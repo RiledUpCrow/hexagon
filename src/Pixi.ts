@@ -14,19 +14,23 @@ app.stage.interactive = true;
 const container = new PIXI.Container();
 app.stage.addChild(container);
 
-const map = new DefaultMap(40, 20);
+const map = new DefaultMap(300, 200);
 const drawer = new Drawer(
   container,
   map,
-  40,
+  50,
   window.innerWidth,
   window.innerHeight
 );
 drawer.drawMap();
 
-const drag = new Drag(app.stage).addListener((x, y) => {
+const drag = new Drag(app.ticker, app.stage).addListener((x, y) => {
   drawer.moveMapBy(x, y);
 });
+
+const text = new PIXI.Text("60");
+
+app.stage.addChild(text);
 
 const resize = () => {
   app.renderer.resize(window.innerWidth, window.innerHeight);
@@ -34,5 +38,9 @@ const resize = () => {
 };
 window.addEventListener("resize", resize);
 resize();
+
+app.ticker.add(() => {
+  text.text = String(Math.round(app.ticker.FPS));
+});
 
 export default app;

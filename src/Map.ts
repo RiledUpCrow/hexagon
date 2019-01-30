@@ -14,7 +14,7 @@ export class DefaultMap implements Map {
       this.tiles[xIndex] = [];
       for (let yIndex = 0; yIndex < height; yIndex++) {
         this.tiles[xIndex][yIndex] = new DefaultTile(
-          Math.floor(0xff0000),
+          Math.floor(Math.random() * 256 * 256 * 256),
           xIndex,
           yIndex
         );
