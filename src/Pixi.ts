@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
-import Hex from "./Hex";
-import Point from "./Point";
 import Drawer from "./Drawer";
+import Drag from "./Drag";
+import { DefaultMap } from "./Map";
 
 const app = new PIXI.Application(window.innerWidth, window.innerHeight, {
   antialias: true,
@@ -11,34 +11,28 @@ const app = new PIXI.Application(window.innerWidth, window.innerHeight, {
 
 app.stage.interactive = true;
 
-const graphics = new PIXI.Graphics();
+const container = new PIXI.Container();
+app.stage.addChild(container);
 
-const hex = new Hex(
-  new Point(window.innerWidth / 2, window.innerHeight / 2),
-  60
+const map = new DefaultMap(40, 20);
+const drawer = new Drawer(
+  container,
+  map,
+  40,
+  window.innerWidth,
+  window.innerHeight
 );
+drawer.drawMap();
 
-const drawer = new Drawer(graphics);
+const drag = new Drag(app.stage).addListener((x, y) => {
+  drawer.moveMapBy(x, y);
+});
 
-drawer.drawHex(hex);
-drawer.drawHex(hex.getAdjacentHex(1));
-drawer.drawHex(hex.getAdjacentHex(2));
-drawer.drawHex(hex.getAdjacentHex(3));
-drawer.drawHex(hex.getAdjacentHex(4));
-drawer.drawHex(hex.getAdjacentHex(5));
-drawer.drawHex(hex.getAdjacentHex(6));
-
-app.stage.addChild(graphics);
-
-// Listen for window resize events
-window.addEventListener("resize", resize);
-
-// Resize function window
-function resize() {
-  // Resize the renderer
+const resize = () => {
   app.renderer.resize(window.innerWidth, window.innerHeight);
-}
-
+  drawer.resize(window.innerWidth, window.innerHeight);
+};
+window.addEventListener("resize", resize);
 resize();
 
 export default app;
