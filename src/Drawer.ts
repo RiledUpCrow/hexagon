@@ -183,11 +183,10 @@ class Drawer {
   };
 
   private getBorderDimensions = () => {
-    const borderWidth = this.width / 2;
-    const borderHeight = this.height / 2;
+    const thickness = Math.min(this.width, this.height) / 4;
     return {
-      borderWidth,
-      borderHeight
+      borderWidth: thickness,
+      borderHeight: thickness
     };
   };
 
@@ -197,9 +196,9 @@ class Drawer {
     const rowHeight = height * 0.75;
     return {
       maxX: borderWidth,
-      minX: -(width * this.map.width - borderWidth),
+      minX: width * -this.map.width + (this.width - borderWidth),
       maxY: borderHeight,
-      minY: -(rowHeight * this.map.height - borderHeight)
+      minY: rowHeight * -this.map.height + (this.height - borderHeight)
     };
   };
 
