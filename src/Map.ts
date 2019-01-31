@@ -3,21 +3,24 @@ import Tile, { DefaultTile } from "./Tile";
 export default interface Map {
   width: number;
   height: number;
-  tiles: Tile[][];
+  tiles: (Tile | null)[][];
 }
 
 export class DefaultMap implements Map {
-  public tiles: Tile[][] = [];
+  public tiles: (Tile | null)[][] = [];
 
   constructor(public width: number, public height: number) {
     for (let xIndex = 0; xIndex < width; xIndex++) {
       this.tiles[xIndex] = [];
       for (let yIndex = 0; yIndex < height; yIndex++) {
-        this.tiles[xIndex][yIndex] = new DefaultTile(
-          Math.floor(Math.random() * 256 * 256 * 256),
-          xIndex,
-          yIndex
-        );
+        this.tiles[xIndex][yIndex] =
+          Math.random() >= 0.25
+            ? new DefaultTile(
+                Math.floor(Math.random() * 256 * 256 * 256),
+                xIndex,
+                yIndex
+              )
+            : null;
       }
     }
   }
