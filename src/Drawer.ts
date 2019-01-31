@@ -1,31 +1,49 @@
-import { Container, DisplayObject } from "pixi.js";
+import { Container, DisplayObject, Point } from "pixi.js";
 import Map from "./Map";
 import TileRenderer from "./TileRenderer";
 
 class Drawer {
+  private readonly originalSize: number;
   private readonly position = {
     x: 0,
     y: 0
   };
   private readonly tileRenderer: TileRenderer;
-  private readonly tiles: (DisplayObject | null)[][];
+  private tiles: (DisplayObject | null)[][] = [];
 
   constructor(
     private container: Container,
     private map: Map,
     private size: number,
     private width: number,
-    private height: number
+    private height: number,
+    private scale: Point = new Point(1, 1)
   ) {
-    this.tileRenderer = new TileRenderer(size);
+    this.originalSize = size;
+    this.tileRenderer = new TileRenderer();
+    this.emptyTiles();
+  }
+
+  private emptyTiles = () => {
+    this.tiles.forEach(tileColumn => {
+      tileColumn.forEach(tile => {
+        if (tile) {
+          this.container.removeChild(tile);
+        }
+      });
+    });
     this.tiles = [];
-    map.tiles.forEach(tileColumn => {
+    this.map.tiles.forEach(tileColumn => {
       const newArray = new Array(tileColumn.length).fill(null);
       this.tiles.push(newArray);
     });
-  }
+  };
 
-  public drawMap = () => {
+  public drawMap = (forceRefresh: boolean = false) => {
+    if (forceRefresh) {
+      this.emptyTiles();
+    }
+
     const {
       minXIndex,
       maxXIndex,
@@ -49,7 +67,7 @@ class Drawer {
         } else {
           if (!renderedTile) {
             const tile = this.map.tiles[xIndex][yIndex];
-            renderedTile = this.tileRenderer.drawTile(tile);
+            renderedTile = this.tileRenderer.drawTile(tile, this.size);
             this.container.addChild(renderedTile);
             this.tiles[xIndex][yIndex] = renderedTile;
           }
@@ -64,7 +82,6 @@ class Drawer {
 
   public moveMapTo = (x: number, y: number) => {
     const { minX, maxX, minY, maxY } = this.getMapBoundaries();
-    console.log(x, y, minX, minY);
     if (x < minX) {
       x = minX;
     }
@@ -92,6 +109,29 @@ class Drawer {
     this.width = width;
     this.height = height;
     this.drawMap();
+  };
+
+  public zoom = (amount: number, point: Point) => {
+    const currentZoom = (this.size / this.originalSize) * 1000;
+    let targetZoom = currentZoom - amount;
+    if (targetZoom > 2000) {
+      targetZoom = 2000;
+    }
+    if (targetZoom < 500) {
+      targetZoom = 500;
+    }
+    const targetSize = (targetZoom / 1000) * this.originalSize;
+    if (targetSize !== this.size) {
+      const scale = targetSize / this.size;
+      const targetX = (point.x / this.width) * 2;
+      const targetY = (point.y / this.height) * 2;
+      this.size = targetSize;
+      this.drawMap(true);
+      this.moveMapTo(
+        this.position.x * scale - (((scale - 1) * this.width) / 2) * targetX,
+        this.position.y * scale - (((scale - 1) * this.height) / 2) * targetY
+      );
+    }
   };
 
   private getTileIndexBoundaries = () => {

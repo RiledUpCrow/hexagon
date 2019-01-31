@@ -4,16 +4,16 @@ import Point from "./Point";
 import Hex from "./Hex";
 
 export default class TileRenderer {
-  constructor(private size: number) {}
+  constructor() {}
 
-  public drawTile = (tile: Tile): DisplayObject => {
-    const center = this.getTileCoordinates(tile.x, tile.y);
-    const hex = new Hex(center, this.size);
+  public drawTile = (tile: Tile, size: number): DisplayObject => {
+    const center = this.getTileCoordinates(tile.x, tile.y, size);
+    const hex = new Hex(center, size);
     const graphics = new Graphics();
 
     graphics
       .beginFill(tile.color)
-      .lineStyle(2, 0x000000)
+      .lineStyle(size / 20, 0x000000)
       .moveTo(hex.c1.x, hex.c1.y)
       .lineTo(hex.c2.x, hex.c2.y)
       .lineTo(hex.c3.x, hex.c3.y)
@@ -26,9 +26,9 @@ export default class TileRenderer {
     return graphics;
   };
 
-  public getTileCoordinates = (x: number, y: number): Point => {
-    const width = this.size * Math.sqrt(3);
-    const height = this.size * 2;
+  private getTileCoordinates = (x: number, y: number, size: number): Point => {
+    const width = size * Math.sqrt(3);
+    const height = size * 2;
 
     const offset = y % 2 !== 0 ? 0.5 : 0;
     const tileY = height * (0.75 * y);
