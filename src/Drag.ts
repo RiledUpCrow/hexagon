@@ -56,7 +56,17 @@ class Drag {
     }
   };
 
+  private isZoomMove = (event: interaction.InteractionEvent): boolean => {
+    return (
+      "targetTouches" in event.data.originalEvent &&
+      event.data.originalEvent.targetTouches.length === 2
+    );
+  };
+
   private handleDown = (event: interaction.InteractionEvent) => {
+    if (this.isZoomMove(event)) {
+      return;
+    }
     this.down = true;
     const { x, y } = event.data.global;
     this.lastPoint = new Point(x, y);
@@ -65,12 +75,18 @@ class Drag {
   };
 
   private handleUp = (event: interaction.InteractionEvent) => {
+    if (this.isZoomMove(event)) {
+      return;
+    }
     this.down = false;
     this.updateVelocity();
     this.moves = [];
   };
 
   private handleMove = (event: interaction.InteractionEvent) => {
+    if (this.isZoomMove(event)) {
+      return;
+    }
     if (!this.down) {
       return;
     }

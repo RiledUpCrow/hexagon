@@ -1,6 +1,7 @@
-import { Container, DisplayObject, Point } from "pixi.js";
+import { Container, DisplayObject } from "pixi.js";
 import Map from "./Map";
 import TileRenderer from "./TileRenderer";
+import Point from "./Point";
 
 class Drawer {
   private readonly originalSize: number;
