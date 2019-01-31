@@ -28,7 +28,7 @@ const drag = new Drag(app.ticker, app.stage).addListener((x, y) => {
   drawer.moveMapBy(x, y);
 });
 
-const text = new PIXI.Text("60");
+const text = new PIXI.Text("60", { stroke: 0xffffff, strokeThickness: 5 });
 
 app.stage.addChild(text);
 
