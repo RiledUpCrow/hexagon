@@ -1,4 +1,4 @@
-import { DisplayObject, ticker } from "pixi.js";
+import { DisplayObject, ticker, interaction } from "pixi.js";
 import Point from "./Point";
 import Vector from "./Vector";
 
@@ -37,36 +37,12 @@ class Drag {
     options: Partial<Options> = defaultOptions
   ) {
     this.options = { ...defaultOptions, ...options };
-    const { friction, stopSpeed } = this.options;
-    displayObject.on("pointerdown", event => {
-      this.down = true;
-      const { x, y } = event.data.global;
-      this.lastPoint = new Point(x, y);
-      this.velocity = new Vector(0, 0);
-      this.moves = [];
-    });
-    displayObject.on("pointerup", () => {
-      this.down = false;
-      this.updateVelocity();
-      this.moves = [];
-    });
-    displayObject.on("pointermove", event => {
-      if (!this.down) {
-        return;
-      }
-      const { x, y } = event.data.global;
-      const newPoint = new Point(x, y);
-      const move = this.calculateMove(newPoint);
-      this.lastPoint = newPoint;
-      this.runListeners(move);
-    });
-    ticker.add(deltaTime => {
-      if (this.velocity.length() < stopSpeed) {
-        return;
-      }
-      this.velocity = this.velocity.multiply(friction);
-      this.runListeners(this.velocity.multiply(deltaTime));
-    });
+    displayObject.on("pointerdown", this.handleDown);
+    displayObject.on("pointerup", this.handleUp);
+    displayObject.on("pointerupoutside", this.handleUp);
+    displayObject.on("pointercancel", this.handleUp);
+    displayObject.on("pointermove", this.handleMove);
+    ticker.add(this.handleTick);
   }
 
   public addListener = (fn: Listener): void => {
@@ -78,6 +54,40 @@ class Drag {
     if (index >= 0) {
       this.listeners.splice(index, 1);
     }
+  };
+
+  private handleDown = (event: interaction.InteractionEvent) => {
+    this.down = true;
+    const { x, y } = event.data.global;
+    this.lastPoint = new Point(x, y);
+    this.velocity = new Vector(0, 0);
+    this.moves = [];
+  };
+
+  private handleUp = (event: interaction.InteractionEvent) => {
+    this.down = false;
+    this.updateVelocity();
+    this.moves = [];
+  };
+
+  private handleMove = (event: interaction.InteractionEvent) => {
+    if (!this.down) {
+      return;
+    }
+    const { x, y } = event.data.global;
+    const newPoint = new Point(x, y);
+    const move = this.calculateMove(newPoint);
+    this.lastPoint = newPoint;
+    this.runListeners(move);
+  };
+
+  private handleTick = (deltaTime: number) => {
+    const { stopSpeed, friction } = this.options;
+    if (this.velocity.length() < stopSpeed) {
+      return;
+    }
+    this.velocity = this.velocity.multiply(friction);
+    this.runListeners(this.velocity.multiply(deltaTime));
   };
 
   private runListeners = ({ x, y }: Vector): void => {

@@ -63,6 +63,20 @@ class Drawer {
   };
 
   public moveMapTo = (x: number, y: number) => {
+    const { minX, maxX, minY, maxY } = this.getMapBoundaries();
+    console.log(x, y, minX, minY);
+    if (x < minX) {
+      x = minX;
+    }
+    if (x > maxX) {
+      x = maxX;
+    }
+    if (y < minY) {
+      y = minY;
+    }
+    if (y > maxY) {
+      y = maxY;
+    }
     this.position.x = x;
     this.position.y = y;
     this.container.x = this.position.x;
@@ -107,6 +121,19 @@ class Drawer {
       maxX: -this.position.x + this.width,
       minY: -this.position.y,
       maxY: -this.position.y + this.height
+    };
+  };
+
+  private getMapBoundaries = () => {
+    const { width, height } = this.getTileDimensions();
+    const borderWidth = this.width / 2;
+    const borderHeight = this.height / 2;
+    const rowHeight = height * 0.75;
+    return {
+      maxX: borderWidth,
+      minX: -(width * this.map.width - borderWidth),
+      maxY: borderHeight,
+      minY: -(rowHeight * this.map.height - borderHeight)
     };
   };
 }
