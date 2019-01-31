@@ -1,4 +1,4 @@
-import { Container, DisplayObject } from "pixi.js";
+import { Container, DisplayObject, Rectangle, Graphics } from "pixi.js";
 import Map from "./Map";
 import TileRenderer from "./TileRenderer";
 import Point from "./Point";
@@ -23,7 +23,21 @@ class Drawer {
     this.originalSize = size;
     this.tileRenderer = new TileRenderer();
     this.emptyTiles();
+    this.drawBackground();
   }
+
+  private drawBackground = () => {
+    const { minX, maxX, minY, maxY } = this.getScreenBoundaries();
+    const background = new Graphics()
+      .beginFill(0xffffff)
+      .moveTo(minX, minY)
+      .lineTo(maxX, minY)
+      .lineTo(maxX, maxY)
+      .lineTo(minX, maxY)
+      .closePath()
+      .endFill();
+    this.container.addChild(background);
+  };
 
   private emptyTiles = () => {
     this.tiles.forEach(tileColumn => {
@@ -68,6 +82,9 @@ class Drawer {
         } else {
           if (!renderedTile) {
             const tile = this.map.tiles[xIndex][yIndex];
+            if (!tile) {
+              continue;
+            }
             renderedTile = this.tileRenderer.drawTile(tile, this.size);
             this.container.addChild(renderedTile);
             this.tiles[xIndex][yIndex] = renderedTile;
@@ -165,16 +182,36 @@ class Drawer {
     };
   };
 
-  private getMapBoundaries = () => {
-    const { width, height } = this.getTileDimensions();
+  private getBorderDimensions = () => {
     const borderWidth = this.width / 2;
     const borderHeight = this.height / 2;
+    return {
+      borderWidth,
+      borderHeight
+    };
+  };
+
+  private getMapBoundaries = () => {
+    const { borderWidth, borderHeight } = this.getBorderDimensions();
+    const { width, height } = this.getTileDimensions();
     const rowHeight = height * 0.75;
     return {
       maxX: borderWidth,
       minX: -(width * this.map.width - borderWidth),
       maxY: borderHeight,
       minY: -(rowHeight * this.map.height - borderHeight)
+    };
+  };
+
+  private getScreenBoundaries = () => {
+    const { borderWidth, borderHeight } = this.getBorderDimensions();
+    const { width, height } = this.getTileDimensions();
+    const rowHeight = height * 0.75;
+    return {
+      minX: -borderWidth,
+      maxX: width * this.map.width + borderWidth,
+      minY: -borderHeight,
+      maxY: rowHeight * this.map.height + borderHeight
     };
   };
 }
