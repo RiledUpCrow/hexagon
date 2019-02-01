@@ -16,7 +16,7 @@ export class DefaultMap implements Map {
         this.tiles[xIndex][yIndex] =
           Math.random() >= 0.25
             ? new DefaultTile(
-                Math.floor(Math.random() * 256 * 256 * 256),
+                Math.floor((Math.random() * 0.5 + 0.25) * 256 * 256 * 256),
                 xIndex,
                 yIndex
               )
