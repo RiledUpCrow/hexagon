@@ -80,6 +80,7 @@ class Drawer {
         if (hide) {
           if (renderedTile) {
             this.container.removeChild(renderedTile);
+            renderedTile.destroy();
           }
           this.tiles[xIndex][yIndex] = null;
         } else {
