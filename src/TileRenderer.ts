@@ -1,18 +1,31 @@
-import { DisplayObject, Graphics } from "pixi.js";
+import { DisplayObject, Graphics, Texture, Sprite } from "pixi.js";
 import Tile from "./Tile";
 import Point from "./Point";
 import Hex from "./Hex";
 
 export default class TileRenderer {
+  private textures: { [size: number]: Texture } = {};
+
   constructor() {}
 
   public drawTile = (tile: Tile, size: number): DisplayObject => {
+    const sprite = new Sprite(this.getTileTexture(size));
+    sprite.tint = tile.color;
+    sprite.anchor.set(0.5);
+    return sprite;
+  };
+
+  private getTileTexture = (size: number): Texture => {
+    if (size in this.textures) {
+      return this.textures[size];
+    }
+
     const center = new Point(0, 0);
     const hex = new Hex(center, size);
     const graphics = new Graphics();
 
     graphics
-      .beginFill(tile.color)
+      .beginFill(0xffffff)
       .lineStyle(size / 20, 0x000000)
       .moveTo(hex.c1.x, hex.c1.y)
       .lineTo(hex.c2.x, hex.c2.y)
@@ -23,6 +36,8 @@ export default class TileRenderer {
       .closePath()
       .endFill();
 
-    return graphics;
+    this.textures[size] = graphics.generateCanvasTexture();
+
+    return this.getTileTexture(size);
   };
 }
