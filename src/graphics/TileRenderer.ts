@@ -1,4 +1,4 @@
-import { DisplayObject, Graphics, Texture, Sprite } from "pixi.js";
+import { DisplayObject, Graphics, Texture, Sprite, SCALE_MODES } from "pixi.js";
 import Tile from "./Tile";
 import Point from "./Point";
 import Hex from "./Hex";
@@ -36,7 +36,10 @@ export default class TileRenderer {
       .closePath()
       .endFill();
 
-    this.textures[size] = graphics.generateCanvasTexture();
+    this.textures[size] = graphics.generateCanvasTexture(
+      SCALE_MODES.LINEAR,
+      1.5
+    );
 
     return this.getTileTexture(size);
   };
