@@ -131,7 +131,10 @@ class Drawer {
     this.drawMap();
   };
 
-  public zoom = (amount: number, point: Point) => {
+  public zoom = (
+    amount: number,
+    point: Point = new Point(this.width / 2, this.height / 2)
+  ) => {
     const currentZoom = (this.size / this.originalSize) * 1000;
     let targetZoom = currentZoom - amount;
     if (targetZoom > 2000) {

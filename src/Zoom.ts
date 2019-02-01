@@ -1,7 +1,7 @@
 import { DisplayObject, interaction } from "pixi.js";
 import Point from "./Point";
 
-type Listener = (scale: number, point: Point) => void;
+type Listener = (scale: number, point?: Point) => void;
 
 export default class Zoom {
   private readonly listeners: Listener[] = [];
@@ -30,13 +30,14 @@ export default class Zoom {
     }
   };
 
-  private runListeners = (zoom: number, target: Point) => {
+  private runListeners = (zoom: number, target?: Point) => {
     this.listeners.forEach(fn => fn(zoom, target));
   };
 
   private handleWheel = (event: WheelEvent) => {
     event.preventDefault();
-    this.runListeners(event.deltaY, this.point);
+    const zoom = event.deltaY;
+    this.runListeners(zoom, zoom > 0 ? undefined : this.point);
   };
 
   private handleMove = (event: interaction.InteractionEvent) => {
