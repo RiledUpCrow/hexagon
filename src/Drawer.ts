@@ -1,34 +1,32 @@
-import { Container, DisplayObject, Rectangle, Graphics } from "pixi.js";
+import { Container, DisplayObject, Graphics } from "pixi.js";
 import Map from "./Map";
 import TileRenderer from "./TileRenderer";
 import Point from "./Point";
 
 class Drawer {
   private readonly originalSize: number;
-  private readonly position = {
-    x: 0,
-    y: 0
-  };
-  private readonly tileRenderer: TileRenderer;
+  private readonly position = { x: 0, y: 0 };
+  private readonly tileRenderer = new TileRenderer();
   private tiles: (DisplayObject | null)[][] = [];
+  private background: DisplayObject | null = null;
 
   constructor(
-    private container: Container,
-    private map: Map,
-    private size: number,
-    private width: number,
-    private height: number,
-    private scale: Point = new Point(1, 1)
+    private readonly container: Container,
+    private readonly map: Map,
+    private size: number = 50,
+    private width: number = window.innerWidth,
+    private height: number = window.innerHeight
   ) {
     this.originalSize = size;
-    this.tileRenderer = new TileRenderer();
-    this.emptyTiles();
-    this.drawBackground();
+    this.drawMap(true);
   }
 
   private drawBackground = () => {
-    const { minX, maxX, minY, maxY } = this.getScreenBoundaries();
-    const background = new Graphics()
+    if (this.background) {
+      this.container.removeChild(this.background);
+    }
+    const { minX, maxX, minY, maxY } = this.getViewBoundaries();
+    this.background = new Graphics()
       .beginFill(0xffffff)
       .moveTo(minX, minY)
       .lineTo(maxX, minY)
@@ -36,7 +34,7 @@ class Drawer {
       .lineTo(minX, maxY)
       .closePath()
       .endFill();
-    this.container.addChild(background);
+    this.container.addChildAt(this.background, 0);
   };
 
   private emptyTiles = () => {
@@ -55,6 +53,8 @@ class Drawer {
   };
 
   public drawMap = (forceRefresh: boolean = false) => {
+    this.drawBackground();
+
     if (forceRefresh) {
       this.emptyTiles();
     }
@@ -185,10 +185,10 @@ class Drawer {
   };
 
   private getBorderDimensions = () => {
-    const thickness = Math.min(this.width, this.height) / 4;
+    const { width, height } = this.getTileDimensions();
     return {
-      borderWidth: thickness,
-      borderHeight: thickness
+      borderWidth: width * 2,
+      borderHeight: height * 0.75 * 2
     };
   };
 
@@ -198,27 +198,14 @@ class Drawer {
     const rowHeight = height * 0.75;
     return {
       maxX: borderWidth,
-      minX: width * -this.map.width + (this.width - borderWidth),
+      minX: width * -(this.map.width - 1) + (this.width - borderWidth),
       maxY: borderHeight,
-      minY: rowHeight * -this.map.height + (this.height - borderHeight)
-    };
-  };
-
-  private getScreenBoundaries = () => {
-    const { borderWidth, borderHeight } = this.getBorderDimensions();
-    const { width, height } = this.getTileDimensions();
-    const rowHeight = height * 0.75;
-    return {
-      minX: -borderWidth,
-      maxX: width * this.map.width + borderWidth,
-      minY: -borderHeight,
-      maxY: rowHeight * this.map.height + borderHeight
+      minY: rowHeight * -(this.map.height - 1) + (this.height - borderHeight)
     };
   };
 
   private getTileCoordinates = (x: number, y: number, size: number): Point => {
-    const width = size * Math.sqrt(3);
-    const height = size * 2;
+    const { width, height } = this.getTileDimensions();
 
     const offset = y % 2 !== 0 ? 0.5 : 0;
     const tileY = height * (0.75 * y);
