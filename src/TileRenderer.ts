@@ -7,7 +7,7 @@ export default class TileRenderer {
   constructor() {}
 
   public drawTile = (tile: Tile, size: number): DisplayObject => {
-    const center = this.getTileCoordinates(tile.x, tile.y, size);
+    const center = new Point(0, 0);
     const hex = new Hex(center, size);
     const graphics = new Graphics();
 
@@ -24,16 +24,5 @@ export default class TileRenderer {
       .endFill();
 
     return graphics;
-  };
-
-  private getTileCoordinates = (x: number, y: number, size: number): Point => {
-    const width = size * Math.sqrt(3);
-    const height = size * 2;
-
-    const offset = y % 2 !== 0 ? 0.5 : 0;
-    const tileY = height * (0.75 * y);
-    const tileX = width * (x + offset);
-
-    return new Point(tileX, tileY);
   };
 }

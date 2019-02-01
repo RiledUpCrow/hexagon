@@ -86,6 +86,8 @@ class Drawer {
               continue;
             }
             renderedTile = this.tileRenderer.drawTile(tile, this.size);
+            const { x, y } = this.getTileCoordinates(tile.x, tile.y, this.size);
+            renderedTile.position.set(x, y);
             this.container.addChild(renderedTile);
             this.tiles[xIndex][yIndex] = renderedTile;
           }
@@ -212,6 +214,17 @@ class Drawer {
       minY: -borderHeight,
       maxY: rowHeight * this.map.height + borderHeight
     };
+  };
+
+  private getTileCoordinates = (x: number, y: number, size: number): Point => {
+    const width = size * Math.sqrt(3);
+    const height = size * 2;
+
+    const offset = y % 2 !== 0 ? 0.5 : 0;
+    const tileY = height * (0.75 * y);
+    const tileX = width * (x + offset);
+
+    return new Point(tileX, tileY);
   };
 }
 
