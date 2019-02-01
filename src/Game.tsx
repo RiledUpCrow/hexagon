@@ -1,5 +1,5 @@
-import React, { FunctionComponent, memo, useRef, useEffect } from 'react';
-import Pixi from './Pixi';
+import React, { FunctionComponent, memo, useRef, useEffect } from "react";
+import Pixi from "./graphics/Pixi";
 
 const Game: FunctionComponent = () => {
   const container = useRef<HTMLDivElement>(null);
@@ -13,6 +13,6 @@ const Game: FunctionComponent = () => {
   });
 
   return <div ref={container} />;
-}
+};
 
 export default memo(Game);
