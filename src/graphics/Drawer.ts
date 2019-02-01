@@ -6,7 +6,7 @@ import Point from "./Point";
 class Drawer {
   private readonly originalSize: number;
   private readonly position = { x: 0, y: 0 };
-  private readonly tileRenderer = new TileRenderer();
+  private readonly tileRenderer: TileRenderer;
   private tiles: (DisplayObject | null)[][] = [];
   private background: DisplayObject | null = null;
 
@@ -15,9 +15,12 @@ class Drawer {
     private readonly map: Map,
     private size: number = 50,
     private width: number = window.innerWidth,
-    private height: number = window.innerHeight
+    private height: number = window.innerHeight,
+    private readonly maxZoom = 2,
+    private readonly minZoom = 0.5
   ) {
     this.originalSize = size;
+    this.tileRenderer = new TileRenderer(size * maxZoom);
     this.drawMap(true);
   }
 
@@ -135,15 +138,15 @@ class Drawer {
     amount: number,
     point: Point = new Point(this.width / 2, this.height / 2)
   ) => {
-    const currentZoom = (this.size / this.originalSize) * 1000;
-    let targetZoom = currentZoom - amount;
-    if (targetZoom > 2000) {
-      targetZoom = 2000;
+    const currentZoom = this.size / this.originalSize;
+    let targetZoom = currentZoom - amount / 1000;
+    if (targetZoom > this.maxZoom) {
+      targetZoom = this.maxZoom;
     }
-    if (targetZoom < 500) {
-      targetZoom = 500;
+    if (targetZoom < this.minZoom) {
+      targetZoom = this.minZoom;
     }
-    const targetSize = (targetZoom / 1000) * this.originalSize;
+    const targetSize = targetZoom * this.originalSize;
     if (targetSize !== this.size) {
       const scale = targetSize / this.size;
       const targetX = (point.x / this.width) * 2;

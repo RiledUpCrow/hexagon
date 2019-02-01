@@ -4,22 +4,22 @@ import Point from "./Point";
 import Hex from "./Hex";
 
 export default class TileRenderer {
-  private textures: { [size: number]: Texture } = {};
+  private texture: Texture;
 
-  constructor() {}
+  constructor(private readonly maxSize: number) {
+    this.texture = this.generateTileTexture(maxSize);
+  }
 
   public drawTile = (tile: Tile, size: number): DisplayObject => {
-    const sprite = new Sprite(this.getTileTexture(size));
+    const sprite = new Sprite(this.texture);
+    const scale = size / this.maxSize;
+    sprite.scale.set(scale, scale);
     sprite.tint = tile.color;
     sprite.anchor.set(0.5);
     return sprite;
   };
 
-  private getTileTexture = (size: number): Texture => {
-    if (size in this.textures) {
-      return this.textures[size];
-    }
-
+  private generateTileTexture = (size: number): Texture => {
     const center = new Point(0, 0);
     const hex = new Hex(center, size);
     const graphics = new Graphics();
@@ -36,11 +36,6 @@ export default class TileRenderer {
       .closePath()
       .endFill();
 
-    this.textures[size] = graphics.generateCanvasTexture(
-      SCALE_MODES.LINEAR,
-      1.5
-    );
-
-    return this.getTileTexture(size);
+    return graphics.generateCanvasTexture(SCALE_MODES.LINEAR, 1.5);
   };
 }
