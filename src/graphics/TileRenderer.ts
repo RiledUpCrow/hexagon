@@ -7,9 +7,10 @@ import {
   loader,
   Container
 } from "pixi.js";
-import Tile, { GroundFeature } from "./Tile";
+import Tile from "./Tile";
 import Point from "./Point";
 import Hex from "./Hex";
+import { GroundFeature, groundFeatures } from "./GroundFeature";
 
 export default class TileRenderer {
   private texture: Texture;
@@ -64,19 +65,15 @@ export default class TileRenderer {
     groundFeature: GroundFeature,
     size: number
   ): DisplayObject | null => {
-    switch (groundFeature) {
-      case GroundFeature.FLAT:
-        return null;
-      case GroundFeature.HILL: {
-        const sprite = new Sprite(loader.resources["hill.png"].texture);
-        const hexWidth = size * Math.sqrt(3);
-        const scale = (hexWidth / sprite.width) * 0.9;
-        sprite.scale.set(scale, scale);
-        sprite.anchor.set(0.5, 0.5);
-        return sprite;
-      }
-      default:
-        return null;
+    const url = groundFeatures[groundFeature];
+    if (!url) {
+      return null;
     }
+    const sprite = new Sprite(loader.resources[url].texture);
+    const hexWidth = size * Math.sqrt(3);
+    const scale = (hexWidth / sprite.width) * 0.9;
+    sprite.scale.set(scale, scale);
+    sprite.anchor.set(0.5, 0.5);
+    return sprite;
   };
 }

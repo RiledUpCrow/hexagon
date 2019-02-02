@@ -4,6 +4,7 @@ import Drag from "./Drag";
 import { DefaultMap } from "./Map";
 import Zoom from "./Zoom";
 import FpsCounter from "./FpsCounter";
+import { groundFeatures } from "./GroundFeature";
 
 const app = new PIXI.Application(window.innerWidth, window.innerHeight, {
   antialias: true,
@@ -31,6 +32,13 @@ const setup = () => {
   resize();
 };
 
-PIXI.loader.add("hill.png").load(setup);
+Object.keys(groundFeatures).forEach(key => {
+  const url = groundFeatures[key];
+  if (!url) {
+    return;
+  }
+  PIXI.loader.add(url);
+});
+PIXI.loader.load(setup);
 
 export default app;

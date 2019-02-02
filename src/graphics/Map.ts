@@ -1,4 +1,6 @@
-import Tile, { DefaultTile, GroundFeature } from "./Tile";
+import Tile, { DefaultTile } from "./Tile";
+import randomKey from "./randomKey";
+import { groundFeatures } from "./GroundFeature";
 
 export default interface Map {
   width: number;
@@ -17,7 +19,7 @@ export class DefaultMap implements Map {
           Math.random() >= 0.25
             ? new DefaultTile(
                 Math.floor((Math.random() * 0.5 + 0.25) * 256 * 256 * 256),
-                Math.floor(Math.random() * 2)
+                randomKey(groundFeatures)
               )
             : null;
       }
