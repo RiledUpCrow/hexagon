@@ -11,22 +11,26 @@ const app = new PIXI.Application(window.innerWidth, window.innerHeight, {
   resolution: devicePixelRatio
 });
 
-const container = new PIXI.Container();
-app.stage.addChild(container);
-app.stage.interactive = true;
+const setup = () => {
+  const container = new PIXI.Container();
+  app.stage.addChild(container);
+  app.stage.interactive = true;
 
-const map = new DefaultMap(128, 80);
-const drawer = new Drawer(container, map);
+  const map = new DefaultMap(128, 80);
+  const drawer = new Drawer(container, map);
 
-new Drag(app.ticker, app.stage).addListener((x, y) => drawer.moveMapBy(x, y));
-new Zoom(app.stage).addListener((zoom, point) => drawer.zoom(zoom, point));
-new FpsCounter(app);
+  new Drag(app.ticker, app.stage).addListener((x, y) => drawer.moveMapBy(x, y));
+  new Zoom(app.stage).addListener((zoom, point) => drawer.zoom(zoom, point));
+  new FpsCounter(app);
 
-const resize = () => {
-  app.renderer.resize(window.innerWidth, window.innerHeight);
-  drawer.resize(window.innerWidth, window.innerHeight);
+  const resize = () => {
+    app.renderer.resize(window.innerWidth, window.innerHeight);
+    drawer.resize(window.innerWidth, window.innerHeight);
+  };
+  window.addEventListener("resize", resize);
+  resize();
 };
-window.addEventListener("resize", resize);
-resize();
+
+PIXI.loader.add("hill.png").load(setup);
 
 export default app;

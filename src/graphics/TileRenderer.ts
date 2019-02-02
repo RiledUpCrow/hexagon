@@ -1,5 +1,13 @@
-import { DisplayObject, Graphics, Texture, Sprite, SCALE_MODES } from "pixi.js";
-import Tile from "./Tile";
+import {
+  DisplayObject,
+  Graphics,
+  Texture,
+  Sprite,
+  SCALE_MODES,
+  loader,
+  Container
+} from "pixi.js";
+import Tile, { GroundFeature } from "./Tile";
 import Point from "./Point";
 import Hex from "./Hex";
 
@@ -11,6 +19,19 @@ export default class TileRenderer {
   }
 
   public drawTile = (tile: Tile, size: number): DisplayObject => {
+    const container = new Container();
+    container.addChild(this.getTileSprite(tile, size));
+
+    const groundFeature = this.getGroundFeature(tile.groundFeature, size);
+    console.log(groundFeature);
+    if (groundFeature) {
+      container.addChild(groundFeature);
+    }
+
+    return container;
+  };
+
+  public getTileSprite = (tile: Tile, size: number): DisplayObject => {
     const sprite = new Sprite(this.texture);
     const scale = size / this.maxSize;
     sprite.scale.set(scale, scale);
@@ -37,5 +58,25 @@ export default class TileRenderer {
       .endFill();
 
     return graphics.generateCanvasTexture(SCALE_MODES.LINEAR, 1.5);
+  };
+
+  private getGroundFeature = (
+    groundFeature: GroundFeature,
+    size: number
+  ): DisplayObject | null => {
+    switch (groundFeature) {
+      case GroundFeature.FLAT:
+        return null;
+      case GroundFeature.HILL: {
+        const sprite = new Sprite(loader.resources["hill.png"].texture);
+        const hexWidth = size * Math.sqrt(3);
+        const scale = (hexWidth / sprite.width) * 0.9;
+        sprite.scale.set(scale, scale);
+        sprite.anchor.set(0.5, 0.5);
+        return sprite;
+      }
+      default:
+        return null;
+    }
   };
 }

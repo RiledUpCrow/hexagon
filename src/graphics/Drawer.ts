@@ -90,7 +90,7 @@ class Drawer {
               continue;
             }
             renderedTile = this.tileRenderer.drawTile(tile, this.size);
-            const { x, y } = this.getTileCoordinates(tile.x, tile.y, this.size);
+            const { x, y } = this.getTileCoordinates(xIndex, yIndex, this.size);
             renderedTile.position.set(x, y);
             this.container.addChild(renderedTile);
             this.tiles[xIndex][yIndex] = renderedTile;

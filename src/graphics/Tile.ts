@@ -1,9 +1,16 @@
 export default interface Tile {
   color: number;
-  x: number;
-  y: number;
+  groundFeature: GroundFeature;
+}
+
+export enum GroundFeature {
+  FLAT,
+  HILL
 }
 
 export class DefaultTile implements Tile {
-  constructor(public color: number, public x: number, public y: number) {}
+  constructor(
+    public color: number,
+    public groundFeature: GroundFeature = GroundFeature.FLAT
+  ) {}
 }
