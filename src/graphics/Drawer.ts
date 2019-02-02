@@ -120,8 +120,8 @@ class Drawer {
     }
     this.position.x = x;
     this.position.y = y;
-    this.container.x = this.position.x;
-    this.container.y = this.position.y;
+    this.container.x = Math.round(this.position.x);
+    this.container.y = Math.round(this.position.y);
     this.drawMap();
   };
 
