@@ -1,24 +1,25 @@
-import * as PIXI from "pixi.js";
 import Drawer from "./Drawer";
 import Drag from "./Drag";
 import { DefaultMap } from "./Map";
 import Zoom from "./Zoom";
 import FpsCounter from "./FpsCounter";
 import { groundFeatures } from "./GroundFeature";
+import { Application, Container, Loader } from "pixi.js";
 
-const app = new PIXI.Application(window.innerWidth, window.innerHeight, {
+const app = new Application({
   antialias: true,
-  autoResize: true,
-  resolution: devicePixelRatio
+  resolution: devicePixelRatio,
+  width: window.innerWidth,
+  height: window.innerHeight
 });
 
 const setup = () => {
-  const container = new PIXI.Container();
+  const container = new Container();
   app.stage.addChild(container);
   app.stage.interactive = true;
 
   const map = new DefaultMap(128, 80);
-  const drawer = new Drawer(container, map);
+  const drawer = new Drawer(app.renderer, container, map);
 
   new Drag(app.ticker, app.stage).addListener((x, y) => drawer.moveMapBy(x, y));
   new Zoom(app.stage).addListener((zoom, point) => drawer.zoom(zoom, point));
@@ -37,8 +38,8 @@ Object.keys(groundFeatures).forEach(key => {
   if (!url) {
     return;
   }
-  PIXI.loader.add(url);
+  Loader.shared.add(url);
 });
-PIXI.loader.load(setup);
+Loader.shared.load(setup);
 
 export default app;

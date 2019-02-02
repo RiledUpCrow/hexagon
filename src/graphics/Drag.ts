@@ -1,4 +1,4 @@
-import { DisplayObject, ticker, interaction } from "pixi.js";
+import { DisplayObject, interaction, Ticker } from "pixi.js";
 import Point from "./Point";
 import Vector from "./Vector";
 
@@ -32,7 +32,7 @@ class Drag {
   private readonly options: Options;
 
   constructor(
-    private readonly ticker: ticker.Ticker,
+    private readonly ticker: Ticker,
     private readonly displayObject: DisplayObject,
     options: Partial<Options> = defaultOptions
   ) {

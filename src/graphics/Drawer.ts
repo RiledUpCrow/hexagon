@@ -1,4 +1,4 @@
-import { Container, DisplayObject, Graphics } from "pixi.js";
+import { Container, DisplayObject, Graphics, Renderer } from "pixi.js";
 import Map from "./Map";
 import TileRenderer from "./TileRenderer";
 import Point from "./Point";
@@ -11,6 +11,7 @@ class Drawer {
   private background: DisplayObject | null = null;
 
   constructor(
+    private readonly renderer: Renderer,
     private readonly container: Container,
     private readonly map: Map,
     private size: number = 50,
@@ -20,7 +21,7 @@ class Drawer {
     private readonly minZoom = 0.5
   ) {
     this.originalSize = size;
-    this.tileRenderer = new TileRenderer(size * maxZoom);
+    this.tileRenderer = new TileRenderer(renderer, size * maxZoom);
     this.drawMap(true);
   }
 

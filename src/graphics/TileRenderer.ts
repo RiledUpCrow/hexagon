@@ -4,8 +4,9 @@ import {
   Texture,
   Sprite,
   SCALE_MODES,
-  loader,
-  Container
+  Container,
+  Renderer,
+  Loader
 } from "pixi.js";
 import Tile from "./Tile";
 import Point from "./Point";
@@ -16,7 +17,10 @@ import { groundTypes } from "./GroundType";
 export default class TileRenderer {
   private texture: Texture;
 
-  constructor(private readonly maxSize: number) {
+  constructor(
+    private readonly renderer: Renderer,
+    private readonly maxSize: number
+  ) {
     this.texture = this.generateTileTexture(maxSize);
   }
 
@@ -59,7 +63,7 @@ export default class TileRenderer {
       .closePath()
       .endFill();
 
-    return graphics.generateCanvasTexture(SCALE_MODES.LINEAR, 1.5);
+    return this.renderer.generateTexture(graphics, SCALE_MODES.LINEAR, 1.5);
   };
 
   private getGroundFeature = (
@@ -70,7 +74,7 @@ export default class TileRenderer {
     if (!url) {
       return null;
     }
-    const sprite = new Sprite(loader.resources[url].texture);
+    const sprite = new Sprite(Loader.shared.resources[url].texture);
     const hexWidth = size * Math.sqrt(3);
     const scale = (hexWidth / sprite.width) * 0.9;
     sprite.scale.set(scale, scale);
