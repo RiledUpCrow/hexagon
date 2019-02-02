@@ -7,7 +7,7 @@ import { groundFeatures } from "./GroundFeature";
 import { Application, Container, Loader } from "pixi.js";
 
 const app = new Application({
-  antialias: true,
+  autoDensity: true,
   resolution: devicePixelRatio,
   width: window.innerWidth,
   height: window.innerHeight

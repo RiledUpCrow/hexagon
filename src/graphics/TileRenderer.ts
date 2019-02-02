@@ -6,7 +6,8 @@ import {
   SCALE_MODES,
   Container,
   Renderer,
-  Loader
+  Loader,
+  Rectangle
 } from "pixi.js";
 import Tile from "./Tile";
 import Point from "./Point";
@@ -47,7 +48,7 @@ export default class TileRenderer {
   };
 
   private generateTileTexture = (size: number): Texture => {
-    const center = new Point(0, 0);
+    const center = new Point(size * Math.sqrt(3), size);
     const hex = new Hex(center, size);
     const graphics = new Graphics();
 
@@ -63,7 +64,12 @@ export default class TileRenderer {
       .closePath()
       .endFill();
 
-    return this.renderer.generateTexture(graphics, SCALE_MODES.LINEAR, 1.5);
+    return this.renderer.generateTexture(
+      graphics,
+      SCALE_MODES.LINEAR,
+      1,
+      new Rectangle(0, 0, size * Math.sqrt(3) * 2, size * 2)
+    );
   };
 
   private getGroundFeature = (

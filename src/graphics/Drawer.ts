@@ -121,8 +121,10 @@ class Drawer {
     }
     this.position.x = x;
     this.position.y = y;
-    this.container.x = Math.round(this.position.x);
-    this.container.y = Math.round(this.position.y);
+    this.container.x =
+      Math.round(this.position.x * devicePixelRatio) / devicePixelRatio;
+    this.container.y =
+      Math.round(this.position.y * devicePixelRatio) / devicePixelRatio;
     this.drawMap();
   };
 
