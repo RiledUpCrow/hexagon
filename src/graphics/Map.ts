@@ -1,6 +1,7 @@
 import Tile, { DefaultTile } from "./Tile";
 import randomKey from "./randomKey";
 import { groundFeatures } from "./GroundFeature";
+import { groundTypes } from "./GroundType";
 
 export default interface Map {
   width: number;
@@ -15,13 +16,11 @@ export class DefaultMap implements Map {
     for (let xIndex = 0; xIndex < width; xIndex++) {
       this.tiles[xIndex] = [];
       for (let yIndex = 0; yIndex < height; yIndex++) {
-        this.tiles[xIndex][yIndex] =
-          Math.random() >= 0.25
-            ? new DefaultTile(
-                Math.floor((Math.random() * 0.5 + 0.25) * 256 * 256 * 256),
-                randomKey(groundFeatures)
-              )
-            : null;
+        this.tiles[xIndex][yIndex] = new DefaultTile(
+          randomKey(groundTypes),
+          // "FLAT"
+          randomKey(groundFeatures)
+        );
       }
     }
   }

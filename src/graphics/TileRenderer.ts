@@ -11,6 +11,7 @@ import Tile from "./Tile";
 import Point from "./Point";
 import Hex from "./Hex";
 import { GroundFeature, groundFeatures } from "./GroundFeature";
+import { groundTypes } from "./GroundType";
 
 export default class TileRenderer {
   private texture: Texture;
@@ -36,7 +37,7 @@ export default class TileRenderer {
     const sprite = new Sprite(this.texture);
     const scale = size / this.maxSize;
     sprite.scale.set(scale, scale);
-    sprite.tint = tile.color;
+    sprite.tint = groundTypes[tile.groundType];
     sprite.anchor.set(0.5);
     return sprite;
   };
