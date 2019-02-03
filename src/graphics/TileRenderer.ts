@@ -7,7 +7,8 @@ import {
   Container,
   Renderer,
   Loader,
-  Rectangle
+  Rectangle,
+  BLEND_MODES
 } from "pixi.js";
 import Tile from "./Tile";
 import Point from "./Point";
@@ -134,6 +135,7 @@ export default class TileRenderer {
     const height = size * 2;
     const scale = height / sprite.height;
     sprite.scale.set(scale, scale);
+    sprite.blendMode = BLEND_MODES.ADD;
     sprite.mask = this.hexShape!;
     const texture = this.renderer.generateTexture(
       sprite,
