@@ -12,12 +12,18 @@ import {
 import Tile from "./Tile";
 import Point from "./Point";
 import Hex from "./Hex";
-import { GroundFeature, groundFeatures } from "./GroundFeature";
-import { groundTypes } from "./GroundType";
+import TextureManager from "./TextureManager";
+import { GroundFeature } from "./GroundFeature";
+import { GroundType } from "./GroundType";
 
 export default class TileRenderer {
-  private texture?: Texture;
-  private groundFeatureTextures: { [key: string]: Texture | null } = {};
+  private hexShape?: Graphics;
+  private groundFeatureTextures: {
+    [size: number]: { [key: string]: Texture };
+  } = {};
+  private groundTypeTextures: {
+    [size: number]: { [key: string]: Texture };
+  } = {};
   private currentSize?: number;
 
   constructor(
@@ -27,18 +33,32 @@ export default class TileRenderer {
 
   public drawTile = (tile: Tile, size: number): DisplayObject => {
     if (size !== this.currentSize) {
-      if (this.texture) {
-        this.texture.destroy();
+      if (this.hexShape) {
+        this.hexShape.destroy();
       }
-      this.texture = this.generateTileTexture(size);
-      Object.keys(groundFeatures).forEach(key => {
-        if (this.groundFeatureTextures[key]) {
-          this.groundFeatureTextures[key]!.destroy();
+      this.hexShape = this.generateTileShape(size);
+      if (!this.groundFeatureTextures[size]) {
+        this.groundFeatureTextures[size] = {};
+      }
+      Object.keys(TextureManager.groundFeatures).forEach(k => {
+        const key = k as GroundFeature;
+        if (!this.groundFeatureTextures[size][key]) {
+          this.groundFeatureTextures[size][
+            key
+          ] = this.generateGroundFeatureTexture(key, size);
         }
-        this.groundFeatureTextures[key] = this.generateGroundFeatureTexture(
-          key,
-          size
-        );
+      });
+      if (!this.groundTypeTextures[size]) {
+        this.groundTypeTextures[size] = {};
+      }
+      Object.keys(TextureManager.groundTypes).forEach(k => {
+        const key = k as GroundType;
+        if (!this.groundTypeTextures[size][key]) {
+          this.groundTypeTextures[size][key] = this.generateGroundTypeTexture(
+            key,
+            size
+          );
+        }
       });
       this.currentSize = size;
     }
@@ -60,7 +80,7 @@ export default class TileRenderer {
     return container;
   };
 
-  private generateTileTexture = (size: number): Texture => {
+  private generateTileShape = (size: number): Graphics => {
     size += 1;
     size *= devicePixelRatio;
     const center = new Point(size * Math.sqrt(3) * 0.5, size);
@@ -68,7 +88,7 @@ export default class TileRenderer {
     const graphics = new Graphics();
 
     graphics
-      .beginFill(0xffffff)
+      .beginFill(0xffff00)
       .moveTo(hex.c1.x, hex.c1.y)
       .lineTo(hex.c2.x, hex.c2.y)
       .lineTo(hex.c3.x, hex.c3.y)
@@ -78,23 +98,17 @@ export default class TileRenderer {
       .closePath()
       .endFill();
 
-    const texture = this.renderer.generateTexture(
-      graphics,
-      SCALE_MODES.LINEAR,
-      1
-    );
-
-    return texture;
+    return graphics;
   };
 
   private generateGroundFeatureTexture = (
     groundFeature: GroundFeature,
     size: number
-  ): Texture | null => {
+  ): Texture => {
     size *= devicePixelRatio;
-    const url = groundFeatures[groundFeature];
+    const url = TextureManager.groundFeatures[groundFeature];
     if (!url) {
-      return null;
+      return Texture.EMPTY;
     }
     const sprite = new Sprite(Loader.shared.resources[url].texture);
     const width = size * Math.sqrt(3);
@@ -110,18 +124,41 @@ export default class TileRenderer {
     return texture;
   };
 
+  public generateGroundTypeTexture = (
+    groundType: GroundType,
+    size: number
+  ): Texture => {
+    size *= devicePixelRatio;
+    const tileTexture = TextureManager.groundTypes[groundType];
+    const sprite = new Sprite(Loader.shared.resources[tileTexture].texture);
+    const height = size * 2;
+    const scale = height / sprite.height;
+    sprite.scale.set(scale, scale);
+    sprite.mask = this.hexShape!;
+    const texture = this.renderer.generateTexture(
+      sprite,
+      SCALE_MODES.LINEAR,
+      1,
+      new Rectangle(0, 0, sprite.width, sprite.height)
+    );
+    return texture;
+  };
+
   public getTileSprite = (tile: Tile): DisplayObject => {
-    const sprite = new Sprite(this.texture!);
+    const sprite = new Sprite(
+      this.groundTypeTextures[this.currentSize!][tile.groundType]
+    );
     const scale = 1 / devicePixelRatio;
     sprite.scale.set(scale, scale);
-    sprite.tint = groundTypes[tile.groundType];
     return sprite;
   };
 
   private getGroundFeature = (
     groundFeature: GroundFeature
   ): DisplayObject | null => {
-    const texture = this.groundFeatureTextures[groundFeature]!;
+    const texture = this.groundFeatureTextures[this.currentSize!][
+      groundFeature
+    ]!;
     const sprite = new Sprite(texture);
     const scale = 1 / devicePixelRatio;
     sprite.scale.set(scale, scale);

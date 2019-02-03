@@ -3,8 +3,8 @@ import Drag from "./Drag";
 import { DefaultMap } from "./Map";
 import Zoom from "./Zoom";
 import FpsCounter from "./FpsCounter";
-import { groundFeatures } from "./GroundFeature";
 import { Application, Container, Loader } from "pixi.js";
+import TextureManager from "./TextureManager";
 
 const app = new Application({
   autoDensity: true,
@@ -33,13 +33,6 @@ const setup = () => {
   resize();
 };
 
-Object.keys(groundFeatures).forEach(key => {
-  const url = groundFeatures[key];
-  if (!url) {
-    return;
-  }
-  Loader.shared.add(url);
-});
-Loader.shared.load(setup);
+TextureManager.load(Loader.shared).then(setup);
 
 export default app;

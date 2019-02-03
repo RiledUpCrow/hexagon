@@ -9,6 +9,7 @@ class Drawer {
   private readonly tileRenderer: TileRenderer;
   private tiles: (DisplayObject | null)[][] = [];
   private background: DisplayObject | null = null;
+  private granularSize: number;
 
   constructor(
     private readonly renderer: Renderer,
@@ -21,6 +22,7 @@ class Drawer {
     private readonly minZoom = 0.25
   ) {
     this.originalSize = size;
+    this.granularSize = size;
     this.tileRenderer = new TileRenderer(renderer, size * maxZoom);
     this.drawMap(true);
   }
@@ -46,6 +48,7 @@ class Drawer {
       tileColumn.forEach(tile => {
         if (tile) {
           this.container.removeChild(tile);
+          tile.destroy();
         }
       });
     });
@@ -142,7 +145,7 @@ class Drawer {
     amount: number,
     point: Point = new Point(this.width / 2, this.height / 2)
   ) => {
-    const currentZoom = this.size / this.originalSize;
+    const currentZoom = this.granularSize / this.originalSize;
     let targetZoom = currentZoom - amount / 1000;
     if (targetZoom > this.maxZoom) {
       targetZoom = this.maxZoom;
@@ -151,11 +154,15 @@ class Drawer {
       targetZoom = this.minZoom;
     }
     const targetSize = targetZoom * this.originalSize;
-    if (targetSize !== this.size) {
-      const scale = targetSize / this.size;
+    this.granularSize = targetSize;
+
+    const step = 5;
+    const steppedSize = Math.round(this.granularSize / step) * step;
+    if (steppedSize !== this.size) {
+      const scale = steppedSize / this.size;
       const targetX = (point.x / this.width) * 2;
       const targetY = (point.y / this.height) * 2;
-      this.size = targetSize;
+      this.size = steppedSize;
       this.drawMap(true);
       this.moveMapTo(
         this.position.x * scale - (((scale - 1) * this.width) / 2) * targetX,
