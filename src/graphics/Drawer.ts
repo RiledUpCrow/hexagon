@@ -14,11 +14,11 @@ class Drawer {
     private readonly renderer: Renderer,
     private readonly container: Container,
     private readonly map: Map,
-    private size: number = 50,
+    private size: number = 100,
     private width: number = window.innerWidth,
     private height: number = window.innerHeight,
-    private readonly maxZoom = 2,
-    private readonly minZoom = 0.5
+    private readonly maxZoom = 1.25,
+    private readonly minZoom = 0.25
   ) {
     this.originalSize = size;
     this.tileRenderer = new TileRenderer(renderer, size * maxZoom);
@@ -218,8 +218,8 @@ class Drawer {
     const { width, height } = this.getTileDimensions();
 
     const offset = y % 2 !== 0 ? 0.5 : 0;
-    const tileY = height * (0.75 * y);
-    const tileX = width * (x + offset);
+    const tileY = height * (0.75 * y - 0.5);
+    const tileX = width * (x + offset - 0.5);
 
     return new Point(tileX, tileY);
   };

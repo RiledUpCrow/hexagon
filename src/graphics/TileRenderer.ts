@@ -16,45 +16,60 @@ import { GroundFeature, groundFeatures } from "./GroundFeature";
 import { groundTypes } from "./GroundType";
 
 export default class TileRenderer {
-  private texture: Texture;
+  private texture?: Texture;
+  private groundFeatureTextures: { [key: string]: Texture | null } = {};
+  private currentSize?: number;
 
   constructor(
     private readonly renderer: Renderer,
     private readonly maxSize: number
-  ) {
-    this.texture = this.generateTileTexture(maxSize);
-  }
+  ) {}
 
   public drawTile = (tile: Tile, size: number): DisplayObject => {
-    const container = new Container();
-    container.addChild(this.getTileSprite(tile, size));
+    if (size !== this.currentSize) {
+      if (this.texture) {
+        this.texture.destroy();
+      }
+      this.texture = this.generateTileTexture(size);
+      Object.keys(groundFeatures).forEach(key => {
+        if (this.groundFeatureTextures[key]) {
+          this.groundFeatureTextures[key]!.destroy();
+        }
+        this.groundFeatureTextures[key] = this.generateGroundFeatureTexture(
+          key,
+          size
+        );
+      });
+      this.currentSize = size;
+    }
 
-    const groundFeature = this.getGroundFeature(tile.groundFeature, size);
-    console.log(groundFeature);
+    const middleX = (size * Math.sqrt(3)) / 2;
+    const middleY = size;
+
+    const container = new Container();
+
+    const tileObject = this.getTileSprite(tile);
+    container.addChild(tileObject);
+
+    const groundFeature = this.getGroundFeature(tile.groundFeature);
     if (groundFeature) {
+      groundFeature.position.set(middleX, middleY);
       container.addChild(groundFeature);
     }
 
     return container;
   };
 
-  public getTileSprite = (tile: Tile, size: number): DisplayObject => {
-    const sprite = new Sprite(this.texture);
-    const scale = size / this.maxSize;
-    sprite.scale.set(scale, scale);
-    sprite.tint = groundTypes[tile.groundType];
-    sprite.anchor.set(0.5);
-    return sprite;
-  };
-
   private generateTileTexture = (size: number): Texture => {
-    const center = new Point(size * Math.sqrt(3), size);
+    size += 1;
+    size *= devicePixelRatio;
+    const center = new Point(size * Math.sqrt(3) * 0.5, size);
     const hex = new Hex(center, size);
+    console.log(hex);
     const graphics = new Graphics();
 
     graphics
       .beginFill(0xffffff)
-      .lineStyle(size / 20, 0x000000)
       .moveTo(hex.c1.x, hex.c1.y)
       .lineTo(hex.c2.x, hex.c2.y)
       .lineTo(hex.c3.x, hex.c3.y)
@@ -64,25 +79,54 @@ export default class TileRenderer {
       .closePath()
       .endFill();
 
-    return this.renderer.generateTexture(
+    const texture = this.renderer.generateTexture(
       graphics,
       SCALE_MODES.LINEAR,
-      1,
-      new Rectangle(0, 0, size * Math.sqrt(3) * 2, size * 2)
+      1
     );
+
+    console.log("Tile Textrue", texture);
+    return texture;
   };
 
-  private getGroundFeature = (
+  private generateGroundFeatureTexture = (
     groundFeature: GroundFeature,
     size: number
-  ): DisplayObject | null => {
+  ): Texture | null => {
+    size *= devicePixelRatio;
     const url = groundFeatures[groundFeature];
     if (!url) {
       return null;
     }
     const sprite = new Sprite(Loader.shared.resources[url].texture);
-    const hexWidth = size * Math.sqrt(3);
-    const scale = (hexWidth / sprite.width) * 0.9;
+    const width = size * Math.sqrt(3);
+    const scale = (width / sprite.width) * 0.9;
+    sprite.scale.set(scale, scale);
+    const texture = this.renderer.generateTexture(
+      sprite,
+      SCALE_MODES.LINEAR,
+      1,
+      new Rectangle(0, 0, sprite.width, sprite.height)
+    );
+
+    console.log("Feature textrue", texture);
+    return texture;
+  };
+
+  public getTileSprite = (tile: Tile): DisplayObject => {
+    const sprite = new Sprite(this.texture!);
+    const scale = 1 / devicePixelRatio;
+    sprite.scale.set(scale, scale);
+    sprite.tint = groundTypes[tile.groundType];
+    return sprite;
+  };
+
+  private getGroundFeature = (
+    groundFeature: GroundFeature
+  ): DisplayObject | null => {
+    const texture = this.groundFeatureTextures[groundFeature]!;
+    const sprite = new Sprite(texture);
+    const scale = 1 / devicePixelRatio;
     sprite.scale.set(scale, scale);
     sprite.anchor.set(0.5, 0.5);
     return sprite;
