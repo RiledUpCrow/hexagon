@@ -96,12 +96,15 @@ class Drawer {
             renderedTile = this.tileRenderer.drawTile(tile, this.size);
             const { x, y } = this.getTileCoordinates(xIndex, yIndex, this.size);
             renderedTile.position.set(x, y);
+            renderedTile.zIndex = this.map.height * yIndex + xIndex;
             this.container.addChild(renderedTile);
             this.tiles[xIndex][yIndex] = renderedTile;
           }
         }
       }
     }
+
+    this.container.sortChildren();
   };
 
   public moveMapBy = (x: number, y: number) => {
