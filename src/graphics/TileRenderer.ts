@@ -65,7 +65,6 @@ export default class TileRenderer {
     size *= devicePixelRatio;
     const center = new Point(size * Math.sqrt(3) * 0.5, size);
     const hex = new Hex(center, size);
-    console.log(hex);
     const graphics = new Graphics();
 
     graphics
@@ -85,7 +84,6 @@ export default class TileRenderer {
       1
     );
 
-    console.log("Tile Textrue", texture);
     return texture;
   };
 
@@ -109,7 +107,6 @@ export default class TileRenderer {
       new Rectangle(0, 0, sprite.width, sprite.height)
     );
 
-    console.log("Feature textrue", texture);
     return texture;
   };
 
