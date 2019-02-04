@@ -27,10 +27,7 @@ export default class TileRenderer {
   } = {};
   private currentSize?: number;
 
-  constructor(
-    private readonly renderer: Renderer,
-    private readonly maxSize: number
-  ) {}
+  constructor(private readonly renderer: Renderer) {}
 
   public drawTile = (tile: Tile, size: number): DisplayObject => {
     if (size !== this.currentSize) {

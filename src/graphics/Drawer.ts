@@ -1,4 +1,4 @@
-import { Container, DisplayObject, Graphics, Renderer } from "pixi.js";
+import { Container, DisplayObject, Graphics } from "pixi.js";
 import Map from "./Map";
 import TileRenderer from "./TileRenderer";
 import Point from "./Point";
@@ -6,13 +6,12 @@ import Point from "./Point";
 class Drawer {
   private readonly originalSize: number;
   private readonly position = { x: 0, y: 0 };
-  private readonly tileRenderer: TileRenderer;
   private tiles: (DisplayObject | null)[][] = [];
   private background: DisplayObject | null = null;
   private granularSize: number;
 
   constructor(
-    private readonly renderer: Renderer,
+    private readonly tileRenderer: TileRenderer,
     private readonly container: Container,
     private readonly map: Map,
     private size: number = 100,
@@ -23,7 +22,6 @@ class Drawer {
   ) {
     this.originalSize = size;
     this.granularSize = size;
-    this.tileRenderer = new TileRenderer(renderer, size * maxZoom);
     this.drawMap(true);
   }
 
@@ -94,7 +92,7 @@ class Drawer {
               continue;
             }
             renderedTile = this.tileRenderer.drawTile(tile, this.size);
-            const { x, y } = this.getTileCoordinates(xIndex, yIndex, this.size);
+            const { x, y } = this.getTileCoordinates(xIndex, yIndex);
             renderedTile.position.set(x, y);
             renderedTile.zIndex = this.map.height * yIndex + xIndex;
             this.container.addChild(renderedTile);
@@ -224,7 +222,7 @@ class Drawer {
     };
   };
 
-  private getTileCoordinates = (x: number, y: number, size: number): Point => {
+  private getTileCoordinates = (x: number, y: number): Point => {
     const { width, height } = this.getTileDimensions();
 
     const offset = y % 2 !== 0 ? 0.5 : 0;
