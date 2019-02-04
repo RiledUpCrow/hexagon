@@ -1,11 +1,13 @@
 import { GroundFeature as GF } from "./GroundFeature";
 import { GroundType as GT } from "./GroundType";
+import { UnitType as UT } from "./UnitType";
 import { Loader } from "pixi.js";
 
 type TextureUrl = string;
 
 type GroundFeatures = { [key in GF]: TextureUrl | null };
 type GroundTypes = { [key in GT]: TextureUrl };
+type UnitTypes = { [key in UT]: TextureUrl };
 
 export default class TextureManager {
   public static readonly groundFeatures: GroundFeatures = {
@@ -19,6 +21,9 @@ export default class TextureManager {
     TUNDRA: "tundra.png",
     DESERT: "desert.png",
     SNOW: "snow.png"
+  };
+  public static readonly unitTypes: UnitTypes = {
+    WARRIOR: "warrior.png"
   };
 
   public static load = (loader: Loader): Promise<void> => {
@@ -35,6 +40,11 @@ export default class TextureManager {
         if (typeof urlOrColor === "string") {
           loader.add(urlOrColor);
         }
+      });
+
+      Object.keys(TextureManager.unitTypes).forEach(key => {
+        const url = TextureManager.unitTypes[key as UT];
+        loader.add(url);
       });
 
       loader.load(resolve);
