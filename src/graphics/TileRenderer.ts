@@ -1,24 +1,19 @@
 import {
   DisplayObject,
-  Graphics,
   Texture,
   Sprite,
   SCALE_MODES,
   Container,
   Renderer,
   Loader,
-  Rectangle,
-  BLEND_MODES
+  Rectangle
 } from "pixi.js";
 import Tile from "./Tile";
-import Point from "./Point";
-import Hex from "./Hex";
 import TextureManager from "./TextureManager";
 import { GroundFeature } from "./GroundFeature";
 import { GroundType } from "./GroundType";
 
 export default class TileRenderer {
-  private hexShape?: Graphics;
   private groundFeatureTextures: {
     [size: number]: { [key: string]: Texture };
   } = {};
@@ -31,10 +26,6 @@ export default class TileRenderer {
 
   public drawTile = (tile: Tile, size: number): DisplayObject => {
     if (size !== this.currentSize) {
-      if (this.hexShape) {
-        this.hexShape.destroy();
-      }
-      this.hexShape = this.generateTileShape(size);
       if (!this.groundFeatureTextures[size]) {
         this.groundFeatureTextures[size] = {};
       }
@@ -61,42 +52,19 @@ export default class TileRenderer {
       this.currentSize = size;
     }
 
-    const middleX = (size * Math.sqrt(3)) / 2;
-    const middleY = size;
-
     const container = new Container();
 
     const tileObject = this.getTileSprite(tile);
+    tileObject.position.set(size, size);
     container.addChild(tileObject);
 
     const groundFeature = this.getGroundFeature(tile.groundFeature);
     if (groundFeature) {
-      groundFeature.position.set(middleX, middleY);
+      groundFeature.position.set(size, size);
       container.addChild(groundFeature);
     }
 
     return container;
-  };
-
-  private generateTileShape = (size: number): Graphics => {
-    size *= devicePixelRatio;
-    size += 1; // this removes gaps between tiles due to antialiasing
-    const center = new Point(size * Math.sqrt(3) * 0.5, size);
-    const hex = new Hex(center, size);
-    const graphics = new Graphics();
-
-    graphics
-      .beginFill(0xffff00)
-      .moveTo(hex.c1.x, hex.c1.y)
-      .lineTo(hex.c2.x, hex.c2.y)
-      .lineTo(hex.c3.x, hex.c3.y)
-      .lineTo(hex.c4.x, hex.c4.y)
-      .lineTo(hex.c5.x, hex.c5.y)
-      .lineTo(hex.c6.x, hex.c6.y)
-      .closePath()
-      .endFill();
-
-    return graphics;
   };
 
   private generateGroundFeatureTexture = (
@@ -127,14 +95,12 @@ export default class TileRenderer {
     size: number
   ): Texture => {
     size *= devicePixelRatio;
-    size += 1;
+    size += devicePixelRatio;
     const tileTexture = TextureManager.groundTypes[groundType];
     const sprite = new Sprite(Loader.shared.resources[tileTexture].texture);
-    const height = size * 2;
-    const scale = height / sprite.height;
+    const width = size * Math.sqrt(3);
+    const scale = width / sprite.width;
     sprite.scale.set(scale, scale);
-    sprite.blendMode = BLEND_MODES.ADD;
-    sprite.mask = this.hexShape!;
     const texture = this.renderer.generateTexture(
       sprite,
       SCALE_MODES.LINEAR,
@@ -150,6 +116,7 @@ export default class TileRenderer {
     );
     const scale = 1 / devicePixelRatio;
     sprite.scale.set(scale, scale);
+    sprite.anchor.set(0.5, 0.5);
     return sprite;
   };
 

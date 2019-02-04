@@ -1,1 +1,1 @@
-export type GroundFeature = "FLAT" | "HILL" | "MOUNTAIN";
+export type GroundFeature = "FLAT";

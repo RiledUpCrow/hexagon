@@ -132,10 +132,6 @@ class Drawer {
     this.drawMap();
   };
 
-  public getMapPosition = (): { x: number; y: number } => {
-    return { ...this.position };
-  };
-
   public resize = (width: number, height: number) => {
     this.width = width;
     this.height = height;
@@ -159,6 +155,7 @@ class Drawer {
 
     const step = 5;
     const steppedSize = Math.round(this.granularSize / step) * step;
+    console.log(steppedSize);
     if (steppedSize !== this.size) {
       const scale = steppedSize / this.size;
       const targetX = (point.x / this.width) * 2;
@@ -177,10 +174,10 @@ class Drawer {
     const { width, height } = this.getTileDimensions();
     const rowHeight = height * 0.75;
 
-    const minXIndex = Math.floor(minX / width);
+    const minXIndex = Math.floor(minX / width - 0.5);
     const maxXIndex = Math.ceil(maxX / width);
 
-    const minYIndex = Math.floor(minY / rowHeight);
+    const minYIndex = Math.floor(minY / rowHeight - 0.5);
     const maxYIndex = Math.ceil(maxY / rowHeight);
 
     return { minXIndex, maxXIndex, minYIndex, maxYIndex };

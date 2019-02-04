@@ -1,1 +1,8 @@
-export type GroundType = "GRASSLAND" | "PLAINS" | "TUNDRA" | "DESERT" | "SNOW";
+export type GroundType =
+  | "GRASSLAND"
+  | "PLAINS"
+  | "TUNDRA"
+  | "DESERT"
+  | "SNOW"
+  | "WATER"
+  | "MOUNTAIN";

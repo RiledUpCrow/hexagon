@@ -11,16 +11,16 @@ type UnitTypes = { [key in UT]: TextureUrl };
 
 export default class TextureManager {
   public static readonly groundFeatures: GroundFeatures = {
-    FLAT: null,
-    HILL: "hill.png",
-    MOUNTAIN: "mountain.png"
+    FLAT: null
   };
   public static readonly groundTypes: GroundTypes = {
     GRASSLAND: "grassland.png",
     PLAINS: "plains.png",
     TUNDRA: "tundra.png",
     DESERT: "desert.png",
-    SNOW: "snow.png"
+    SNOW: "snow.png",
+    WATER: "water.png",
+    MOUNTAIN: "mountain.png"
   };
   public static readonly unitTypes: UnitTypes = {
     WARRIOR: "warrior.png"
