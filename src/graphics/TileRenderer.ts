@@ -82,8 +82,8 @@ export default class TileRenderer {
   };
 
   private generateTileShape = (size: number): Graphics => {
-    size += 1;
     size *= devicePixelRatio;
+    size += 1; // this removes gaps between tiles due to antialiasing
     const center = new Point(size * Math.sqrt(3) * 0.5, size);
     const hex = new Hex(center, size);
     const graphics = new Graphics();
@@ -130,6 +130,7 @@ export default class TileRenderer {
     size: number
   ): Texture => {
     size *= devicePixelRatio;
+    size += 1;
     const tileTexture = TextureManager.groundTypes[groundType];
     const sprite = new Sprite(Loader.shared.resources[tileTexture].texture);
     const height = size * 2;
