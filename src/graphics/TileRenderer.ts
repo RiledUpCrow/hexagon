@@ -55,12 +55,12 @@ export default class TileRenderer {
     const container = new Container();
 
     const tileObject = this.getTileSprite(tile);
-    tileObject.position.set(size, size);
+    tileObject.position.set(size + 1, size + 1);
     container.addChild(tileObject);
 
     const groundFeature = this.getGroundFeature(tile.groundFeature);
     if (groundFeature) {
-      groundFeature.position.set(size, size);
+      groundFeature.position.set(size + 1, size + 1);
       container.addChild(groundFeature);
     }
 
@@ -95,7 +95,7 @@ export default class TileRenderer {
     size: number
   ): Texture => {
     size *= devicePixelRatio;
-    size += devicePixelRatio;
+    size += devicePixelRatio * 0.5;
     const tileTexture = TextureManager.groundTypes[groundType];
     const sprite = new Sprite(Loader.shared.resources[tileTexture].texture);
     const width = size * Math.sqrt(3);
