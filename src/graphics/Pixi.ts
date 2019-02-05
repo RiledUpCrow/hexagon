@@ -14,7 +14,7 @@ const app = new Application({
   height: window.innerHeight,
 });
 
-const setup = () => {
+const setup = (): void => {
   const container = new Container();
   app.stage.addChild(container);
   app.stage.interactive = true;
@@ -26,7 +26,7 @@ const setup = () => {
   new Zoom(app.stage).addListener((zoom, point) => drawer.zoom(zoom, point));
   new FpsCounter(app);
 
-  const resize = () => {
+  const resize = (): void => {
     app.renderer.resize(window.innerWidth, window.innerHeight);
     drawer.resize(window.innerWidth, window.innerHeight);
   };

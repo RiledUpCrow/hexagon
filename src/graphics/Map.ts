@@ -11,7 +11,7 @@ export default interface Map {
 export class DefaultMap implements Map {
   public tiles: (Tile | null)[][] = [];
 
-  constructor(public width: number, public height: number) {
+  public constructor(public width: number, public height: number) {
     for (let xIndex = 0; xIndex < width; xIndex++) {
       this.tiles[xIndex] = [];
       for (let yIndex = 0; yIndex < height; yIndex++) {

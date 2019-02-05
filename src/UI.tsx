@@ -1,7 +1,7 @@
-import React, { FunctionComponent, memo, useState, useCallback } from "react";
-import "./UI.css";
+import React, { FunctionComponent, memo, useState, useCallback } from 'react';
+import './UI.css';
 
-const UI: FunctionComponent = () => {
+const UI: FunctionComponent = (): JSX.Element => {
   const [open, setOpen] = useState(false);
   const close = useCallback(() => setOpen(false), [setOpen]);
 

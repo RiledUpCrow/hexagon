@@ -10,7 +10,7 @@ class Drawer {
   private background: DisplayObject | null = null;
   private granularSize: number;
 
-  constructor(
+  public constructor(
     private readonly tileRenderer: TileRenderer,
     private readonly container: Container,
     private readonly map: Map,
@@ -155,7 +155,6 @@ class Drawer {
 
     const step = 5;
     const steppedSize = Math.round(this.granularSize / step) * step;
-    console.log(steppedSize);
     if (steppedSize !== this.size) {
       const scaleX =
         Math.round(steppedSize * Math.sqrt(3)) /

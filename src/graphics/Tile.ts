@@ -7,7 +7,7 @@ export default interface Tile {
 }
 
 export class DefaultTile implements Tile {
-  constructor(
+  public constructor(
     public groundType: GroundType,
     public groundFeature: GroundFeature = 'FLAT'
   ) {}

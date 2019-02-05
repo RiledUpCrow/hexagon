@@ -11,7 +11,7 @@ class Hex {
   public height: number;
   public width: number;
 
-  constructor(public center: Point, public size: number) {
+  public constructor(public center: Point, public size: number) {
     this.c1 = this.getCorner(1);
     this.c2 = this.getCorner(2);
     this.c3 = this.getCorner(3);

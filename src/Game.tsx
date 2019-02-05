@@ -1,7 +1,7 @@
-import React, { FunctionComponent, memo, useRef, useEffect } from "react";
-import Pixi from "./graphics/Pixi";
+import React, { FunctionComponent, memo, useRef, useEffect } from 'react';
+import Pixi from './graphics/Pixi';
 
-const Game: FunctionComponent = () => {
+const Game: FunctionComponent = (): JSX.Element => {
   const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

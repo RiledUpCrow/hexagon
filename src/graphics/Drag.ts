@@ -31,9 +31,9 @@ class Drag {
   private readonly listeners: Listener[] = [];
   private readonly options: Options;
 
-  constructor(
-    private readonly ticker: Ticker,
-    private readonly displayObject: DisplayObject,
+  public constructor(
+    ticker: Ticker,
+    displayObject: DisplayObject,
     options: Partial<Options> = defaultOptions
   ) {
     this.options = { ...defaultOptions, ...options };

@@ -9,7 +9,7 @@ export default class Zoom {
   private lastSecond: Point | null = null;
   private point: Point = new Point(0, 0);
 
-  constructor(private readonly displayObject: DisplayObject) {
+  public constructor(private readonly displayObject: DisplayObject) {
     document.addEventListener('wheel', this.handleWheel);
     displayObject.on('mousemove', this.handleMove);
     displayObject.on('touchend', this.handleFingerLift);
@@ -44,7 +44,7 @@ export default class Zoom {
     this.point = Point.fromPixi(event.data.global);
   };
 
-  private handleFingerLift = (event: interaction.InteractionEvent) => {
+  private handleFingerLift = () => {
     this.lastFirst = null;
     this.lastSecond = null;
   };
