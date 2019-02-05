@@ -31,7 +31,7 @@ class Drawer {
     }
     const { minX, maxX, minY, maxY } = this.getViewBoundaries();
     this.background = new Graphics()
-      .beginFill(0xffffff)
+      .beginFill(0x13062d)
       .moveTo(minX, minY)
       .lineTo(maxX, minY)
       .lineTo(maxX, maxY)

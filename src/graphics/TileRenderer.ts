@@ -105,7 +105,7 @@ export default class TileRenderer {
       sprite,
       SCALE_MODES.LINEAR,
       1,
-      new Rectangle(0, 0, sprite.width, sprite.height)
+      new Rectangle(0, 0, sprite.width, sprite.height + devicePixelRatio * 2)
     );
     return texture;
   };

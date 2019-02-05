@@ -15,10 +15,13 @@ export class DefaultMap implements Map {
     for (let xIndex = 0; xIndex < width; xIndex++) {
       this.tiles[xIndex] = [];
       for (let yIndex = 0; yIndex < height; yIndex++) {
-        this.tiles[xIndex][yIndex] = new DefaultTile(
-          randomKey(TextureManager.groundTypes),
-          randomKey(TextureManager.groundFeatures)
-        );
+        this.tiles[xIndex][yIndex] =
+          Math.random() > 0.5
+            ? new DefaultTile(
+                randomKey(TextureManager.groundTypes),
+                randomKey(TextureManager.groundFeatures)
+              )
+            : null;
       }
     }
   }
