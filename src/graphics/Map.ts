@@ -16,7 +16,7 @@ export class DefaultMap implements Map {
       this.tiles[xIndex] = [];
       for (let yIndex = 0; yIndex < height; yIndex++) {
         this.tiles[xIndex][yIndex] =
-          Math.random() > 0.5
+          Math.random() >= 0
             ? new DefaultTile(
                 randomKey(TextureManager.groundTypes),
                 randomKey(TextureManager.groundFeatures)

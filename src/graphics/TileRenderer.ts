@@ -94,8 +94,7 @@ export default class TileRenderer {
     groundType: GroundType,
     size: number
   ): Texture => {
-    size *= devicePixelRatio;
-    size += devicePixelRatio * 0.5;
+    size *= devicePixelRatio; // generate hd textures for high density screens
     const tileTexture = TextureManager.groundTypes[groundType];
     const sprite = new Sprite(Loader.shared.resources[tileTexture].texture);
     const width = size * Math.sqrt(3);
@@ -114,7 +113,9 @@ export default class TileRenderer {
     const sprite = new Sprite(
       this.groundTypeTextures[this.currentSize!][tile.groundType]
     );
-    const scale = 1 / devicePixelRatio;
+    const width = sprite.width;
+    const targetWidth = Math.round(this.currentSize! * Math.sqrt(3));
+    const scale = targetWidth / width;
     sprite.scale.set(scale, scale);
     sprite.anchor.set(0.5, 0.5);
     return sprite;

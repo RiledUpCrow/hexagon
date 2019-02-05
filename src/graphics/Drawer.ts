@@ -157,14 +157,17 @@ class Drawer {
     const steppedSize = Math.round(this.granularSize / step) * step;
     console.log(steppedSize);
     if (steppedSize !== this.size) {
-      const scale = steppedSize / this.size;
+      const scaleX =
+        Math.round(steppedSize * Math.sqrt(3)) /
+        Math.round(this.size * Math.sqrt(3));
+      const scaleY = steppedSize / this.size;
       const targetX = (point.x / this.width) * 2;
       const targetY = (point.y / this.height) * 2;
       this.size = steppedSize;
       this.drawMap(true);
       this.moveMapTo(
-        this.position.x * scale - (((scale - 1) * this.width) / 2) * targetX,
-        this.position.y * scale - (((scale - 1) * this.height) / 2) * targetY
+        this.position.x * scaleX - (((scaleX - 1) * this.width) / 2) * targetX,
+        this.position.y * scaleY - (((scaleY - 1) * this.height) / 2) * targetY
       );
     }
   };
@@ -185,8 +188,8 @@ class Drawer {
 
   private getTileDimensions = () => {
     return {
-      width: this.size * Math.sqrt(3),
-      height: this.size * 2
+      width: Math.round(this.size * Math.sqrt(3)),
+      height: Math.round(this.size * 2)
     };
   };
 
