@@ -1,6 +1,6 @@
-import { DisplayObject, interaction, Ticker } from "pixi.js";
-import Point from "./Point";
-import Vector from "./Vector";
+import { DisplayObject, interaction, Ticker } from 'pixi.js';
+import Point from './Point';
+import Vector from './Vector';
 
 type Listener = (x: number, y: number) => void;
 
@@ -20,7 +20,7 @@ const defaultOptions: Options = {
   friction: 0.95,
   timeWindow: 50,
   speedTreshold: 5,
-  stopSpeed: 0.5
+  stopSpeed: 0.5,
 };
 
 class Drag {
@@ -37,11 +37,11 @@ class Drag {
     options: Partial<Options> = defaultOptions
   ) {
     this.options = { ...defaultOptions, ...options };
-    displayObject.on("pointerdown", this.handleDown);
-    displayObject.on("pointerup", this.handleUp);
-    displayObject.on("pointerupoutside", this.handleUp);
-    displayObject.on("pointercancel", this.handleUp);
-    displayObject.on("pointermove", this.handleMove);
+    displayObject.on('pointerdown', this.handleDown);
+    displayObject.on('pointerup', this.handleUp);
+    displayObject.on('pointerupoutside', this.handleUp);
+    displayObject.on('pointercancel', this.handleUp);
+    displayObject.on('pointermove', this.handleMove);
     ticker.add(this.handleTick);
   }
 
@@ -58,7 +58,7 @@ class Drag {
 
   private isZoomMove = (event: interaction.InteractionEvent): boolean => {
     return (
-      "targetTouches" in event.data.originalEvent &&
+      'targetTouches' in event.data.originalEvent &&
       event.data.originalEvent.targetTouches.length === 2
     );
   };

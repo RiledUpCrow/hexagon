@@ -1,1 +1,1 @@
-export type UnitType = "WARRIOR";
+export type UnitType = 'WARRIOR';

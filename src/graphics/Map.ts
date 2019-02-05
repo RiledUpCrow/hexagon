@@ -1,6 +1,6 @@
-import Tile, { DefaultTile } from "./Tile";
-import randomKey from "./randomKey";
-import TextureManager from "./TextureManager";
+import Tile, { DefaultTile } from './Tile';
+import randomKey from './randomKey';
+import TextureManager from './TextureManager';
 
 export default interface Map {
   width: number;

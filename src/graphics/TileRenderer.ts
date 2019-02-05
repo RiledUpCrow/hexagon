@@ -6,12 +6,12 @@ import {
   Container,
   Renderer,
   Loader,
-  Rectangle
-} from "pixi.js";
-import Tile from "./Tile";
-import TextureManager from "./TextureManager";
-import { GroundFeature } from "./GroundFeature";
-import { GroundType } from "./GroundType";
+  Rectangle,
+} from 'pixi.js';
+import Tile from './Tile';
+import TextureManager from './TextureManager';
+import { GroundFeature } from './GroundFeature';
+import { GroundType } from './GroundType';
 
 export default class TileRenderer {
   private groundFeatureTextures: {

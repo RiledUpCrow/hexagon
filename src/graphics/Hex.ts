@@ -1,5 +1,5 @@
-import Point from "./Point";
-import Vector from "./Vector";
+import Point from './Point';
+import Vector from './Vector';
 
 class Hex {
   public c1: Point;
@@ -34,7 +34,7 @@ class Hex {
       3: [0.5, 0.75],
       4: [-0.5, -0.75],
       5: [-1, 0],
-      6: [-0.5, 0.75]
+      6: [-0.5, 0.75],
     };
     return this.center.add(
       new Vector(this.width * vecs[index][0], this.height * vecs[index][1])

@@ -1,5 +1,5 @@
-import { DisplayObject, interaction } from "pixi.js";
-import Point from "./Point";
+import { DisplayObject, interaction } from 'pixi.js';
+import Point from './Point';
 
 type Listener = (scale: number, point?: Point) => void;
 
@@ -10,13 +10,13 @@ export default class Zoom {
   private point: Point = new Point(0, 0);
 
   constructor(private readonly displayObject: DisplayObject) {
-    document.addEventListener("wheel", this.handleWheel);
-    displayObject.on("mousemove", this.handleMove);
-    displayObject.on("touchend", this.handleFingerLift);
-    displayObject.on("touchendoutside", this.handleFingerLift);
-    displayObject.on("touchcancel", this.handleFingerLift);
-    displayObject.on("touchstart", this.handleFingerLift);
-    displayObject.on("touchmove", this.handlePinch);
+    document.addEventListener('wheel', this.handleWheel);
+    displayObject.on('mousemove', this.handleMove);
+    displayObject.on('touchend', this.handleFingerLift);
+    displayObject.on('touchendoutside', this.handleFingerLift);
+    displayObject.on('touchcancel', this.handleFingerLift);
+    displayObject.on('touchstart', this.handleFingerLift);
+    displayObject.on('touchmove', this.handlePinch);
   }
 
   public addListener = (fn: Listener): void => {

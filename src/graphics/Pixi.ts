@@ -1,17 +1,17 @@
-import Drawer from "./Drawer";
-import Drag from "./Drag";
-import { DefaultMap } from "./Map";
-import Zoom from "./Zoom";
-import FpsCounter from "./FpsCounter";
-import { Application, Container, Loader } from "pixi.js";
-import TextureManager from "./TextureManager";
-import TileRenderer from "./TileRenderer";
+import Drawer from './Drawer';
+import Drag from './Drag';
+import { DefaultMap } from './Map';
+import Zoom from './Zoom';
+import FpsCounter from './FpsCounter';
+import { Application, Container, Loader } from 'pixi.js';
+import TextureManager from './TextureManager';
+import TileRenderer from './TileRenderer';
 
 const app = new Application({
   autoDensity: true,
   resolution: devicePixelRatio,
   width: window.innerWidth,
-  height: window.innerHeight
+  height: window.innerHeight,
 });
 
 const setup = () => {
@@ -30,7 +30,7 @@ const setup = () => {
     app.renderer.resize(window.innerWidth, window.innerHeight);
     drawer.resize(window.innerWidth, window.innerHeight);
   };
-  window.addEventListener("resize", resize);
+  window.addEventListener('resize', resize);
   resize();
 };
 

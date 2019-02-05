@@ -1,7 +1,7 @@
-import { GroundFeature as GF } from "./GroundFeature";
-import { GroundType as GT } from "./GroundType";
-import { UnitType as UT } from "./UnitType";
-import { Loader } from "pixi.js";
+import { GroundFeature as GF } from './GroundFeature';
+import { GroundType as GT } from './GroundType';
+import { UnitType as UT } from './UnitType';
+import { Loader } from 'pixi.js';
 
 type TextureUrl = string;
 
@@ -12,20 +12,20 @@ type UnitTypes = { [key in UT]: TextureUrl };
 export default class TextureManager {
   public static readonly groundFeatures: GroundFeatures = {
     FLAT: null,
-    FOREST: "forest.png"
+    FOREST: 'forest.png',
   };
   public static readonly groundTypes: GroundTypes = {
-    GRASSLAND: "grassland.png",
-    GRASS_HILL: "grasshill.png",
-    PLAINS: "plains.png",
-    TUNDRA: "tundra.png",
-    DESERT: "desert.png",
-    SNOW: "snow.png",
-    WATER: "water.png",
-    MOUNTAIN: "mountain.png"
+    GRASSLAND: 'grassland.png',
+    GRASS_HILL: 'grasshill.png',
+    PLAINS: 'plains.png',
+    TUNDRA: 'tundra.png',
+    DESERT: 'desert.png',
+    SNOW: 'snow.png',
+    WATER: 'water.png',
+    MOUNTAIN: 'mountain.png',
   };
   public static readonly unitTypes: UnitTypes = {
-    WARRIOR: "warrior.png"
+    WARRIOR: 'warrior.png',
   };
 
   public static load = (loader: Loader): Promise<void> => {
@@ -39,7 +39,7 @@ export default class TextureManager {
 
       Object.keys(TextureManager.groundTypes).forEach(key => {
         const urlOrColor = TextureManager.groundTypes[key as GT];
-        if (typeof urlOrColor === "string") {
+        if (typeof urlOrColor === 'string') {
           loader.add(urlOrColor);
         }
       });

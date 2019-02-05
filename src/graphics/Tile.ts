@@ -1,5 +1,5 @@
-import { GroundFeature } from "./GroundFeature";
-import { GroundType } from "./GroundType";
+import { GroundFeature } from './GroundFeature';
+import { GroundType } from './GroundType';
 
 export default interface Tile {
   groundType: GroundType;
@@ -9,6 +9,6 @@ export default interface Tile {
 export class DefaultTile implements Tile {
   constructor(
     public groundType: GroundType,
-    public groundFeature: GroundFeature = "FLAT"
+    public groundFeature: GroundFeature = 'FLAT'
   ) {}
 }

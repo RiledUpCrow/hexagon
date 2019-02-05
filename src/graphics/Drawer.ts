@@ -1,7 +1,7 @@
-import { Container, DisplayObject, Graphics } from "pixi.js";
-import Map from "./Map";
-import TileRenderer from "./TileRenderer";
-import Point from "./Point";
+import { Container, DisplayObject, Graphics } from 'pixi.js';
+import Map from './Map';
+import TileRenderer from './TileRenderer';
+import Point from './Point';
 
 class Drawer {
   private readonly originalSize: number;
@@ -68,7 +68,7 @@ class Drawer {
       minXIndex,
       maxXIndex,
       minYIndex,
-      maxYIndex
+      maxYIndex,
     } = this.getTileIndexBoundaries();
 
     for (let xIndex = 0; xIndex < this.map.width; xIndex++) {
@@ -189,7 +189,7 @@ class Drawer {
   private getTileDimensions = () => {
     return {
       width: Math.round(this.size * Math.sqrt(3)),
-      height: Math.round(this.size * 2)
+      height: Math.round(this.size * 2),
     };
   };
 
@@ -198,7 +198,7 @@ class Drawer {
       minX: -this.position.x,
       maxX: -this.position.x + this.width,
       minY: -this.position.y,
-      maxY: -this.position.y + this.height
+      maxY: -this.position.y + this.height,
     };
   };
 
@@ -206,7 +206,7 @@ class Drawer {
     const { width, height } = this.getTileDimensions();
     return {
       borderWidth: width * 2,
-      borderHeight: height * 0.75 * 2
+      borderHeight: height * 0.75 * 2,
     };
   };
 
@@ -218,7 +218,7 @@ class Drawer {
       maxX: borderWidth,
       minX: width * -(this.map.width - 1) + (this.width - borderWidth),
       maxY: borderHeight,
-      minY: rowHeight * -(this.map.height - 1) + (this.height - borderHeight)
+      minY: rowHeight * -(this.map.height - 1) + (this.height - borderHeight),
     };
   };
 
