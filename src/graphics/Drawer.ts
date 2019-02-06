@@ -14,11 +14,11 @@ class Drawer {
     private readonly tileRenderer: TileRenderer,
     private readonly container: Container,
     private readonly map: Map,
-    private size: number = 100,
+    private size: number = 50,
     private width: number = window.innerWidth,
     private height: number = window.innerHeight,
-    private readonly maxZoom = 1.25,
-    private readonly minZoom = 0.25
+    private readonly maxZoom = 1.5,
+    private readonly minZoom = 0.5
   ) {
     this.originalSize = size;
     this.granularSize = size;
