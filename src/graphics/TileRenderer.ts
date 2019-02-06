@@ -55,12 +55,12 @@ export default class TileRenderer {
     const container = new Container();
 
     const tileObject = this.getTileSprite(tile);
-    tileObject.position.set(size + 1, size + 1);
+    tileObject.position.set(size, size);
     container.addChild(tileObject);
 
     const groundFeature = this.getGroundFeature(tile.groundFeature);
     if (groundFeature) {
-      groundFeature.position.set(size + 1, size + 1);
+      groundFeature.position.set(size, size);
       container.addChild(groundFeature);
     }
 

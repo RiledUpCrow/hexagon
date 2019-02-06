@@ -2,6 +2,7 @@ import { Container, DisplayObject, Graphics } from 'pixi.js';
 import Map from './Map';
 import TileRenderer from './TileRenderer';
 import Point from './Point';
+import DimensionsProvider from './DimensionsProvider';
 
 class Drawer {
   private readonly originalSize: number;
@@ -14,6 +15,7 @@ class Drawer {
     private readonly tileRenderer: TileRenderer,
     private readonly container: Container,
     private readonly map: Map,
+    private readonly dp: DimensionsProvider = new DimensionsProvider(),
     private size: number = 50,
     private width: number = window.innerWidth,
     private height: number = window.innerHeight,
@@ -29,7 +31,10 @@ class Drawer {
     if (this.background) {
       this.container.removeChild(this.background);
     }
-    const { minX, maxX, minY, maxY } = this.getViewBoundaries();
+    const { minX, maxX, minY, maxY } = this.dp.getViewBoundaries(
+      this.container.position,
+      { width: this.width, height: this.height }
+    );
     this.background = new Graphics()
       .beginFill(0x13062d)
       .moveTo(minX, minY)
@@ -69,7 +74,13 @@ class Drawer {
       maxXIndex,
       minYIndex,
       maxYIndex,
-    } = this.getTileIndexBoundaries();
+    } = this.dp.getTileIndexBoundaries(
+      this.size,
+      this.dp.getViewBoundaries(this.container.position, {
+        width: this.width,
+        height: this.height,
+      })
+    );
 
     for (let xIndex = 0; xIndex < this.map.width; xIndex++) {
       for (let yIndex = 0; yIndex < this.map.height; yIndex++) {
@@ -92,8 +103,12 @@ class Drawer {
               continue;
             }
             renderedTile = this.tileRenderer.drawTile(tile, this.size);
-            const { x, y } = this.getTileCoordinates(xIndex, yIndex);
-            renderedTile.position.set(x, y);
+            const { tileX, tileY } = this.dp.getTileCoordinates(
+              this.size,
+              xIndex,
+              yIndex
+            );
+            renderedTile.position.set(tileX, tileY);
             renderedTile.zIndex = this.map.height * yIndex + xIndex;
             this.container.addChild(renderedTile);
             this.tiles[xIndex][yIndex] = renderedTile;
@@ -110,7 +125,11 @@ class Drawer {
   };
 
   public moveMapTo = (x: number, y: number) => {
-    const { minX, maxX, minY, maxY } = this.getMapBoundaries();
+    const { minX, maxX, minY, maxY } = this.dp.getMapBoundaries(
+      this.size,
+      this.map,
+      { width: this.width, height: this.height }
+    );
     if (x < minX) {
       x = minX;
     }
@@ -169,66 +188,6 @@ class Drawer {
         this.position.y * scaleY - (((scaleY - 1) * this.height) / 2) * targetY
       );
     }
-  };
-
-  private getTileIndexBoundaries = () => {
-    const { minX, maxX, minY, maxY } = this.getViewBoundaries();
-    const { width, height } = this.getTileDimensions();
-    const rowHeight = height * 0.75;
-
-    const minXIndex = Math.floor(minX / width - 0.5);
-    const maxXIndex = Math.ceil(maxX / width);
-
-    const minYIndex = Math.floor(minY / rowHeight - 0.5);
-    const maxYIndex = Math.ceil(maxY / rowHeight);
-
-    return { minXIndex, maxXIndex, minYIndex, maxYIndex };
-  };
-
-  private getTileDimensions = () => {
-    return {
-      width: Math.round(this.size * Math.sqrt(3)),
-      height: this.size * 2 * Math.cos((30 * Math.PI) / 180),
-    };
-  };
-
-  private getViewBoundaries = () => {
-    return {
-      minX: -this.position.x,
-      maxX: -this.position.x + this.width,
-      minY: -this.position.y,
-      maxY: -this.position.y + this.height,
-    };
-  };
-
-  private getBorderDimensions = () => {
-    const { width, height } = this.getTileDimensions();
-    return {
-      borderWidth: width * 2,
-      borderHeight: height * 0.75 * 2,
-    };
-  };
-
-  private getMapBoundaries = () => {
-    const { borderWidth, borderHeight } = this.getBorderDimensions();
-    const { width, height } = this.getTileDimensions();
-    const rowHeight = height * 0.75;
-    return {
-      maxX: borderWidth,
-      minX: width * -(this.map.width - 1) + (this.width - borderWidth),
-      maxY: borderHeight,
-      minY: rowHeight * -(this.map.height - 1) + (this.height - borderHeight),
-    };
-  };
-
-  private getTileCoordinates = (x: number, y: number): Point => {
-    const { width, height } = this.getTileDimensions();
-
-    const offset = y % 2 !== 0 ? 0.5 : 0;
-    const tileY = height * (0.75 * y - 0.5);
-    const tileX = width * (x + offset - 0.5);
-
-    return new Point(tileX, tileY);
   };
 }
 
