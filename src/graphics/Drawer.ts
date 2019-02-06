@@ -3,6 +3,7 @@ import Map from './Map';
 import TileRenderer from './TileRenderer';
 import Point from './Point';
 import DimensionsProvider from './DimensionsProvider';
+import between from './between';
 
 class Drawer {
   private readonly originalSize: number;
@@ -84,40 +85,47 @@ class Drawer {
 
     for (let xIndex = 0; xIndex < this.map.width; xIndex++) {
       for (let yIndex = 0; yIndex < this.map.height; yIndex++) {
-        const hide =
+        if (
           xIndex < minXIndex ||
           xIndex > maxXIndex ||
           yIndex < minYIndex ||
-          yIndex > maxYIndex;
-        let renderedTile = this.tiles[xIndex][yIndex];
-        if (hide) {
-          if (renderedTile) {
-            this.container.removeChild(renderedTile);
-            renderedTile.destroy();
-          }
-          this.tiles[xIndex][yIndex] = null;
+          yIndex > maxYIndex
+        ) {
+          this.removeTile(xIndex, yIndex);
         } else {
-          if (!renderedTile) {
-            const tile = this.map.tiles[xIndex][yIndex];
-            if (!tile) {
-              continue;
-            }
-            renderedTile = this.tileRenderer.drawTile(tile, this.size);
-            const { tileX, tileY } = this.dp.getTileCoordinates(
-              this.size,
-              xIndex,
-              yIndex
-            );
-            renderedTile.position.set(tileX, tileY);
-            renderedTile.zIndex = this.map.height * yIndex + xIndex;
-            this.container.addChild(renderedTile);
-            this.tiles[xIndex][yIndex] = renderedTile;
-          }
+          this.createTile(xIndex, yIndex);
         }
       }
     }
 
     this.container.sortChildren();
+  };
+
+  private removeTile = (xIndex: number, yIndex: number) => {
+    let renderedTile = this.tiles[xIndex][yIndex];
+    if (renderedTile) {
+      this.container.removeChild(renderedTile);
+    }
+    this.tiles[xIndex][yIndex] = null;
+  };
+
+  private createTile = (xIndex: number, yIndex: number) => {
+    if (!this.tiles[xIndex][yIndex]) {
+      const tile = this.map.tiles[xIndex][yIndex];
+      if (!tile) {
+        return;
+      }
+      const renderedTile = this.tileRenderer.drawTile(tile, this.size);
+      const { tileX, tileY } = this.dp.getTileCoordinates(
+        this.size,
+        xIndex,
+        yIndex
+      );
+      renderedTile.position.set(tileX, tileY);
+      renderedTile.zIndex = this.map.height * yIndex + xIndex;
+      this.container.addChild(renderedTile);
+      this.tiles[xIndex][yIndex] = renderedTile;
+    }
   };
 
   public moveMapBy = (x: number, y: number) => {
@@ -130,20 +138,8 @@ class Drawer {
       this.map,
       { width: this.width, height: this.height }
     );
-    if (x < minX) {
-      x = minX;
-    }
-    if (x > maxX) {
-      x = maxX;
-    }
-    if (y < minY) {
-      y = minY;
-    }
-    if (y > maxY) {
-      y = maxY;
-    }
-    this.position.x = x;
-    this.position.y = y;
+    this.position.x = between(x, minX, maxX);
+    this.position.y = between(y, minY, maxY);
     this.container.x =
       Math.round(this.position.x * devicePixelRatio) / devicePixelRatio;
     this.container.y =
