@@ -188,7 +188,7 @@ class Drawer {
   private getTileDimensions = () => {
     return {
       width: Math.round(this.size * Math.sqrt(3)),
-      height: Math.round(this.size * 2),
+      height: this.size * 2 * Math.cos((30 * Math.PI) / 180),
     };
   };
 

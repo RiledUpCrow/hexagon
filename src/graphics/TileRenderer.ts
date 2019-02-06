@@ -116,7 +116,7 @@ export default class TileRenderer {
     const width = sprite.width;
     const targetWidth = Math.round(this.currentSize! * Math.sqrt(3));
     const scale = targetWidth / width;
-    sprite.scale.set(scale, scale);
+    sprite.scale.set(scale, scale * Math.cos((30 * Math.PI) / 180));
     sprite.anchor.set(0.5, 0.5);
     return sprite;
   };
