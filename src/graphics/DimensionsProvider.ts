@@ -34,19 +34,68 @@ export default class DimensionsProvider {
    */
   private readonly tilt = 30;
 
+  private size = 1;
+  private screenWidth = 1;
+  private screenHeight = 1;
+  private mapWidth = 1;
+  private mapHeight = 1;
+  private posX = 1;
+  private posY = 1;
+
+  /**
+   * Sets the base size of the view.
+   */
+  public setSize = (size: number) => {
+    this.size = size;
+  };
+
+  /**
+   * Sets the screen dimensions (in pixels).
+   */
+  public setScreen = (width: number, height: number) => {
+    this.screenWidth = width;
+    this.screenHeight = height;
+  };
+
+  /**
+   * Sets the dimensions of the map (in tiles).
+   */
+  public setMap = (width: number, height: number) => {
+    this.mapWidth = width;
+    this.mapHeight = height;
+  };
+
+  /**
+   * Sets the position of the map container (in pixels).
+   */
+  public setPosition = (x: number, y: number) => {
+    this.posX = x;
+    this.posY = y;
+  };
+
   /**
    * Returns the tile dimensions based on current size. These are rounded to
-   * the nearest integer to prevent unevenly sized sprites. There's also
-   * row height, which is different than tile height because rows overlap by
-   * one fourth in order to get the tiles match rows above and below.
+   * the nearest integer to prevent unevenly sized sprites.
    */
-  public getTileDimensions = (size: number) => {
-    const tileHeight = size * 2 * Math.cos((this.tilt * Math.PI) / 180);
-    const tileWidth = Math.round(size * Math.sqrt(3));
+  public getTileDimensions = (size = this.size): Dimensions => {
+    const width = Math.round(size * Math.sqrt(3));
+    const height = size * 2 * Math.cos((this.tilt * Math.PI) / 180);
     return {
-      tileWidth,
-      tileHeight,
-      rowHeight: tileHeight * 0.75,
+      width,
+      height,
+    };
+  };
+
+  /**
+   * Returns the dimensions of a single cell in the map. This is different
+   * than tile size because rows overlap by one fourth in order to get
+   * the tiles match rows above and below.
+   */
+  public getCellDimensions = (size = this.size): Dimensions => {
+    const { width, height } = this.getTileDimensions(size);
+    return {
+      width,
+      height: height * 0.75,
     };
   };
 
@@ -62,15 +111,14 @@ export default class DimensionsProvider {
    * @returns an object with scales for both x and y axes
    *          (they can be slightly different)
    */
-  public getScale = (fromSize: number, toSize: number) => {
+  public getScale = (toSize: number) => {
     const {
-      tileWidth: fromTileWidth,
-      tileHeight: fromTileHeight,
-    } = this.getTileDimensions(fromSize);
-    const {
-      tileWidth: toTileWidth,
-      tileHeight: toTileHeight,
-    } = this.getTileDimensions(toSize);
+      width: fromTileWidth,
+      height: fromTileHeight,
+    } = this.getTileDimensions(this.size);
+    const { width: toTileWidth, height: toTileHeight } = this.getTileDimensions(
+      toSize
+    );
     return {
       scaleX: toTileWidth / fromTileWidth,
       scaleY: toTileHeight / fromTileHeight,
@@ -81,11 +129,11 @@ export default class DimensionsProvider {
    * Returns the size of borders around the map. Override this to use
    * a different border sizes.
    */
-  public getBorderDimensions = (size: number) => {
-    const { tileWidth, rowHeight } = this.getTileDimensions(size);
+  public getBorderDimensions = (): Dimensions => {
+    const { width, height } = this.getCellDimensions();
     return {
-      borderWidth: tileWidth * 2,
-      borderHeight: rowHeight * 2,
+      width: width * 2,
+      height: height * 2,
     };
   };
 
@@ -99,18 +147,18 @@ export default class DimensionsProvider {
    * Boundaries are used to determine whether the map container can move to
    * a position.
    */
-  public getMapBoundaries = (
-    size: number,
-    map: Dimensions,
-    screen: Dimensions
-  ) => {
-    const { borderWidth, borderHeight } = this.getBorderDimensions(size);
-    const { tileWidth, rowHeight } = this.getTileDimensions(size);
+  public getMapBoundaries = (): Boundaries => {
+    const {
+      width: borderWidth,
+      height: borderHeight,
+    } = this.getBorderDimensions();
+    const { width, height } = this.getCellDimensions();
     return {
       maxX: borderWidth,
-      minX: tileWidth * -(map.width - 0.5) + (screen.width - borderWidth),
+      minX: width * -(this.mapWidth - 0.5) + (this.screenWidth - borderWidth),
       maxY: borderHeight,
-      minY: rowHeight * -(map.height - 0.5) + (screen.height - borderHeight),
+      minY:
+        height * -(this.mapHeight - 0.5) + (this.screenHeight - borderHeight),
     };
   };
 
@@ -119,30 +167,26 @@ export default class DimensionsProvider {
    * Note that these are actual pixels, not the tiles. You need to calculate
    * which tiles are visible in these boundaries knowing their size.
    */
-  public getViewBoundaries = (map: Position, screen: Dimensions) => ({
-    minX: -map.x,
-    maxX: -map.x + screen.width,
-    minY: -map.y,
-    maxY: -map.y + screen.height,
+  public getViewBoundaries = (): Boundaries => ({
+    minX: -this.posX,
+    maxX: -this.posX + this.screenWidth,
+    minY: -this.posY,
+    maxY: -this.posY + this.screenHeight,
   });
 
   /**
    * Calculates which tiles are visible inside specified boundaries and returns
    * their index ranges.
    */
-  public getTileIndexBoundaries = (
-    size: number,
-    { minX, maxX, minY, maxY }: Boundaries
-  ) => {
-    const { tileWidth, rowHeight } = this.getTileDimensions(size);
-
-    const minXIndex = Math.floor(minX / tileWidth - 0.5);
-    const maxXIndex = Math.ceil(maxX / tileWidth);
-
-    const minYIndex = Math.floor(minY / rowHeight - 0.5);
-    const maxYIndex = Math.ceil(maxY / rowHeight);
-
-    return { minXIndex, maxXIndex, minYIndex, maxYIndex };
+  public getTileIndexBoundaries = (): Boundaries => {
+    const { minX, maxX, minY, maxY } = this.getViewBoundaries();
+    const { width, height } = this.getCellDimensions();
+    return {
+      minX: Math.floor(minX / width - 0.5),
+      maxX: Math.ceil(maxX / width),
+      minY: Math.floor(minY / height - 0.5),
+      maxY: Math.ceil(maxY / height),
+    };
   };
 
   /**
@@ -150,19 +194,12 @@ export default class DimensionsProvider {
    * map container. These are adjusted so that the center of 0,0 tile is
    * at 0,0 pixel.
    */
-  public getTileCoordinates = (
-    size: number,
-    xIndex: number,
-    yIndex: number
-  ) => {
-    const { tileWidth, rowHeight } = this.getTileDimensions(size);
-
+  public getTileCoordinates = (xIndex: number, yIndex: number): Position => {
+    const { width, height } = this.getCellDimensions();
     // odd rows get half a width of horizontal offset to achieve tiling effect
     const offset = yIndex % 2 !== 0 ? 0.5 : 0;
-
-    const tileY = rowHeight * (yIndex - 0.5);
-    const tileX = tileWidth * (xIndex + offset - 0.5);
-
-    return { tileX, tileY };
+    const x = width * (xIndex + offset - 0.5);
+    const y = height * (yIndex - 0.5);
+    return { x, y };
   };
 }

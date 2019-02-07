@@ -6,6 +6,7 @@ import FpsCounter from './FpsCounter';
 import { Application, Container, Loader } from 'pixi.js';
 import TextureManager from './TextureManager';
 import TileRenderer from './TileRenderer';
+import DimensionsProvider from './DimensionsProvider';
 
 const app = new Application({
   autoDensity: true,
@@ -19,8 +20,10 @@ const setup = (): void => {
   app.stage.addChild(container);
   app.stage.interactive = true;
 
+  const tileRenderer = new TileRenderer(app.renderer);
   const map = new DefaultMap(128, 80);
-  const drawer = new Drawer(new TileRenderer(app.renderer), container, map);
+  const dp = new DimensionsProvider();
+  const drawer = new Drawer(tileRenderer, container, map, dp);
 
   new Drag(app.ticker, app.stage).addListener((x, y) => drawer.moveMapBy(x, y));
   new Zoom(app.stage).addListener((zoom, point) => drawer.zoom(zoom, point));

@@ -4,6 +4,7 @@ import TileRenderer from './TileRenderer';
 import Point from './Point';
 import DimensionsProvider from './DimensionsProvider';
 import between from './between';
+import roundTo from './roundTo';
 
 class Drawer {
   private readonly originalSize: number;
@@ -16,7 +17,7 @@ class Drawer {
     private readonly tileRenderer: TileRenderer,
     private readonly container: Container,
     private readonly map: Map,
-    private readonly dp: DimensionsProvider = new DimensionsProvider(),
+    private readonly dp: DimensionsProvider,
     private size: number = 50,
     private width: number = window.innerWidth,
     private height: number = window.innerHeight,
@@ -25,43 +26,13 @@ class Drawer {
   ) {
     this.originalSize = size;
     this.granularSize = size;
+    this.tiles = [];
+    map.tiles.forEach(column => {
+      this.tiles.push(new Array(column.length).fill(null));
+    });
+    this.updateDimensions();
     this.drawMap(true);
   }
-
-  private drawBackground = () => {
-    if (this.background) {
-      this.container.removeChild(this.background);
-    }
-    const { minX, maxX, minY, maxY } = this.dp.getViewBoundaries(
-      this.container.position,
-      { width: this.width, height: this.height }
-    );
-    this.background = new Graphics()
-      .beginFill(0x13062d)
-      .moveTo(minX, minY)
-      .lineTo(maxX, minY)
-      .lineTo(maxX, maxY)
-      .lineTo(minX, maxY)
-      .closePath()
-      .endFill();
-    this.container.addChildAt(this.background, 0);
-  };
-
-  private emptyTiles = () => {
-    this.tiles.forEach(tileColumn => {
-      tileColumn.forEach(tile => {
-        if (tile) {
-          this.container.removeChild(tile);
-          tile.destroy();
-        }
-      });
-    });
-    this.tiles = [];
-    this.map.tiles.forEach(tileColumn => {
-      const newArray = new Array(tileColumn.length).fill(null);
-      this.tiles.push(newArray);
-    });
-  };
 
   public drawMap = (forceRefresh: boolean = false) => {
     this.drawBackground();
@@ -70,62 +41,15 @@ class Drawer {
       this.emptyTiles();
     }
 
-    const {
-      minXIndex,
-      maxXIndex,
-      minYIndex,
-      maxYIndex,
-    } = this.dp.getTileIndexBoundaries(
-      this.size,
-      this.dp.getViewBoundaries(this.container.position, {
-        width: this.width,
-        height: this.height,
-      })
-    );
-
-    for (let xIndex = 0; xIndex < this.map.width; xIndex++) {
-      for (let yIndex = 0; yIndex < this.map.height; yIndex++) {
-        if (
-          xIndex < minXIndex ||
-          xIndex > maxXIndex ||
-          yIndex < minYIndex ||
-          yIndex > maxYIndex
-        ) {
-          this.removeTile(xIndex, yIndex);
-        } else {
-          this.createTile(xIndex, yIndex);
-        }
+    this.mapIterator().forEach((x, y) => {
+      if (this.isHidden(x, y)) {
+        this.removeTile(x, y);
+      } else {
+        this.createTile(x, y);
       }
-    }
+    });
 
     this.container.sortChildren();
-  };
-
-  private removeTile = (xIndex: number, yIndex: number) => {
-    let renderedTile = this.tiles[xIndex][yIndex];
-    if (renderedTile) {
-      this.container.removeChild(renderedTile);
-    }
-    this.tiles[xIndex][yIndex] = null;
-  };
-
-  private createTile = (xIndex: number, yIndex: number) => {
-    if (!this.tiles[xIndex][yIndex]) {
-      const tile = this.map.tiles[xIndex][yIndex];
-      if (!tile) {
-        return;
-      }
-      const renderedTile = this.tileRenderer.drawTile(tile, this.size);
-      const { tileX, tileY } = this.dp.getTileCoordinates(
-        this.size,
-        xIndex,
-        yIndex
-      );
-      renderedTile.position.set(tileX, tileY);
-      renderedTile.zIndex = this.map.height * yIndex + xIndex;
-      this.container.addChild(renderedTile);
-      this.tiles[xIndex][yIndex] = renderedTile;
-    }
   };
 
   public moveMapBy = (x: number, y: number) => {
@@ -133,23 +57,19 @@ class Drawer {
   };
 
   public moveMapTo = (x: number, y: number) => {
-    const { minX, maxX, minY, maxY } = this.dp.getMapBoundaries(
-      this.size,
-      this.map,
-      { width: this.width, height: this.height }
-    );
+    const { minX, maxX, minY, maxY } = this.dp.getMapBoundaries();
     this.position.x = between(x, minX, maxX);
     this.position.y = between(y, minY, maxY);
-    this.container.x =
-      Math.round(this.position.x * devicePixelRatio) / devicePixelRatio;
-    this.container.y =
-      Math.round(this.position.y * devicePixelRatio) / devicePixelRatio;
+    this.container.x = roundTo(this.position.x, devicePixelRatio);
+    this.container.y = roundTo(this.position.y, devicePixelRatio);
+    this.updateDimensions();
     this.drawMap();
   };
 
   public resize = (width: number, height: number) => {
     this.width = width;
     this.height = height;
+    this.updateDimensions();
     this.drawMap();
   };
 
@@ -178,12 +98,79 @@ class Drawer {
       const targetX = (point.x / this.width) * 2;
       const targetY = (point.y / this.height) * 2;
       this.size = steppedSize;
+      this.updateDimensions();
       this.drawMap(true);
       this.moveMapTo(
         this.position.x * scaleX - (((scaleX - 1) * this.width) / 2) * targetX,
         this.position.y * scaleY - (((scaleY - 1) * this.height) / 2) * targetY
       );
     }
+  };
+
+  private mapIterator = () => ({
+    forEach: (fn: (xIndex: number, yIndex: number) => void) => {
+      for (let xIndex = 0; xIndex < this.map.width; xIndex++) {
+        for (let yIndex = 0; yIndex < this.map.height; yIndex++) {
+          fn(xIndex, yIndex);
+        }
+      }
+    },
+  });
+
+  private isHidden = (xIndex: number, yIndex: number) => {
+    const { minX, maxX, minY, maxY } = this.dp.getTileIndexBoundaries();
+    return xIndex < minX || xIndex > maxX || yIndex < minY || yIndex > maxY;
+  };
+
+  private updateDimensions = () => {
+    this.dp.setSize(this.size);
+    this.dp.setScreen(this.width, this.height);
+    this.dp.setMap(this.map.width, this.map.height);
+    this.dp.setPosition(this.position.x, this.position.y);
+  };
+
+  private drawBackground = () => {
+    if (this.background) {
+      this.container.removeChild(this.background);
+    }
+    const { minX, maxX, minY, maxY } = this.dp.getViewBoundaries();
+    this.background = new Graphics()
+      .beginFill(0x13062d)
+      .moveTo(minX, minY)
+      .lineTo(maxX, minY)
+      .lineTo(maxX, maxY)
+      .lineTo(minX, maxY)
+      .closePath()
+      .endFill();
+    this.container.addChildAt(this.background, 0);
+  };
+
+  private emptyTiles = () => {
+    this.mapIterator().forEach((x, y) => this.removeTile(x, y));
+  };
+
+  private removeTile = (xIndex: number, yIndex: number) => {
+    let renderedTile = this.tiles[xIndex][yIndex];
+    if (renderedTile) {
+      this.container.removeChild(renderedTile);
+    }
+    this.tiles[xIndex][yIndex] = null;
+  };
+
+  private createTile = (xIndex: number, yIndex: number) => {
+    if (this.tiles[xIndex][yIndex]) {
+      return;
+    }
+    const tile = this.map.tiles[xIndex][yIndex];
+    if (!tile) {
+      return;
+    }
+    const renderedTile = this.tileRenderer.drawTile(tile, this.size);
+    const { x, y } = this.dp.getTileCoordinates(xIndex, yIndex);
+    renderedTile.position.set(x, y);
+    renderedTile.zIndex = this.map.height * yIndex + xIndex;
+    this.container.addChild(renderedTile);
+    this.tiles[xIndex][yIndex] = renderedTile;
   };
 }
 
