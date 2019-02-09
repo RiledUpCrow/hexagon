@@ -1,18 +1,36 @@
 import React, { FunctionComponent, memo, useState, useCallback } from 'react';
 import './UI.css';
+import Settings from './Settings';
+import Button from './components/Button';
 
-const UI: FunctionComponent = (): JSX.Element => {
-  const [open, setOpen] = useState(false);
+interface Props {
+  settings: Settings;
+  endGame: () => void;
+}
+
+const UI: FunctionComponent<Props> = ({ endGame }): JSX.Element => {
+  const [open, setOpen] = useState(true);
   const close = useCallback(() => setOpen(false), [setOpen]);
 
   return (
     <div className="ui">
-      {open && (
-        <div className="paper">
-          <h1 className="title">This is UI</h1>
-          <button onClick={close}>Click</button>
-        </div>
-      )}
+      <div className="bar">
+        <p>Top bar</p>
+      </div>
+      <div className="view">
+        {open && (
+          <div className="paper">
+            <h1 className="title">This is UI</h1>
+            <Button onClick={close}>Close</Button>
+          </div>
+        )}
+      </div>
+      <div className="bar">
+        <p>Bottom bar</p>
+        <Button size="small" onClick={endGame}>
+          Main menu
+        </Button>
+      </div>
     </div>
   );
 };

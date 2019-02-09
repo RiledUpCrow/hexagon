@@ -1,7 +1,12 @@
 import React, { FunctionComponent, memo, useRef, useEffect } from 'react';
 import Pixi from './graphics/Pixi';
+import Settings from './Settings';
 
-const Game: FunctionComponent = (): JSX.Element => {
+interface Props {
+  settings: Settings;
+}
+
+const Game: FunctionComponent<Props> = (): JSX.Element => {
   const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

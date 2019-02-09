@@ -13,13 +13,39 @@
 }
 
 .title {
-  color: slateblue;
+  color: rgba(0, 0, 0, 0.75);
 }
 
 .paper {
   pointer-events: all;
-  height: 200px;
-  width: 600px;
-  background: aqua;
-  max-width: 100vw;
+  padding: 1em;
+  width: 100%;
+  background: rgb(51, 218, 87);
+  border: 5px solid rgb(30, 146, 26);
+  border-radius: 20px;
+  max-width: 600px;
+}
+
+.bar {
+  pointer-events: all;
+  width: 100%;
+  height: 2em;
+  background: rgb(51, 218, 87);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.view {
+  padding: 1em;
+  flex-grow: 1;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+p {
+  margin: 0;
+  padding: 0;
 }
