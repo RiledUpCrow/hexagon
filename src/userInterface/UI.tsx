@@ -1,20 +1,19 @@
-import React, { FunctionComponent, memo, useState, useCallback } from 'react';
-import './UI.css';
-import Settings from '../data/Settings';
+import React, { FunctionComponent, memo, useCallback, useState } from 'react';
 import Button from '../components/Button';
+import './UI.css';
 
 interface Props {
-  settings: Settings;
+  ready: boolean;
   endGame: () => void;
 }
 
-const UI: FunctionComponent<Props> = ({ endGame }): JSX.Element => {
+const UI: FunctionComponent<Props> = ({ endGame, ready }): JSX.Element => {
   const [open, setOpen] = useState(true);
   const close = useCallback(() => setOpen(false), [setOpen]);
 
   return (
     <div className="UI-ui">
-      <div className="UI-view">
+      <div className={`UI-view ${ready ? 'UI-ready' : ''}`}>
         {open && (
           <div className="UI-paper">
             <h1 className="UI-title">This is UI</h1>

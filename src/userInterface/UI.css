@@ -45,4 +45,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background: hsl(178, 30%, 14%);
+  transition-duration: 500ms;
+}
+
+.UI-ready {
+  background: none;
 }

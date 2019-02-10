@@ -1,19 +1,20 @@
-import Drawer from './Drawer';
+import { Application, Container } from 'pixi.js';
+import Settings from '../data/Settings';
+import DimensionsProvider from './DimensionsProvider';
 import Drag from './Drag';
-import { DefaultMap } from './Map';
-import Zoom from './Zoom';
+import Drawer from './Drawer';
 import FpsCounter from './FpsCounter';
-import { Application, Container, Loader, interaction } from 'pixi.js';
+import { DefaultMap } from './Map';
 import TextureManager from './TextureManager';
 import TileRenderer from './TileRenderer';
-import DimensionsProvider from './DimensionsProvider';
-import Settings from '../data/Settings';
+import Zoom from './Zoom';
 
 type Kill = () => void;
 
 const launch = (
   { mapWidth, mapHeight, maxZoom, minZoom, size }: Settings,
-  div: HTMLElement
+  div: HTMLElement,
+  onReady: () => void
 ): Kill => {
   const app = new Application({
     autoDensity: true,
@@ -68,6 +69,8 @@ const launch = (
       app.stage.removeChildren();
       container.destroy();
     };
+
+    onReady();
 
     return tearDown;
   };

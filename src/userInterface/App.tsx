@@ -6,11 +6,18 @@ import MainMenu from './MainMenu';
 import Settings from '../data/Settings';
 
 const App: FunctionComponent = (): JSX.Element => {
+  const [ready, setReady] = useState(false);
+  const handleReady = useCallback(
+    () => setTimeout(() => setReady(true), 500),
+    []
+  );
+
   const [game, setGame] = useState<Settings | null>(null);
   const startGame = useCallback((settings: Settings) => {
     setGame(settings);
   }, []);
   const endGame = useCallback(() => {
+    setReady(false);
     setGame(null);
   }, []);
 
@@ -18,8 +25,8 @@ const App: FunctionComponent = (): JSX.Element => {
     <div className="App-root">
       {game ? (
         <>
-          <Game settings={game} />
-          <UI settings={game} endGame={endGame} />
+          <Game settings={game} onReady={handleReady} />
+          <UI endGame={endGame} ready={ready} />
         </>
       ) : (
         <MainMenu startGame={startGame} />

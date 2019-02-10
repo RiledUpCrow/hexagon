@@ -1,13 +1,14 @@
 import React, { FunctionComponent, memo, useEffect, useRef } from 'react';
 import './Game.css';
-import Pixi from '../graphics/Pixi';
+import pixi from '../graphics/Pixi';
 import Settings from '../data/Settings';
 
 interface Props {
   settings: Settings;
+  onReady: () => void;
 }
 
-const Game: FunctionComponent<Props> = ({ settings }): JSX.Element => {
+const Game: FunctionComponent<Props> = ({ settings, onReady }): JSX.Element => {
   const { mapHeight, mapWidth, size, maxZoom, minZoom } = settings;
   const container = useRef<HTMLDivElement>(null);
 
@@ -16,7 +17,7 @@ const Game: FunctionComponent<Props> = ({ settings }): JSX.Element => {
     if (!div) {
       return;
     }
-    const destroyPixi = Pixi(settings, div);
+    const destroyPixi = pixi(settings, div, onReady);
 
     return destroyPixi;
   }, [mapHeight, mapWidth, size, maxZoom, minZoom]);
