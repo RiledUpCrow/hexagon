@@ -2,11 +2,15 @@ import { Container, DisplayObject } from 'pixi.js';
 import { GroundFeature } from './GroundFeature';
 import TextureManager from './TextureManager';
 import Tile from './Tile';
+import DimensionsProvider from './DimensionsProvider';
 
 export default class TileRenderer {
   private currentSize?: number;
 
-  public constructor(private readonly textureManager: TextureManager) {}
+  public constructor(
+    private readonly textureManager: TextureManager,
+    private readonly dp: DimensionsProvider
+  ) {}
 
   public drawTile = (tile: Tile, size: number): DisplayObject => {
     this.currentSize = size;
@@ -27,11 +31,8 @@ export default class TileRenderer {
   };
 
   public getTileSprite = (tile: Tile): DisplayObject => {
-    const targetWidth = Math.round(this.currentSize! * Math.sqrt(3));
-    const sprite = this.textureManager.getGroundType(
-      tile.groundType,
-      targetWidth
-    );
+    const { width } = this.dp.getTileDimensions();
+    const sprite = this.textureManager.getGroundType(tile.groundType, width);
     sprite.scale.y *= Math.cos((30 * Math.PI) / 180);
     return sprite;
   };

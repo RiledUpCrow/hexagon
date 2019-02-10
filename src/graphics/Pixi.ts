@@ -3,7 +3,7 @@ import Drag from './Drag';
 import { DefaultMap } from './Map';
 import Zoom from './Zoom';
 import FpsCounter from './FpsCounter';
-import { Application, Container, Loader } from 'pixi.js';
+import { Application, Container, Loader, interaction } from 'pixi.js';
 import TextureManager from './TextureManager';
 import TileRenderer from './TileRenderer';
 import DimensionsProvider from './DimensionsProvider';
@@ -30,9 +30,9 @@ const launch = (
     app.stage.addChild(container);
     app.stage.interactive = true;
 
-    const tileRenderer = new TileRenderer(textureManager);
-    const map = new DefaultMap(mapWidth, mapHeight);
     const dp = new DimensionsProvider();
+    const tileRenderer = new TileRenderer(textureManager, dp);
+    const map = new DefaultMap(mapWidth, mapHeight);
     const drawer = new Drawer(
       tileRenderer,
       container,

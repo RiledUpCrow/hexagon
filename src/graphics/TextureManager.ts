@@ -37,9 +37,9 @@ export default class TextureManager {
     [key: string]: { [size: number]: Texture };
   } = {};
 
-  private readonly SIZES = new Array(8)
+  private readonly SIZES = new Array(6)
     .fill(null)
-    .map((_, index) => Math.pow(index + 1, 2));
+    .map((_, index) => Math.pow(2, index));
 
   public constructor(private loader: Loader, private renderer: Renderer) {}
 
@@ -100,12 +100,9 @@ export default class TextureManager {
   private getSprite = (key: string, width: number, height?: number): Sprite => {
     const mipMaps = this.mipMaps[key];
     let bestTexture: Texture | null = null;
-    this.SIZES.forEach(size => {
+    for (let i = 0; i < this.SIZES.length; i++) {
+      const size = this.SIZES[i];
       const texture = mipMaps[size];
-      if (!bestTexture) {
-        bestTexture = texture;
-        return;
-      }
       let target;
       if (height !== undefined) {
         target = height * devicePixelRatio * (width * devicePixelRatio);
@@ -115,13 +112,10 @@ export default class TextureManager {
         target = width * devicePixelRatio * someHeight;
       }
       const thisSize = texture.width * texture.height;
-      const bestSize = bestTexture.width * bestTexture.height;
-      const thisDifference = Math.abs(target - thisSize);
-      const bestDifference = Math.abs(target - bestSize);
-      if (thisDifference < bestDifference) {
+      if (thisSize > target) {
         bestTexture = texture;
       }
-    });
+    }
 
     const result = new Sprite(bestTexture!);
     if (height !== undefined) {
@@ -173,7 +167,7 @@ export default class TextureManager {
       sprite,
       SCALE_MODES.LINEAR,
       1,
-      new Rectangle(0, 0, sprite.width, sprite.height)
+      new Rectangle(0, 0, sprite.width, sprite.height + devicePixelRatio * 2)
     );
     return result;
   };

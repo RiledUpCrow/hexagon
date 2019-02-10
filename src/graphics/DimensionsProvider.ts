@@ -78,8 +78,10 @@ export default class DimensionsProvider {
    * the nearest integer to prevent unevenly sized sprites.
    */
   public getTileDimensions = (size = this.size): Dimensions => {
-    const width = Math.round(size * Math.sqrt(3));
-    const height = size * 2 * Math.cos((this.tilt * Math.PI) / 180);
+    const realWidth = size * Math.sqrt(3);
+    const width = Math.round(realWidth);
+    const change = width / realWidth;
+    const height = change * (size * 2 * Math.cos((this.tilt * Math.PI) / 180));
     return {
       width,
       height,
@@ -201,5 +203,27 @@ export default class DimensionsProvider {
     const x = width * (xIndex + offset - 0.5);
     const y = height * (yIndex - 0.5);
     return { x, y };
+  };
+
+  public toLocalPoint = (global: Position): Position => {
+    const result = {
+      x: global.x - this.posX,
+      y: global.y - this.posY,
+    };
+    console.log('Position', this.posX, this.posY);
+    console.log('Global', global.x, global.y);
+    console.log('Local', result.x, result.y);
+    return result;
+  };
+
+  public toGlobalPoint = (local: Position): Position => {
+    const result = {
+      x: local.x + this.posX,
+      y: local.y + this.posY,
+    };
+    console.log('Position', this.posX, this.posY);
+    console.log('Local', local.x, local.y);
+    console.log('Global', result.x, result.y);
+    return result;
   };
 }

@@ -11,7 +11,6 @@ class Drawer {
   private readonly position = { x: 0, y: 0 };
   private tiles: (DisplayObject | null)[][] = [];
   private background: DisplayObject | null = null;
-  private granularSize: number;
 
   public constructor(
     private readonly tileRenderer: TileRenderer,
@@ -25,7 +24,6 @@ class Drawer {
     private readonly minZoom = 0.5
   ) {
     this.originalSize = size;
-    this.granularSize = size;
     this.tiles = [];
     map.tiles.forEach(column => {
       this.tiles.push(new Array(column.length).fill(null));
@@ -77,33 +75,26 @@ class Drawer {
     amount: number,
     point: Point = new Point(this.width / 2, this.height / 2)
   ) => {
-    const currentZoom = this.granularSize / this.originalSize;
-    let targetZoom = currentZoom - amount / 1000;
-    if (targetZoom > this.maxZoom) {
-      targetZoom = this.maxZoom;
-    }
-    if (targetZoom < this.minZoom) {
-      targetZoom = this.minZoom;
-    }
+    const currentZoom = this.size / this.originalSize;
+    let targetZoom = between(
+      currentZoom - amount / 1000,
+      this.minZoom,
+      this.maxZoom
+    );
     const targetSize = targetZoom * this.originalSize;
-    this.granularSize = targetSize;
 
-    const step = 5;
-    const steppedSize = Math.round(this.granularSize / step) * step;
-    if (steppedSize !== this.size) {
-      const scaleX =
-        Math.round(steppedSize * Math.sqrt(3)) /
-        Math.round(this.size * Math.sqrt(3));
-      const scaleY = steppedSize / this.size;
-      const targetX = (point.x / this.width) * 2;
-      const targetY = (point.y / this.height) * 2;
-      this.size = steppedSize;
+    if (targetSize !== this.size) {
+      const { scaleX, scaleY } = this.dp.getScale(targetSize);
+      const beforeLocal = this.dp.toLocalPoint(point);
+      const afterLocal = {
+        x: beforeLocal.x * scaleX,
+        y: beforeLocal.y * scaleY,
+      };
+      const afterGlobal = this.dp.toGlobalPoint(afterLocal);
+      this.size = targetSize;
       this.updateDimensions();
       this.drawMap(true);
-      this.moveMapTo(
-        this.position.x * scaleX - (((scaleX - 1) * this.width) / 2) * targetX,
-        this.position.y * scaleY - (((scaleY - 1) * this.height) / 2) * targetY
-      );
+      this.moveMapBy(point.x - afterGlobal.x, point.y - afterGlobal.y);
     }
   };
 
