@@ -7,7 +7,7 @@ import { Application, Container, Loader, interaction } from 'pixi.js';
 import TextureManager from './TextureManager';
 import TileRenderer from './TileRenderer';
 import DimensionsProvider from './DimensionsProvider';
-import Settings from '../Settings';
+import Settings from '../data/Settings';
 
 type Kill = () => void;
 

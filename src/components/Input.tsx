@@ -4,7 +4,7 @@ import React, {
   useCallback,
   ChangeEvent,
 } from 'react';
-import useUniqueId from '../useUniqueId';
+import useUniqueId from '../logic/useUniqueId';
 
 interface Props {
   value: number;

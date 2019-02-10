@@ -1,5 +1,5 @@
 import Tile, { DefaultTile } from './Tile';
-import randomKey from './randomKey';
+import randomKey from '../logic/randomKey';
 import TextureManager from './TextureManager';
 import { GroundFeature } from './GroundFeature';
 

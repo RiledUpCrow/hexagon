@@ -1,8 +1,8 @@
 import React, { FunctionComponent, memo, useCallback, useState } from 'react';
 import './MainMenu.css';
-import Settings, { defaultSettings } from './Settings';
-import Button from './components/Button';
-import Input from './components/Input';
+import Settings, { defaultSettings } from '../data/Settings';
+import Button from '../components/Button';
+import Input from '../components/Input';
 
 interface Props {
   startGame: (settings: Settings) => void;

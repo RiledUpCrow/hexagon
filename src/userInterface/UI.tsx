@@ -1,7 +1,7 @@
 import React, { FunctionComponent, memo, useState, useCallback } from 'react';
 import './UI.css';
-import Settings from './Settings';
-import Button from './components/Button';
+import Settings from '../data/Settings';
+import Button from '../components/Button';
 
 interface Props {
   settings: Settings;

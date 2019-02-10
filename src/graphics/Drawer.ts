@@ -3,8 +3,8 @@ import Map from './Map';
 import TileRenderer from './TileRenderer';
 import Point from './Point';
 import DimensionsProvider from './DimensionsProvider';
-import between from './between';
-import roundTo from './roundTo';
+import between from '../logic/between';
+import roundTo from '../logic/roundTo';
 
 class Drawer {
   private readonly originalSize: number;

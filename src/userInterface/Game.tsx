@@ -1,7 +1,7 @@
 import React, { FunctionComponent, memo, useEffect, useRef } from 'react';
 import './Game.css';
-import Pixi from './graphics/Pixi';
-import Settings from './Settings';
+import Pixi from '../graphics/Pixi';
+import Settings from '../data/Settings';
 
 interface Props {
   settings: Settings;
