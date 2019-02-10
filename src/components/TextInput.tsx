@@ -5,21 +5,22 @@ import React, {
   ChangeEvent,
 } from 'react';
 import useUniqueId from '../logic/useUniqueId';
+import './TextInput.css';
 
 interface Props {
-  value: number;
+  value: string;
   label: string;
-  onChange: (value: number) => void;
+  onChange: (value: string) => void;
 }
 
-const Input: FunctionComponent<Props> = ({
+const TextInput: FunctionComponent<Props> = ({
   value,
   label,
   onChange,
 }): JSX.Element => {
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      onChange(Number(event.target.value));
+      onChange(event.target.value);
     },
     [onChange]
   );
@@ -33,4 +34,4 @@ const Input: FunctionComponent<Props> = ({
   );
 };
 
-export default memo(Input);
+export default memo(TextInput);

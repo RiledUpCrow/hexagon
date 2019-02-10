@@ -1,4 +1,5 @@
-.button {
+.Button-button {
+  margin: 0 0.2em;
   background: hsl(194, 66%, 50%);
   text-transform: uppercase;
   color: rgb(255, 255, 255, 0.75);
@@ -9,39 +10,39 @@
   transition-duration: 100ms;
 }
 
-.wide {
+.Button-wide {
   width: 100%;
 }
 
-.small {
+.Button-small {
   font-size: 0.75em;
   padding: 0.25em 0.5em;
   border-width: 3px;
 }
 
-.normal {
+.Button-normal {
   font-size: 1.25em;
   padding: 0.5em 0.75em;
   border-width: 5px;
 }
 
-.large {
+.Button-large {
   font-size: 1.5em;
   padding: 0.75em 1em;
   border-width: 7px;
 }
 
-.button:hover {
+.Button-button:hover {
   background: hsl(194, 66%, 65%);
   border-color: hsl(194, 66%, 45%);
 }
 
-.button:active {
+.Button-button:active {
   background: hsl(194, 66%, 50%);
   border-color: hsl(194, 66%, 25%);
 }
 
-.button:disabled {
+.Button-button:disabled {
   background: hsl(194, 5%, 50%);
   border-color: hsl(194, 5%, 35%);
 }

@@ -1,19 +1,24 @@
-.root {
+.MainMenu-root {
   flex-grow: 1;
-  min-height: 100vh;
+  width: 100%;
+  max-width: 450px;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
-.title {
+.MainMenu-title {
+  text-align: center;
 }
 
-.settings {
+.MainMenu-settings {
   flex-grow: 1;
+  width: 100%;
 }
 
-.start {
+.MainMenu-start {
   padding: 2em;
   display: flex;
   justify-content: center;
+  width: 100%;
 }

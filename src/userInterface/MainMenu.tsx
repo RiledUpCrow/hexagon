@@ -2,7 +2,7 @@ import React, { FunctionComponent, memo, useCallback, useState } from 'react';
 import './MainMenu.css';
 import Settings, { defaultSettings } from '../data/Settings';
 import Button from '../components/Button';
-import Input from '../components/Input';
+import NumberPicker from '../components/NumberPicker';
 
 interface Props {
   startGame: (settings: Settings) => void;
@@ -30,18 +30,67 @@ const MainMenu: FunctionComponent<Props> = ({ startGame }): JSX.Element => {
   }, [mapWidth, mapHeight, size, maxZoom, minZoom, coverage, tilt, startGame]);
 
   return (
-    <div className="root">
-      <h1 className="title">Settings</h1>
-      <div className="settings">
-        <Input label="Map width" value={mapWidth} onChange={setMapWidth} />
-        <Input label="Map height" value={mapHeight} onChange={setMapHeight} />
-        <Input label="Tile size" value={size} onChange={setSize} />
-        <Input label="Max zoom" value={maxZoom} onChange={setMaxZoom} />
-        <Input label="Min zoom" value={minZoom} onChange={setMinZoom} />
-        <Input label="Tile coverage" value={coverage} onChange={setCoverage} />
-        <Input label="Camera tilt" value={tilt} onChange={setTilt} />
+    <div className="MainMenu-root">
+      <h1 className="MainMenu-title">Settings</h1>
+      <div className="MainMenu-settings">
+        <NumberPicker
+          label="Map width"
+          min={16}
+          max={128}
+          step={16}
+          value={mapWidth}
+          onChange={setMapWidth}
+        />
+        <NumberPicker
+          label="Map height"
+          min={10}
+          max={80}
+          step={10}
+          value={mapHeight}
+          onChange={setMapHeight}
+        />
+        <NumberPicker
+          label="Tile size"
+          min={10}
+          max={100}
+          step={10}
+          value={size}
+          onChange={setSize}
+        />
+        <NumberPicker
+          label="Max zoom"
+          min={1}
+          max={5}
+          step={0.25}
+          value={maxZoom}
+          onChange={setMaxZoom}
+        />
+        <NumberPicker
+          label="Min zoom"
+          min={0.25}
+          max={1}
+          step={0.25}
+          value={minZoom}
+          onChange={setMinZoom}
+        />
+        <NumberPicker
+          label="Tile coverage"
+          min={0}
+          max={1}
+          step={0.05}
+          value={coverage}
+          onChange={setCoverage}
+        />
+        <NumberPicker
+          label="Camera tilt"
+          min={30}
+          max={90}
+          step={5}
+          value={tilt}
+          onChange={setTilt}
+        />
       </div>
-      <div className="start">
+      <div className="MainMenu-start">
         <Button size="large" wide onClick={handleStart}>
           Start
         </Button>

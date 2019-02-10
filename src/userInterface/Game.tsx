@@ -21,7 +21,7 @@ const Game: FunctionComponent<Props> = ({ settings }): JSX.Element => {
     return destroyPixi;
   }, [mapHeight, mapWidth, size, maxZoom, minZoom]);
 
-  return <div className="game" ref={container} />;
+  return <div className="Game-root" ref={container} />;
 };
 
 export default memo(Game);

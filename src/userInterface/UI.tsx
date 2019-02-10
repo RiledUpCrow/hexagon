@@ -13,16 +13,16 @@ const UI: FunctionComponent<Props> = ({ endGame }): JSX.Element => {
   const close = useCallback(() => setOpen(false), [setOpen]);
 
   return (
-    <div className="ui">
-      <div className="view">
+    <div className="UI-ui">
+      <div className="UI-view">
         {open && (
-          <div className="paper">
-            <h1 className="title">This is UI</h1>
+          <div className="UI-paper">
+            <h1 className="UI-title">This is UI</h1>
             <Button onClick={close}>Close</Button>
           </div>
         )}
       </div>
-      <div className="bar">
+      <div className="UI-bar">
         <Button size="small" onClick={endGame}>
           Main menu
         </Button>
