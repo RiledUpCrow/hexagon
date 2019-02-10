@@ -14,9 +14,6 @@ const UI: FunctionComponent<Props> = ({ endGame }): JSX.Element => {
 
   return (
     <div className="ui">
-      <div className="bar">
-        <p>Top bar</p>
-      </div>
       <div className="view">
         {open && (
           <div className="paper">
@@ -26,7 +23,6 @@ const UI: FunctionComponent<Props> = ({ endGame }): JSX.Element => {
         )}
       </div>
       <div className="bar">
-        <p>Bottom bar</p>
         <Button size="small" onClick={endGame}>
           Main menu
         </Button>

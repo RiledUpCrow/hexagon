@@ -19,15 +19,14 @@ export default class Zoom {
     displayObject.on('touchmove', this.handlePinch);
   }
 
-  public addListener = (fn: Listener): void => {
+  public addListener = (fn: Listener): Zoom => {
     this.listeners.push(fn);
+    return this;
   };
 
-  public removeListener = (fn: Listener): void => {
-    const index = this.listeners.indexOf(fn);
-    if (index >= 0) {
-      this.listeners.splice(index, 1);
-    }
+  public stop = (): void => {
+    document.removeEventListener('wheel', this.handleWheel);
+    this.displayObject.removeAllListeners();
   };
 
   private runListeners = (zoom: number, target?: Point) => {

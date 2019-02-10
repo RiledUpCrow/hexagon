@@ -15,7 +15,7 @@ const App: FunctionComponent = (): JSX.Element => {
   }, []);
 
   return (
-    <div className="App">
+    <div className="app">
       {game ? (
         <>
           <Game settings={game} />

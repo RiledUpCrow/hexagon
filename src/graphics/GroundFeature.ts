@@ -1,1 +1,1 @@
-export type GroundFeature = 'FLAT' | 'FOREST';
+export type GroundFeature = 'FOREST';

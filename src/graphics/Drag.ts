@@ -32,8 +32,8 @@ class Drag {
   private readonly options: Options;
 
   public constructor(
-    ticker: Ticker,
-    displayObject: DisplayObject,
+    private readonly ticker: Ticker,
+    private readonly displayObject: DisplayObject,
     options: Partial<Options> = defaultOptions
   ) {
     this.options = { ...defaultOptions, ...options };
@@ -45,15 +45,14 @@ class Drag {
     ticker.add(this.handleTick);
   }
 
-  public addListener = (fn: Listener): void => {
+  public addListener = (fn: Listener): Drag => {
     this.listeners.push(fn);
+    return this;
   };
 
-  public removeListener = (fn: Listener): void => {
-    const index = this.listeners.indexOf(fn);
-    if (index >= 0) {
-      this.listeners.splice(index, 1);
-    }
+  public stop = (): void => {
+    this.ticker.remove(this.handleTick);
+    this.displayObject.removeAllListeners();
   };
 
   private isZoomMove = (event: interaction.InteractionEvent): boolean => {

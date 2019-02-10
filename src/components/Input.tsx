@@ -7,9 +7,9 @@ import React, {
 import useUniqueId from '../useUniqueId';
 
 interface Props {
-  value: string;
+  value: number;
   label: string;
-  onChange: (value: string) => void;
+  onChange: (value: number) => void;
 }
 
 const Input: FunctionComponent<Props> = ({
@@ -19,7 +19,7 @@ const Input: FunctionComponent<Props> = ({
 }): JSX.Element => {
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      onChange(event.target.value);
+      onChange(Number(event.target.value));
     },
     [onChange]
   );
@@ -28,7 +28,7 @@ const Input: FunctionComponent<Props> = ({
   return (
     <div>
       <label htmlFor={id}>{label}</label>
-      <input id={id} value={value} onChange={handleChange} />
+      <input type="number" id={id} value={value} onChange={handleChange} />
     </div>
   );
 };

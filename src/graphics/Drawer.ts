@@ -18,9 +18,9 @@ class Drawer {
     private readonly container: Container,
     private readonly map: Map,
     private readonly dp: DimensionsProvider,
+    private width: number,
+    private height: number,
     private size: number = 50,
-    private width: number = window.innerWidth,
-    private height: number = window.innerHeight,
     private readonly maxZoom = 1.5,
     private readonly minZoom = 0.5
   ) {

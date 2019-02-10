@@ -17,7 +17,7 @@ export class DefaultMap implements Map {
       this.tiles[xIndex] = [];
       for (let yIndex = 0; yIndex < height; yIndex++) {
         const type = randomKey(TextureManager.groundTypes);
-        let feature: GroundFeature = 'FLAT';
+        let feature: GroundFeature | null = null;
         if (
           type === 'GRASSLAND' ||
           type === 'GRASS_HILL' ||

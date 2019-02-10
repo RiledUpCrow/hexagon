@@ -7,36 +7,83 @@ import { Application, Container, Loader } from 'pixi.js';
 import TextureManager from './TextureManager';
 import TileRenderer from './TileRenderer';
 import DimensionsProvider from './DimensionsProvider';
+import Settings from '../Settings';
 
-const app = new Application({
-  autoDensity: true,
-  resolution: devicePixelRatio,
-  width: window.innerWidth,
-  height: window.innerHeight,
-});
+type Kill = () => void;
 
-const setup = (): void => {
-  const container = new Container();
-  app.stage.addChild(container);
-  app.stage.interactive = true;
+const launch = (
+  { mapWidth, mapHeight, maxZoom, minZoom, size }: Settings,
+  div: HTMLElement
+): Kill => {
+  const app = new Application({
+    autoDensity: true,
+    resolution: devicePixelRatio,
+    width: div.clientWidth,
+    height: div.clientHeight,
+    resizeTo: div,
+  });
 
-  const tileRenderer = new TileRenderer(app.renderer);
-  const map = new DefaultMap(128, 80);
-  const dp = new DimensionsProvider();
-  const drawer = new Drawer(tileRenderer, container, map, dp);
+  const textureManager = new TextureManager(app.loader, app.renderer);
 
-  new Drag(app.ticker, app.stage).addListener((x, y) => drawer.moveMapBy(x, y));
-  new Zoom(app.stage).addListener((zoom, point) => drawer.zoom(zoom, point));
-  new FpsCounter(app);
+  const setup = (): (() => void) => {
+    const container = new Container();
+    app.stage.addChild(container);
+    app.stage.interactive = true;
 
-  const resize = (): void => {
-    app.renderer.resize(window.innerWidth, window.innerHeight);
-    drawer.resize(window.innerWidth, window.innerHeight);
+    const tileRenderer = new TileRenderer(textureManager);
+    const map = new DefaultMap(mapWidth, mapHeight);
+    const dp = new DimensionsProvider();
+    const drawer = new Drawer(
+      tileRenderer,
+      container,
+      map,
+      dp,
+      div.clientWidth,
+      div.clientHeight,
+      size,
+      maxZoom,
+      minZoom
+    );
+
+    const drag = new Drag(app.ticker, app.stage).addListener((x, y) =>
+      drawer.moveMapBy(x, y)
+    );
+    const zoom = new Zoom(app.stage).addListener((zoom, point) =>
+      drawer.zoom(zoom, point)
+    );
+    const counter = new FpsCounter(app);
+
+    const resize = (): void => {
+      app.renderer.resize(div.clientWidth, div.clientHeight);
+      drawer.resize(div.clientWidth, div.clientHeight);
+    };
+    window.addEventListener('resize', resize);
+    resize();
+
+    const tearDown = (): void => {
+      window.removeEventListener('resize', resize);
+      drag.stop();
+      zoom.stop();
+      counter.stop();
+      app.stage.removeChildren();
+      container.destroy();
+    };
+
+    return tearDown;
   };
-  window.addEventListener('resize', resize);
-  resize();
+
+  const loaded = textureManager.load().then(setup);
+
+  div.appendChild(app.view);
+
+  return () => {
+    loaded.then(tearDown => {
+      tearDown();
+      textureManager.cleanup();
+      div.removeChild(app.view);
+      app.destroy();
+    });
+  };
 };
 
-TextureManager.load(Loader.shared).then(setup);
-
-export default app;
+export default launch;
