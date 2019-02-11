@@ -15,6 +15,8 @@ type GroundTypes = { [key in GT]: string };
 type UnitTypes = { [key in UT]: string };
 
 export default class TextureManager {
+  private loaded = false;
+
   public static readonly groundFeatures: GroundFeatures = {
     FOREST: 'forest.png',
   };
@@ -45,6 +47,11 @@ export default class TextureManager {
 
   public load = (): Promise<void> => {
     return new Promise(resolve => {
+      if (this.loaded) {
+        resolve();
+        return;
+      }
+      this.loaded = true;
       this.loadBaseTextures(this.loader);
       this.loader.load(() => {
         this.textureKeys.forEach(key => {
@@ -82,19 +89,6 @@ export default class TextureManager {
 
   public getUnitType = (ut: UT, width: number, height?: number): Sprite => {
     return this.getSprite(TextureManager.unitTypes[ut], width, height);
-  };
-
-  public cleanup = () => {
-    Object.keys(this.loader.resources).forEach(key => {
-      this.loader.resources[key].texture.destroy();
-      Object.keys(this.mipMaps).forEach(key => {
-        const mipMap = this.mipMaps[key];
-        Object.keys(mipMap).forEach(size => {
-          const texture = mipMap[Number(size)];
-          texture.destroy();
-        });
-      });
-    });
   };
 
   private getSprite = (key: string, width: number, height?: number): Sprite => {

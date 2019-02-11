@@ -13,22 +13,21 @@ import { TileData } from '../userInterface/UI';
 
 type Kill = () => void;
 
+const app = new Application({
+  autoDensity: true,
+  resolution: devicePixelRatio,
+  width: window.innerWidth,
+  height: window.innerHeight,
+});
+
+const textureManager = new TextureManager(app.loader, app.renderer);
+
 const launch = (
   { mapWidth, mapHeight, maxZoom, minZoom, size }: Settings,
   div: HTMLElement,
   onReady: () => void,
   onSelect: (tileData: TileData) => void
 ): Kill => {
-  const app = new Application({
-    autoDensity: true,
-    resolution: devicePixelRatio,
-    width: div.clientWidth,
-    height: div.clientHeight,
-    resizeTo: div,
-  });
-
-  const textureManager = new TextureManager(app.loader, app.renderer);
-
   const setup = (): (() => void) => {
     const container = new Container();
     app.stage.addChild(container);
@@ -98,9 +97,7 @@ const launch = (
   return () => {
     loaded.then(tearDown => {
       tearDown();
-      textureManager.cleanup();
       div.removeChild(app.view);
-      app.destroy();
     });
   };
 };

@@ -7,10 +7,7 @@ import UI, { TileData } from './UI';
 
 const App: FunctionComponent = (): JSX.Element => {
   const [ready, setReady] = useState(false);
-  const handleReady = useCallback(
-    () => setTimeout(() => setReady(true), 500),
-    []
-  );
+  const handleReady = useCallback(() => setReady(true), []);
 
   const [game, setGame] = useState<Settings | null>(null);
   const startGame = useCallback((settings: Settings) => {
