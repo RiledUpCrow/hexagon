@@ -200,8 +200,8 @@ export default class DimensionsProvider {
     const { width, height } = this.getCellDimensions();
     // odd rows get half a width of horizontal offset to achieve tiling effect
     const offset = yIndex % 2 !== 0 ? 0.5 : 0;
-    const x = width * (xIndex + offset - 0.5);
-    const y = height * (yIndex - 0.5);
+    const x = width * (xIndex + offset);
+    const y = height * yIndex;
     return { x, y };
   };
 
@@ -210,9 +210,6 @@ export default class DimensionsProvider {
       x: global.x - this.posX,
       y: global.y - this.posY,
     };
-    console.log('Position', this.posX, this.posY);
-    console.log('Global', global.x, global.y);
-    console.log('Local', result.x, result.y);
     return result;
   };
 
@@ -221,9 +218,55 @@ export default class DimensionsProvider {
       x: local.x + this.posX,
       y: local.y + this.posY,
     };
-    console.log('Position', this.posX, this.posY);
-    console.log('Local', local.x, local.y);
-    console.log('Global', result.x, result.y);
     return result;
+  };
+
+  public toHex = (local: Position): Position => {
+    const { x, y } = local;
+    const { height: tileHeight, width: tileWidth } = this.getTileDimensions();
+    const { height: cellHeight, width: cellWidth } = this.getCellDimensions();
+    const row = (y + tileHeight / 2) / cellHeight;
+    const rowY = Math.floor(row);
+    const oddRow = rowY % 2 === 1;
+    const col = (x + tileWidth / 2 - (oddRow ? tileWidth / 2 : 0)) / cellWidth;
+    const colX = Math.floor(col);
+    const rowFraction = row - rowY;
+    const colFraction = col - colX;
+
+    // point was in the square part of the hexagon, easy
+    if (rowFraction > 1 / 3) {
+      return { x: colX, y: rowY };
+    }
+
+    // point was in the place where three hexagons meet
+    if (colFraction < 0.5) {
+      // this is the left half of the hexagon
+      const side = Math.sign((2 * colFraction - 1) / 3 + rowFraction);
+      if (side > 0) {
+        // this is still the same hex
+        return { x: colX, y: rowY };
+      } else {
+        // this is hex at north-west direction
+        if (oddRow) {
+          return { x: colX, y: rowY - 1 };
+        } else {
+          return { x: colX - 1, y: rowY - 1 };
+        }
+      }
+    } else {
+      // this is the right half of the hexagon
+      const side = Math.sign((-2 * colFraction + 1) / 3 + rowFraction);
+      if (side > 0) {
+        // this is still the same hex
+        return { x: colX, y: rowY };
+      } else {
+        // this is hex at north-east direction
+        if (oddRow) {
+          return { x: colX + 1, y: rowY - 1 };
+        } else {
+          return { x: colX, y: rowY - 1 };
+        }
+      }
+    }
   };
 }

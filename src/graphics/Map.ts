@@ -26,7 +26,7 @@ export class DefaultMap implements Map {
           feature = randomKey(TextureManager.groundFeatures);
         }
         this.tiles[xIndex][yIndex] =
-          Math.random() >= 0.2 ? new DefaultTile(type, feature) : null;
+          Math.random() >= 0 ? new DefaultTile(type, feature) : null;
       }
     }
   }

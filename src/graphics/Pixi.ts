@@ -8,6 +8,7 @@ import { DefaultMap } from './Map';
 import TextureManager from './TextureManager';
 import TileRenderer from './TileRenderer';
 import Zoom from './Zoom';
+import Click from './Click';
 
 type Kill = () => void;
 
@@ -46,6 +47,18 @@ const launch = (
       minZoom
     );
 
+    const click = new Click(app.stage).addListener((x, y) => {
+      const local = dp.toLocalPoint({ x, y });
+      const hex = dp.toHex(local);
+      if (hex.x < 0 || hex.x >= mapWidth || hex.y < 0 || hex.y >= mapHeight) {
+        return;
+      }
+      const tile = map.tiles[hex.x][hex.y];
+      if (!tile) {
+        return;
+      }
+      console.log(tile.groundType);
+    });
     const drag = new Drag(app.ticker, app.stage).addListener((x, y) =>
       drawer.moveMapBy(x, y)
     );
@@ -63,6 +76,7 @@ const launch = (
 
     const tearDown = (): void => {
       window.removeEventListener('resize', resize);
+      click.stop();
       drag.stop();
       zoom.stop();
       counter.stop();

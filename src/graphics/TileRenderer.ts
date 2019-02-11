@@ -16,14 +16,12 @@ export default class TileRenderer {
     this.currentSize = size;
     const container = new Container();
     const tileObject = this.getTileSprite(tile);
-    tileObject.position.set(size, size);
     container.addChild(tileObject);
 
     const groundFeature = tile.groundFeature
       ? this.getGroundFeature(tile.groundFeature)
       : null;
     if (groundFeature) {
-      groundFeature.position.set(size, size);
       container.addChild(groundFeature);
     }
 
