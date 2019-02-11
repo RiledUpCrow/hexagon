@@ -1,14 +1,24 @@
+import {
+  Loader,
+  Rectangle,
+  Renderer,
+  SCALE_MODES,
+  Sprite,
+  Texture,
+} from 'pixi.js';
+import desertTxt from '../textures/desert.png';
+import forestTxt from '../textures/forest.png';
+import grasshillTxt from '../textures/grasshill.png';
+import grasslandTxt from '../textures/grassland.png';
+import mountainTxt from '../textures/mountain.png';
+import plainsTxt from '../textures/plains.png';
+import snowTxt from '../textures/snow.png';
+import tundraTxt from '../textures/tundra.png';
+import warriorTxt from '../textures/warrior.png';
+import waterTxt from '../textures/water.png';
 import { GroundFeature as GF } from './GroundFeature';
 import { GroundType as GT } from './GroundType';
 import { UnitType as UT } from './UnitType';
-import {
-  Loader,
-  Texture,
-  Sprite,
-  Renderer,
-  SCALE_MODES,
-  Rectangle,
-} from 'pixi.js';
 
 type GroundFeatures = { [key in GF]: string };
 type GroundTypes = { [key in GT]: string };
@@ -18,20 +28,20 @@ export default class TextureManager {
   private loaded = false;
 
   public static readonly groundFeatures: GroundFeatures = {
-    FOREST: 'forest.png',
+    FOREST: forestTxt,
   };
   public static readonly groundTypes: GroundTypes = {
-    GRASSLAND: 'grassland.png',
-    GRASS_HILL: 'grasshill.png',
-    PLAINS: 'plains.png',
-    TUNDRA: 'tundra.png',
-    DESERT: 'desert.png',
-    SNOW: 'snow.png',
-    WATER: 'water.png',
-    MOUNTAIN: 'mountain.png',
+    GRASSLAND: grasslandTxt,
+    GRASS_HILL: grasshillTxt,
+    PLAINS: plainsTxt,
+    TUNDRA: tundraTxt,
+    DESERT: desertTxt,
+    SNOW: snowTxt,
+    WATER: waterTxt,
+    MOUNTAIN: mountainTxt,
   };
   public static readonly unitTypes: UnitTypes = {
-    WARRIOR: 'warrior.png',
+    WARRIOR: warriorTxt,
   };
 
   private readonly textureKeys: string[] = [];
