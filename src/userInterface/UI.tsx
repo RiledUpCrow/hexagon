@@ -12,8 +12,8 @@ const UI: FunctionComponent<Props> = ({ endGame, ready }): JSX.Element => {
   const close = useCallback(() => setOpen(false), [setOpen]);
 
   return (
-    <div className="UI-ui">
-      <div className={`UI-view ${ready ? 'UI-ready' : ''}`}>
+    <div className={`UI-ui ${ready ? 'UI-ready' : ''}`}>
+      <div className="UI-view">
         {open && (
           <div className="UI-paper">
             <h1 className="UI-title">This is UI</h1>
