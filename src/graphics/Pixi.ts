@@ -9,13 +9,15 @@ import TextureManager from './TextureManager';
 import TileRenderer from './TileRenderer';
 import Zoom from './Zoom';
 import Click from './Click';
+import { TileData } from '../userInterface/UI';
 
 type Kill = () => void;
 
 const launch = (
   { mapWidth, mapHeight, maxZoom, minZoom, size }: Settings,
   div: HTMLElement,
-  onReady: () => void
+  onReady: () => void,
+  onSelect: (tileData: TileData) => void
 ): Kill => {
   const app = new Application({
     autoDensity: true,
@@ -57,7 +59,7 @@ const launch = (
       if (!tile) {
         return;
       }
-      console.log(tile.groundType);
+      onSelect({ tile, position: hex });
     });
     const drag = new Drag(app.ticker, app.stage).addListener((x, y) =>
       drawer.moveMapBy(x, y)
