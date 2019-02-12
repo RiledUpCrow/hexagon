@@ -10,7 +10,7 @@ import TileRenderer from './TileRenderer';
 import Zoom from './Zoom';
 import Click from './Click';
 import { Dispatch } from 'redux';
-import { SELECT_TILE } from '../store/actions';
+import { SELECT_TILE, RESET } from '../store/actions';
 
 type Kill = () => void;
 
@@ -77,6 +77,7 @@ const launch = (
     resize();
 
     const tearDown = (): void => {
+      dispatch({ type: RESET });
       window.removeEventListener('resize', resize);
       click.stop();
       drag.stop();
