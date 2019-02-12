@@ -9,7 +9,8 @@ import TextureManager from './TextureManager';
 import TileRenderer from './TileRenderer';
 import Zoom from './Zoom';
 import Click from './Click';
-import { TileData } from '../userInterface/UI';
+import { Dispatch } from 'redux';
+import { SELECT_TILE } from '../store/actions';
 
 type Kill = () => void;
 
@@ -26,7 +27,7 @@ const launch = (
   { mapWidth, mapHeight, maxZoom, minZoom, size }: Settings,
   div: HTMLElement,
   onReady: () => void,
-  onSelect: (tileData: TileData) => void
+  dispatch: Dispatch
 ): Kill => {
   const setup = (): (() => void) => {
     const container = new Container();
@@ -58,7 +59,7 @@ const launch = (
       if (!tile) {
         return;
       }
-      onSelect({ tile, position: hex });
+      dispatch({ type: SELECT_TILE, tile, position: hex });
     });
     const drag = new Drag(app.ticker, app.stage).addListener((x, y) =>
       drawer.moveMapBy(x, y)

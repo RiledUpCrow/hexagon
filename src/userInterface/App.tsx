@@ -1,11 +1,22 @@
-import React, { FunctionComponent, useCallback, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useState,
+  useContext,
+} from 'react';
 import Settings from '../data/Settings';
 import './App.css';
 import Game from './Game';
 import MainMenu from './MainMenu';
-import UI, { TileData } from './UI';
+import UI from './UI';
+import { Store } from 'redux';
+import { StoreContext } from '../store/store';
 
-const App: FunctionComponent = (): JSX.Element => {
+interface Props {
+  store: Store;
+}
+
+const App: FunctionComponent<Props> = (): JSX.Element => {
   const [ready, setReady] = useState(false);
   const handleReady = useCallback(() => setReady(true), []);
 
@@ -18,18 +29,14 @@ const App: FunctionComponent = (): JSX.Element => {
     setGame(null);
   }, []);
 
-  const [selectedTile, setSelectedTile] = useState<TileData>(null);
+  const { dispatch } = useContext(StoreContext);
 
   return (
     <div className="App-root">
       {game ? (
         <>
-          <Game
-            settings={game}
-            onReady={handleReady}
-            onSelect={setSelectedTile}
-          />
-          <UI endGame={endGame} ready={ready} tile={selectedTile} />
+          <Game settings={game} onReady={handleReady} dispatch={dispatch} />
+          <UI endGame={endGame} ready={ready} />
         </>
       ) : (
         <MainMenu startGame={startGame} />

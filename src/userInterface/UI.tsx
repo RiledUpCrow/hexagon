@@ -1,32 +1,25 @@
 import React, { FunctionComponent, memo, useCallback, useState } from 'react';
 import Button from '../components/Button';
+import useStore from '../logic/useStore';
+import TileInfo from './TileInfo';
 import './UI.css';
-import Tile from '../graphics/Tile';
-import TileInfo, { Position } from './TileInfo';
-
-export type TileData = {
-  tile: Tile;
-  position: Position;
-} | null;
 
 interface Props {
   ready: boolean;
   endGame: () => void;
-  tile: TileData;
 }
 
-const UI: FunctionComponent<Props> = ({
-  endGame,
-  ready,
-  tile,
-}): JSX.Element => {
+const UI: FunctionComponent<Props> = ({ endGame, ready }): JSX.Element => {
   const [open, setOpen] = useState(true);
   const close = useCallback(() => setOpen(false), [setOpen]);
+  const tileData = useStore(s => s.selectedTile);
 
   return (
     <div className={`UI-ui ${ready ? 'UI-ready' : ''}`}>
       <div className="UI-view">
-        {tile && <TileInfo tile={tile.tile} position={tile.position} />}
+        {tileData && (
+          <TileInfo tile={tileData.tile} position={tileData.position} />
+        )}
         {open && (
           <div className="UI-paper">
             <h1 className="UI-title">This is UI</h1>

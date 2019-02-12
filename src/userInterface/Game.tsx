@@ -2,18 +2,18 @@ import React, { FunctionComponent, memo, useEffect, useRef } from 'react';
 import './Game.css';
 import pixi from '../graphics/Pixi';
 import Settings from '../data/Settings';
-import { TileData } from './UI';
+import { Dispatch } from 'redux';
 
 interface Props {
   settings: Settings;
   onReady: () => void;
-  onSelect: (tileData: TileData) => void;
+  dispatch: Dispatch;
 }
 
 const Game: FunctionComponent<Props> = ({
   settings,
   onReady,
-  onSelect,
+  dispatch,
 }): JSX.Element => {
   const { mapHeight, mapWidth, size, maxZoom, minZoom } = settings;
   const container = useRef<HTMLDivElement>(null);
@@ -23,7 +23,7 @@ const Game: FunctionComponent<Props> = ({
     if (!div) {
       return;
     }
-    const destroyPixi = pixi(settings, div, onReady, onSelect);
+    const destroyPixi = pixi(settings, div, onReady, dispatch);
 
     return destroyPixi;
   }, [mapHeight, mapWidth, size, maxZoom, minZoom]);
