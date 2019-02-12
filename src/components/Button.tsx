@@ -1,5 +1,6 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useCallback } from 'react';
 import './Button.css';
+import { buttonClick } from '../logic/sound';
 
 type Size = 'small' | 'normal' | 'large';
 
@@ -17,11 +18,15 @@ const Button: FunctionComponent<Props> = ({
   onClick,
   children,
 }): JSX.Element => {
+  const handleClick = useCallback(() => {
+    buttonClick.play();
+    onClick();
+  }, [onClick]);
   return (
     <button
       disabled={disabled}
       className={`Button-button Button-${size} ${wide ? 'Button-wide' : ''}`}
-      onClick={onClick}
+      onClick={handleClick}
     >
       {children}
     </button>
