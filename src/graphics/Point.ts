@@ -1,7 +1,8 @@
 import * as PIXI from 'pixi.js';
 import Vector from './Vector';
+import { Position } from '../userInterface/TileInfo';
 
-class Point {
+class Point implements Position {
   public constructor(public readonly x: number, public readonly y: number) {}
 
   public distance = (target: Point) => this.getDirection(target).length();

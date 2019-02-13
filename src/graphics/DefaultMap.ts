@@ -1,13 +1,9 @@
-import Tile, { DefaultTile } from './Tile';
+import { DefaultTile } from './DefaultTile';
 import randomKey from '../logic/randomKey';
 import TextureManager from './TextureManager';
-import { GroundFeature } from './GroundFeature';
-
-export default interface Map {
-  width: number;
-  height: number;
-  tiles: (Tile | null)[][];
-}
+import { GroundFeature } from '../data/GroundFeature';
+import Map from '../data/Map';
+import Tile from '../data/Tile';
 
 export class DefaultMap implements Map {
   public tiles: (Tile | null)[][] = [];

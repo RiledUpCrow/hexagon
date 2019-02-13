@@ -16,9 +16,9 @@ import snowTxt from '../textures/snow.png';
 import tundraTxt from '../textures/tundra.png';
 import warriorTxt from '../textures/warrior.png';
 import waterTxt from '../textures/water.png';
-import { GroundFeature as GF } from './GroundFeature';
-import { GroundType as GT } from './GroundType';
-import { UnitType as UT } from './UnitType';
+import { GroundFeature as GF } from '../data/GroundFeature';
+import { GroundType as GT } from '../data/GroundType';
+import { UnitType as UT } from '../data/UnitType';
 
 type GroundFeatures = { [key in GF]: string };
 type GroundTypes = { [key in GT]: string };

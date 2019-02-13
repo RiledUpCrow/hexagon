@@ -4,7 +4,7 @@ import DimensionsProvider from './DimensionsProvider';
 import Drag from './Drag';
 import Drawer from './Drawer';
 import FpsCounter from './FpsCounter';
-import { DefaultMap } from './Map';
+import { DefaultMap } from './DefaultMap';
 import TextureManager from './TextureManager';
 import TileRenderer from './TileRenderer';
 import Zoom from './Zoom';

@@ -1,8 +1,8 @@
 import { Position } from '../../userInterface/TileInfo';
-import Tile from '../../graphics/Tile';
 import { AnyAction } from 'redux';
 import { SELECT_TILE, RESET } from '../actions';
 import { SelectTileAction } from '../actions/selectTileAction';
+import Tile from '../../data/Tile';
 
 export type SelectedTileState = {
   position: Position;

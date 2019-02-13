@@ -1,10 +1,10 @@
 import { Container, DisplayObject, Graphics } from 'pixi.js';
-import Map from './Map';
 import TileRenderer from './TileRenderer';
 import Point from './Point';
 import DimensionsProvider from './DimensionsProvider';
 import between from '../logic/between';
 import roundTo from '../logic/roundTo';
+import Map from '../data/Map';
 
 class Drawer {
   private readonly originalSize: number;

@@ -1,8 +1,8 @@
 import { Container, DisplayObject } from 'pixi.js';
-import { GroundFeature } from './GroundFeature';
+import { GroundFeature } from '../data/GroundFeature';
 import TextureManager from './TextureManager';
-import Tile from './Tile';
 import DimensionsProvider from './DimensionsProvider';
+import Tile from '../data/Tile';
 
 export default class TileRenderer {
   private currentSize?: number;
