@@ -14,8 +14,6 @@ const MainMenu: FunctionComponent<Props> = ({ startGame }): JSX.Element => {
   const [size, setSize] = useState(defaultSettings.size);
   const [maxZoom, setMaxZoom] = useState(defaultSettings.maxZoom);
   const [minZoom, setMinZoom] = useState(defaultSettings.minZoom);
-  const [coverage, setCoverage] = useState(defaultSettings.coverage);
-  const [tilt, setTilt] = useState(defaultSettings.tilt);
 
   const handleStart = useCallback(() => {
     startGame({
@@ -24,10 +22,8 @@ const MainMenu: FunctionComponent<Props> = ({ startGame }): JSX.Element => {
       size,
       maxZoom,
       minZoom,
-      coverage,
-      tilt,
     });
-  }, [mapWidth, mapHeight, size, maxZoom, minZoom, coverage, tilt, startGame]);
+  }, [mapWidth, mapHeight, size, maxZoom, minZoom, startGame]);
 
   return (
     <div className="MainMenu-root">
@@ -72,22 +68,6 @@ const MainMenu: FunctionComponent<Props> = ({ startGame }): JSX.Element => {
           step={0.25}
           value={minZoom}
           onChange={setMinZoom}
-        />
-        <NumberPicker
-          label="Tile coverage"
-          min={0}
-          max={1}
-          step={0.05}
-          value={coverage}
-          onChange={setCoverage}
-        />
-        <NumberPicker
-          label="Camera tilt"
-          min={30}
-          max={90}
-          step={5}
-          value={tilt}
-          onChange={setTilt}
         />
       </div>
       <div className="MainMenu-start">

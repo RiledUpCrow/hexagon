@@ -4,8 +4,6 @@ export default interface Settings {
   size: number;
   maxZoom: number;
   minZoom: number;
-  tilt: number;
-  coverage: number;
 }
 
 export const defaultSettings: Settings = {
@@ -14,6 +12,4 @@ export const defaultSettings: Settings = {
   size: 50,
   maxZoom: 1.5,
   minZoom: 0.5,
-  tilt: 30,
-  coverage: 1,
 };
