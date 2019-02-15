@@ -50,6 +50,13 @@ export default class DimensionsProvider {
   };
 
   /**
+   * Returns the current size.
+   */
+  public getSize = (): number => {
+    return this.size;
+  };
+
+  /**
    * Sets the screen dimensions (in pixels).
    */
   public setScreen = (width: number, height: number) => {

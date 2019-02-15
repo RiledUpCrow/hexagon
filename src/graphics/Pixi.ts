@@ -2,7 +2,6 @@ import { Application, Container } from 'pixi.js';
 import Settings from '../data/Settings';
 import DimensionsProvider from './DimensionsProvider';
 import Drag from './Drag';
-import Drawer from './Drawer';
 import FpsCounter from './FpsCounter';
 import { DefaultMap } from './DefaultMap';
 import TextureManager from './TextureManager';
@@ -11,6 +10,9 @@ import Zoom from './Zoom';
 import Click from './Click';
 import { Dispatch } from 'redux';
 import { SELECT_TILE, RESET } from '../store/actions';
+import BackgroundLayer from './BackgroundLayer';
+import TileLayer from './TileLayer';
+import MapDrawer from './MapDrawer';
 
 type Kill = () => void;
 
@@ -37,16 +39,18 @@ const launch = (
     const dp = new DimensionsProvider();
     const tileRenderer = new TileRenderer(textureManager, dp);
     const map = new DefaultMap(mapWidth, mapHeight);
-    const drawer = new Drawer(
-      tileRenderer,
+    const backgroundLayer = new BackgroundLayer(new Container(), dp);
+    const tileLayer = new TileLayer(new Container(), tileRenderer, map, dp);
+    const drawer = new MapDrawer(
+      [backgroundLayer, tileLayer],
       container,
       map,
       dp,
+      size,
       div.clientWidth,
       div.clientHeight,
-      size,
-      maxZoom,
-      minZoom
+      minZoom,
+      maxZoom
     );
 
     const click = new Click(app.stage).addListener((x, y) => {
@@ -62,7 +66,7 @@ const launch = (
       dispatch({ type: SELECT_TILE, tile, position: hex });
     });
     const drag = new Drag(app.ticker, app.stage).addListener((x, y) =>
-      drawer.moveMapBy(x, y)
+      drawer.moveBy(x, y)
     );
     const zoom = new Zoom(app.stage).addListener((zoom, point) =>
       drawer.zoom(zoom, point)
