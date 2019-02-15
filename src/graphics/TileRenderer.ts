@@ -28,7 +28,7 @@ export default class TileRenderer {
   public getTileSprite = (tile: Tile): DisplayObject => {
     const { width, height } = this.dp.getTileDimensions();
     const sprite = this.textureManager.getGroundType(tile.groundType, width);
-    const scale = height / (this.dp.getSize() * 2);
+    const scale = (height + 1) / (this.dp.getSize() * 2);
     sprite.height *= scale;
     return sprite;
   };
