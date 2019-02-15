@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'typeface-caesar-dressing';
 import './index.css';
 import App from './userInterface/App';
 import * as serviceWorker from './serviceWorker';
