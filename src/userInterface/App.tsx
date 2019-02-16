@@ -1,16 +1,10 @@
-import React, {
-  FunctionComponent,
-  useCallback,
-  useState,
-  useContext,
-} from 'react';
+import React, { FunctionComponent, useCallback, useState } from 'react';
 import Settings from '../data/Settings';
 import './App.css';
 import Game from './Game';
 import MainMenu from './MainMenu';
 import UI from './UI';
 import { Store } from 'redux';
-import { StoreContext } from '../store/store';
 
 interface Props {
   store: Store;
@@ -29,13 +23,11 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
     setGame(null);
   }, []);
 
-  const { dispatch } = useContext(StoreContext);
-
   return (
     <div className="App-root">
       {game ? (
         <>
-          <Game settings={game} onReady={handleReady} dispatch={dispatch} />
+          <Game settings={game} onReady={handleReady} />
           <UI endGame={endGame} ready={ready} />
         </>
       ) : (

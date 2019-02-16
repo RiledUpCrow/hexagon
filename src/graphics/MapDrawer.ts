@@ -13,7 +13,7 @@ export default class MapDrawer {
   public constructor(
     protected readonly layers: MapLayer[],
     protected readonly container: Container,
-    protected readonly map: Map,
+    protected readonly map: () => Map,
     protected readonly dp: DimensionsProvider,
     protected size = 50,
     protected width = window.innerWidth,
@@ -80,7 +80,7 @@ export default class MapDrawer {
   private updateDimensions = () => {
     this.dp.setSize(this.size);
     this.dp.setScreen(this.width, this.height);
-    this.dp.setMap(this.map.width, this.map.height);
+    this.dp.setMap(this.map().width, this.map().height);
     this.dp.setPosition(this.position.x, this.position.y);
   };
 }

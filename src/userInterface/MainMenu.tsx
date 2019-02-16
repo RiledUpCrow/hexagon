@@ -1,8 +1,12 @@
 import React, { FunctionComponent, memo, useCallback, useState } from 'react';
-import './MainMenu.css';
-import Settings, { defaultSettings } from '../data/Settings';
 import Button from '../components/Button';
 import NumberPicker from '../components/NumberPicker';
+import Settings, { defaultSettings } from '../data/Settings';
+import useDispatch from '../logic/useDispatch';
+import useStore from '../logic/useStore';
+import './MainMenu.css';
+import { DefaultMap } from '../graphics/DefaultMap';
+import { LOAD_MAP } from '../store/actions';
 
 interface Props {
   startGame: (settings: Settings) => void;
@@ -14,6 +18,14 @@ const MainMenu: FunctionComponent<Props> = ({ startGame }): JSX.Element => {
   const [size, setSize] = useState(defaultSettings.size);
   const [maxZoom, setMaxZoom] = useState(defaultSettings.maxZoom);
   const [minZoom, setMinZoom] = useState(defaultSettings.minZoom);
+
+  const map = useStore(s => s.map);
+  const dispatch = useDispatch();
+
+  const generateMap = useCallback(() => {
+    const map = new DefaultMap(mapWidth, mapHeight);
+    dispatch({ type: LOAD_MAP, map });
+  }, [mapWidth, mapHeight]);
 
   const handleStart = useCallback(() => {
     startGame({
@@ -69,9 +81,12 @@ const MainMenu: FunctionComponent<Props> = ({ startGame }): JSX.Element => {
           value={minZoom}
           onChange={setMinZoom}
         />
+        <div className="MainMenu-generate">
+          <Button onClick={generateMap}>Generate Map</Button>
+        </div>
       </div>
       <div className="MainMenu-start">
-        <Button size="large" wide onClick={handleStart}>
+        <Button disabled={!map} size="large" wide onClick={handleStart}>
           Start
         </Button>
       </div>

@@ -10,11 +10,11 @@ export default class TileLayer implements MapLayer {
   public constructor(
     protected readonly container: Container,
     protected readonly tileRenderer: TileRenderer,
-    protected readonly map: Map,
+    protected readonly map: () => Map,
     protected readonly dp: DimensionsProvider
   ) {
     this.tiles = [];
-    map.tiles.forEach(column => {
+    map().tiles.forEach(column => {
       this.tiles.push(new Array(column.length).fill(null));
     });
   }
@@ -39,8 +39,8 @@ export default class TileLayer implements MapLayer {
 
   protected mapIterator = () => ({
     forEach: (fn: (xIndex: number, yIndex: number) => void) => {
-      for (let xIndex = 0; xIndex < this.map.width; xIndex++) {
-        for (let yIndex = 0; yIndex < this.map.height; yIndex++) {
+      for (let xIndex = 0; xIndex < this.map().width; xIndex++) {
+        for (let yIndex = 0; yIndex < this.map().height; yIndex++) {
           fn(xIndex, yIndex);
         }
       }
@@ -68,14 +68,14 @@ export default class TileLayer implements MapLayer {
     if (this.tiles[xIndex][yIndex]) {
       return;
     }
-    const tile = this.map.tiles[xIndex][yIndex];
+    const tile = this.map().tiles[xIndex][yIndex];
     if (!tile) {
       return;
     }
     const renderedTile = this.tileRenderer.drawTile(tile);
     const { x, y } = this.dp.getTileCoordinates(xIndex, yIndex);
     renderedTile.position.set(x, y);
-    renderedTile.zIndex = this.map.height * yIndex + xIndex;
+    renderedTile.zIndex = this.map().height * yIndex + xIndex;
     this.container.addChild(renderedTile);
     this.tiles[xIndex][yIndex] = renderedTile;
   };

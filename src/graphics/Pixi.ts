@@ -1,18 +1,19 @@
 import { Application, Container } from 'pixi.js';
+import { Store } from 'redux';
+import Map from '../data/Map';
 import Settings from '../data/Settings';
+import { RESET, SELECT_TILE } from '../store/actions';
+import { RootState } from '../store/reducers';
+import BackgroundLayer from './BackgroundLayer';
+import Click from './Click';
 import DimensionsProvider from './DimensionsProvider';
 import Drag from './Drag';
 import FpsCounter from './FpsCounter';
-import { DefaultMap } from './DefaultMap';
+import MapDrawer from './MapDrawer';
 import TextureManager from './TextureManager';
+import TileLayer from './TileLayer';
 import TileRenderer from './TileRenderer';
 import Zoom from './Zoom';
-import Click from './Click';
-import { Dispatch } from 'redux';
-import { SELECT_TILE, RESET } from '../store/actions';
-import BackgroundLayer from './BackgroundLayer';
-import TileLayer from './TileLayer';
-import MapDrawer from './MapDrawer';
 
 type Kill = () => void;
 
@@ -29,7 +30,7 @@ const launch = (
   { mapWidth, mapHeight, maxZoom, minZoom, size }: Settings,
   div: HTMLElement,
   onReady: () => void,
-  dispatch: Dispatch
+  store: Store<RootState>
 ): Kill => {
   const setup = (): (() => void) => {
     const container = new Container();
@@ -38,7 +39,7 @@ const launch = (
 
     const dp = new DimensionsProvider();
     const tileRenderer = new TileRenderer(textureManager, dp);
-    const map = new DefaultMap(mapWidth, mapHeight);
+    const map = (): Map => store.getState().map!;
     const backgroundLayer = new BackgroundLayer(new Container(), dp);
     const tileLayer = new TileLayer(new Container(), tileRenderer, map, dp);
     const drawer = new MapDrawer(
@@ -59,11 +60,11 @@ const launch = (
       if (hex.x < 0 || hex.x >= mapWidth || hex.y < 0 || hex.y >= mapHeight) {
         return;
       }
-      const tile = map.tiles[hex.x][hex.y];
+      const tile = map().tiles[hex.x][hex.y];
       if (!tile) {
         return;
       }
-      dispatch({ type: SELECT_TILE, tile, position: hex });
+      store.dispatch({ type: SELECT_TILE, tile, position: hex });
     });
     const drag = new Drag(app.ticker, app.stage).addListener((x, y) =>
       drawer.moveBy(x, y)
@@ -81,7 +82,7 @@ const launch = (
     resize();
 
     const tearDown = (): void => {
-      dispatch({ type: RESET });
+      store.dispatch({ type: RESET });
       window.removeEventListener('resize', resize);
       click.stop();
       drag.stop();
