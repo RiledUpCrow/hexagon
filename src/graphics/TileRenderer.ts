@@ -36,7 +36,7 @@ export default class TileRenderer {
   private getGroundFeature = (groundFeature: GroundFeature): DisplayObject => {
     const sprite = this.textureManager.getGroundFeature(
       groundFeature,
-      this.dp.getSize()
+      this.dp.getTileDimensions().width
     );
     return sprite;
   };

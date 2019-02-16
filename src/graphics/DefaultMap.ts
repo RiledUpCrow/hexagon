@@ -19,7 +19,10 @@ export class DefaultMap implements Map {
           type === 'GRASS_HILL' ||
           type === 'PLAINS'
         ) {
-          feature = randomKey(TextureManager.groundFeatures);
+          feature =
+            Math.random() > 0.5
+              ? randomKey(TextureManager.groundFeatures)
+              : null;
         }
         this.tiles[xIndex][yIndex] =
           Math.random() >= 0 ? new DefaultTile(type, feature) : null;
