@@ -1,8 +1,17 @@
 import { AnyAction } from 'redux';
 import Map from '../../data/Map';
-import { LOAD_MAP, RESET, UPDATE_TILE } from '../actions';
+import { LOAD_MAP, RESET, UPDATE_TILE, SELECT_TILE } from '../actions';
 import LoadMapAction from '../actions/loadMapAction';
 import UpdateTileAction from '../actions/updateTileAction';
+import Tile from '../../data/Tile';
+
+type Tiles = (Tile | null)[][];
+
+const updateMap = (tiles: Tiles, x: number, y: number, tile: Tile): Tiles => {
+  const newTiles = tiles.map(col => [...col]);
+  newTiles[x][y] = tile;
+  return newTiles;
+};
 
 export type MapState = Map | null;
 
@@ -24,17 +33,8 @@ export default (
         console.log('Update of a non-existing map - bug?'); // eslint-disable-line no-console
         return state;
       }
-      const oldTiles = state.tiles;
-      const newTiles = [
-        ...oldTiles.slice(0, x),
-        [...oldTiles[x].slice(0, y), tile, ...oldTiles[x].slice(y + 1)],
-        ...oldTiles.slice(x + 1),
-      ];
-
-      return {
-        ...state,
-        tiles: newTiles,
-      };
+      const tiles = updateMap(state.tiles, x, y, tile);
+      return { ...state, tiles };
     }
     case RESET: {
       return defaultState;

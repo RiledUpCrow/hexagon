@@ -3,6 +3,7 @@ import TileRenderer from './TileRenderer';
 import Map from '../data/Map';
 import DimensionsProvider from './DimensionsProvider';
 import MapLayer from './MapLayer';
+import { Position } from '../userInterface/TileInfo';
 
 export default class TileLayer implements MapLayer {
   protected tiles: (DisplayObject | null)[][] = [];
@@ -35,6 +36,15 @@ export default class TileLayer implements MapLayer {
     this.container.sortChildren();
 
     return this.container;
+  };
+
+  public updateTile = (position: Position) => {
+    const { x, y } = position;
+    if (!this.isHidden(x, y)) {
+      this.removeTile(x, y);
+      this.createTile(x, y);
+    }
+    this.container.sortChildren();
   };
 
   protected mapIterator = () => ({

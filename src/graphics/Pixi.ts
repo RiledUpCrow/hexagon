@@ -2,7 +2,7 @@ import { Application, Container } from 'pixi.js';
 import { Store } from 'redux';
 import Map from '../data/Map';
 import Settings from '../data/Settings';
-import { RESET, SELECT_TILE } from '../store/actions';
+import { RESET, SELECT_TILE, UPDATE_TILE } from '../store/actions';
 import { RootState } from '../store/reducers';
 import BackgroundLayer from './BackgroundLayer';
 import Click from './Click';
@@ -14,6 +14,7 @@ import TextureManager from './TextureManager';
 import TileLayer from './TileLayer';
 import TileRenderer from './TileRenderer';
 import Zoom from './Zoom';
+import { Position } from '../userInterface/TileInfo';
 
 type Kill = () => void;
 
@@ -54,6 +55,24 @@ const launch = (
       maxZoom
     );
 
+    let previousMap = map();
+    const storeUnsubscribe = store.subscribe(() => {
+      const currentMap = map();
+      if (currentMap !== previousMap) {
+        const changed: Position[] = [];
+        const { tiles, width, height } = currentMap;
+        for (let x = 0; x < width; x++) {
+          for (let y = 0; y < height; y++) {
+            if (previousMap.tiles[x][y] !== tiles[x][y]) {
+              changed.push({ x, y });
+            }
+          }
+        }
+        changed.forEach(position => tileLayer.updateTile(position));
+      }
+      previousMap = currentMap;
+    });
+
     const click = new Click(app.stage).addListener((x, y) => {
       const local = dp.toLocalPoint({ x, y });
       const hex = dp.toHex(local);
@@ -65,6 +84,13 @@ const launch = (
         return;
       }
       store.dispatch({ type: SELECT_TILE, tile, position: hex });
+      // TODO remove this ⬇
+      store.dispatch({
+        type: UPDATE_TILE,
+        x: hex.x,
+        y: hex.y,
+        tile: { ...tile, groundFeature: tile.groundFeature ? null : 'FOREST' },
+      });
     });
     const drag = new Drag(app.ticker, app.stage).addListener((x, y) =>
       drawer.moveBy(x, y)
@@ -82,6 +108,7 @@ const launch = (
     resize();
 
     const tearDown = (): void => {
+      storeUnsubscribe();
       store.dispatch({ type: RESET });
       window.removeEventListener('resize', resize);
       click.stop();
