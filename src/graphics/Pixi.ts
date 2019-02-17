@@ -12,9 +12,9 @@ import FpsCounter from './FpsCounter';
 import MapDrawer from './MapDrawer';
 import TextureManager from './TextureManager';
 import TileLayer from './TileLayer';
-import TileRenderer from './TileRenderer';
 import Zoom from './Zoom';
-import { Position } from '../userInterface/TileInfo';
+import UnitLayer from './UnitLayer';
+import { UnitState } from '../store/reducers/unitReducer';
 
 type Kill = () => void;
 
@@ -39,11 +39,12 @@ const launch = (
     app.stage.interactive = true;
 
     const dp = new DimensionsProvider();
-    const tileRenderer = new TileRenderer(textureManager, dp);
     const map = (): Map => store.getState().map!;
+    const units = (): UnitState => store.getState().units;
     const backgroundLayer = new BackgroundLayer(new Container(), dp);
-    const tileLayer = new TileLayer(new Container(), tileRenderer, map, dp);
-    const layers = [backgroundLayer, tileLayer];
+    const tileLayer = new TileLayer(new Container(), textureManager, map, dp);
+    const unitLayer = new UnitLayer(new Container(), textureManager, units, dp);
+    const layers = [backgroundLayer, tileLayer, unitLayer];
     const drawer = new MapDrawer(
       layers,
       container,

@@ -7,6 +7,8 @@ import useStore from '../logic/useStore';
 import './MainMenu.css';
 import { DefaultMap } from '../graphics/DefaultMap';
 import { LOAD_MAP } from '../store/actions';
+import LoadMapAction from '../store/actions/loadMapAction';
+import Unit from '../data/Unit';
 
 interface Props {
   startGame: (settings: Settings) => void;
@@ -24,7 +26,10 @@ const MainMenu: FunctionComponent<Props> = ({ startGame }): JSX.Element => {
 
   const generateMap = useCallback(() => {
     const map = new DefaultMap(mapWidth, mapHeight);
-    dispatch({ type: LOAD_MAP, map });
+    const units: Unit[] = [
+      { id: 0, type: 'WARRIOR', position: { x: 1, y: 1 } },
+    ];
+    dispatch<LoadMapAction>({ type: LOAD_MAP, map, units });
   }, [mapWidth, mapHeight]);
 
   const handleStart = useCallback(() => {
