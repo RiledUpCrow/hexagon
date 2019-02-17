@@ -1,23 +1,24 @@
 import { DisplayObject, interaction } from 'pixi.js';
+import Point from './Point';
 
 type Listener = (x: number, y: number) => void;
 
+const THRESHOLD = 5;
+
 export default class Click {
   private readonly listeners: Listener[] = [];
-  private clickStart?: { x: number; y: number };
+  private clickStart?: Point;
 
   public constructor(private readonly stage: DisplayObject) {
     stage.on('pointerdown', event => {
-      const { x, y } = event.data.global;
-      this.clickStart = { x, y };
+      this.clickStart = Point.fromPixi(event.data.global);
     });
     stage.on('pointerup', event => {
       if (!this.clickStart) {
         return;
       }
-      const { x: x1, y: y1 } = event.data.global;
-      const { x: x2, y: y2 } = this.clickStart!;
-      if (x1 === x2 && y1 === y2) {
+      const clickEnd = Point.fromPixi(event.data.global);
+      if (this.clickStart.distance(clickEnd) < THRESHOLD) {
         this.runListeners(event);
       }
     });
