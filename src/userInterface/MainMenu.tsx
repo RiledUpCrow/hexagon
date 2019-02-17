@@ -28,6 +28,8 @@ const MainMenu: FunctionComponent<Props> = ({ startGame }): JSX.Element => {
     const map = new DefaultMap(mapWidth, mapHeight);
     const units: Unit[] = [
       { id: 0, type: 'WARRIOR', position: { x: 1, y: 1 } },
+      { id: 1, type: 'WARRIOR', position: { x: 1, y: 2 } },
+      { id: 2, type: 'WARRIOR', position: { x: 1, y: 3 } },
     ];
     dispatch<LoadMapAction>({ type: LOAD_MAP, map, units });
   }, [mapWidth, mapHeight]);

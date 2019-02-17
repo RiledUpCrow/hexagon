@@ -82,22 +82,22 @@ const launch = (
       }
       store.dispatch({ type: SELECT_TILE, tile, position: hex });
       const selectedUnit = store.getState().selectedUnit;
-      if (selectedUnit) {
-        const unit: Unit = {
-          ...selectedUnit,
-          position: { x: hex.x, y: hex.y },
-        };
-        store.dispatch<UpdateUnitAction>({ type: UPDATE_UNIT, unit });
+      const currentUnits = units();
+      const currentUnitsArray = Object.keys(currentUnits).map(
+        key => currentUnits[Number(key)]
+      );
+      const unit = currentUnitsArray.find(
+        unit => unit.position.x === hex.x && unit.position.y === hex.y
+      );
+      if (unit) {
+        store.dispatch<SelectUnitAction>({ type: SELECT_UNIT, unit });
       } else {
-        const currentUnits = units();
-        const currentUnitsArray = Object.keys(currentUnits).map(
-          key => currentUnits[Number(key)]
-        );
-        const unit = currentUnitsArray.find(
-          unit => unit.position.x === hex.x && unit.position.y === hex.y
-        );
-        if (unit) {
-          store.dispatch<SelectUnitAction>({ type: SELECT_UNIT, unit });
+        if (selectedUnit) {
+          const unit: Unit = {
+            ...selectedUnit,
+            position: { x: hex.x, y: hex.y },
+          };
+          store.dispatch<UpdateUnitAction>({ type: UPDATE_UNIT, unit });
         }
       }
     });
