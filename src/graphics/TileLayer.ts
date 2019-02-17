@@ -7,6 +7,7 @@ import { Position } from '../userInterface/TileInfo';
 
 export default class TileLayer implements MapLayer {
   protected tiles: (DisplayObject | null)[][] = [];
+  protected previousMap: Map;
 
   public constructor(
     protected readonly container: Container,
@@ -14,6 +15,7 @@ export default class TileLayer implements MapLayer {
     protected readonly map: () => Map,
     protected readonly dp: DimensionsProvider
   ) {
+    this.previousMap = map();
     this.tiles = [];
     map().tiles.forEach(column => {
       this.tiles.push(new Array(column.length).fill(null));
@@ -38,7 +40,24 @@ export default class TileLayer implements MapLayer {
     return this.container;
   };
 
-  public updateTile = (position: Position) => {
+  public update = (): void => {
+    const currentMap = this.map();
+    if (currentMap !== this.previousMap) {
+      const changed: Position[] = [];
+      const { tiles, width, height } = currentMap;
+      for (let x = 0; x < width; x++) {
+        for (let y = 0; y < height; y++) {
+          if (this.previousMap.tiles[x][y] !== tiles[x][y]) {
+            changed.push({ x, y });
+          }
+        }
+      }
+      changed.forEach(position => this.updateTile(position));
+    }
+    this.previousMap = currentMap;
+  };
+
+  protected updateTile = (position: Position) => {
     const { x, y } = position;
     if (!this.isHidden(x, y)) {
       this.removeTile(x, y);

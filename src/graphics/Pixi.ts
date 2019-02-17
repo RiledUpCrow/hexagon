@@ -43,8 +43,9 @@ const launch = (
     const map = (): Map => store.getState().map!;
     const backgroundLayer = new BackgroundLayer(new Container(), dp);
     const tileLayer = new TileLayer(new Container(), tileRenderer, map, dp);
+    const layers = [backgroundLayer, tileLayer];
     const drawer = new MapDrawer(
-      [backgroundLayer, tileLayer],
+      layers,
       container,
       map,
       dp,
@@ -55,22 +56,8 @@ const launch = (
       maxZoom
     );
 
-    let previousMap = map();
     const storeUnsubscribe = store.subscribe(() => {
-      const currentMap = map();
-      if (currentMap !== previousMap) {
-        const changed: Position[] = [];
-        const { tiles, width, height } = currentMap;
-        for (let x = 0; x < width; x++) {
-          for (let y = 0; y < height; y++) {
-            if (previousMap.tiles[x][y] !== tiles[x][y]) {
-              changed.push({ x, y });
-            }
-          }
-        }
-        changed.forEach(position => tileLayer.updateTile(position));
-      }
-      previousMap = currentMap;
+      layers.forEach(layer => layer.update());
     });
 
     const click = new Click(app.stage).addListener((x, y) => {

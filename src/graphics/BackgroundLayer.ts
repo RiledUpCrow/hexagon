@@ -27,4 +27,6 @@ export default class BackgroundLayer implements MapLayer {
 
     return this.container;
   };
+
+  public update = () => undefined;
 }
