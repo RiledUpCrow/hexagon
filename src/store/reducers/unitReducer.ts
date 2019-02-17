@@ -1,8 +1,9 @@
 import { AnyAction } from 'redux';
 import Unit from '../../data/Unit';
-import { RESET, LOAD_MAP, UPDATE_UNIT } from '../actions';
+import { RESET, LOAD_MAP, UPDATE_UNIT, MOVE_UNIT } from '../actions';
 import LoadMapAction from '../actions/loadMapAction';
 import UpdateUnitAction from '../actions/updateUnitAction';
+import MoveUnitAction from '../actions/moveUnitAction';
 
 export interface UnitState {
   [id: number]: Unit;
@@ -28,6 +29,13 @@ export default (
       return {
         ...state,
         [unit.id]: { ...unit },
+      };
+    }
+    case MOVE_UNIT: {
+      const { unit, movement } = action as MoveUnitAction;
+      return {
+        ...state,
+        [unit.id]: { ...unit, position: movement[movement.length - 1] },
       };
     }
     case RESET: {

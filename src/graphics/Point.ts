@@ -12,9 +12,13 @@ class Point implements Position {
   public getDirection = (target: Point) =>
     new Vector(target.x - this.x, target.y - this.y);
 
-  public static fromPixi(point: PIXI.Point): Point {
-    return new Point(point.x, point.y);
-  }
+  public static fromPixi = (point: PIXI.Point): Point => {
+    return Point.fromPosition(point);
+  };
+
+  public static fromPosition = (pos: Position): Point => {
+    return new Point(pos.x, pos.y);
+  };
 }
 
 export default Point;

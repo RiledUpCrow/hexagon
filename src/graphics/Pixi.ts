@@ -1,8 +1,9 @@
 import { Application, Container } from 'pixi.js';
 import { Store } from 'redux';
-import Map from '../data/Map';
 import Settings from '../data/Settings';
-import { RESET, SELECT_TILE, SELECT_UNIT, UPDATE_UNIT } from '../store/actions';
+import { MOVE_UNIT, RESET, SELECT_TILE, SELECT_UNIT } from '../store/actions';
+import MoveUnitAction from '../store/actions/moveUnitAction';
+import SelectUnitAction from '../store/actions/selectUnitAction';
 import { RootState } from '../store/reducers';
 import BackgroundLayer from './BackgroundLayer';
 import Click from './Click';
@@ -12,12 +13,8 @@ import FpsCounter from './FpsCounter';
 import MapDrawer from './MapDrawer';
 import TextureManager from './TextureManager';
 import TileLayer from './TileLayer';
-import Zoom from './Zoom';
 import UnitLayer from './UnitLayer';
-import { UnitState } from '../store/reducers/unitReducer';
-import SelectUnitAction from '../store/actions/selectUnitAction';
-import UpdateUnitAction from '../store/actions/updateUnitAction';
-import Unit from '../data/Unit';
+import Zoom from './Zoom';
 
 type Kill = () => void;
 
@@ -43,9 +40,6 @@ const launch = (
 
     const dp = new DimensionsProvider();
 
-    const map = (): Map => store.getState().map!;
-    const units = (): UnitState => store.getState().units;
-
     const backgroundContainer = new Container();
     const tileContainer = new Container();
     const unitContainer = new Container();
@@ -53,14 +47,25 @@ const launch = (
 
     const layers = [
       new BackgroundLayer(backgroundContainer, dp),
-      new TileLayer(tileContainer, textureManager, map, dp),
-      new UnitLayer(unitContainer, textureManager, units, dp),
+      new TileLayer(
+        tileContainer,
+        textureManager,
+        () => store.getState().map!,
+        dp
+      ),
+      new UnitLayer(
+        unitContainer,
+        textureManager,
+        () => store.getState().units,
+        () => store.getState().movement,
+        dp
+      ),
     ];
 
     const drawer = new MapDrawer(
       layers,
       container,
-      map,
+      () => store.getState().map!,
       dp,
       size,
       div.clientWidth,
@@ -85,13 +90,13 @@ const launch = (
       if (hex.x < 0 || hex.x >= mapWidth || hex.y < 0 || hex.y >= mapHeight) {
         return;
       }
-      const tile = map().tiles[hex.x][hex.y];
+      const tile = store.getState().map!.tiles[hex.x][hex.y];
       if (!tile) {
         return;
       }
       store.dispatch({ type: SELECT_TILE, tile, position: hex });
       const selectedUnit = store.getState().selectedUnit;
-      const currentUnits = units();
+      const currentUnits = store.getState().units;
       const currentUnitsArray = Object.keys(currentUnits).map(
         key => currentUnits[Number(key)]
       );
@@ -102,11 +107,11 @@ const launch = (
         store.dispatch<SelectUnitAction>({ type: SELECT_UNIT, unit });
       } else {
         if (selectedUnit) {
-          const unit: Unit = {
-            ...selectedUnit,
-            position: { x: hex.x, y: hex.y },
-          };
-          store.dispatch<UpdateUnitAction>({ type: UPDATE_UNIT, unit });
+          store.dispatch<MoveUnitAction>({
+            type: MOVE_UNIT,
+            unit: selectedUnit,
+            movement: [{ x: hex.x, y: hex.y }],
+          });
         }
       }
     });

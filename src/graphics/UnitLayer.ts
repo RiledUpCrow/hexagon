@@ -6,6 +6,7 @@ import TextureManager from './TextureManager';
 import Unit from '../data/Unit';
 import Point from './Point';
 import { Position } from '../userInterface/TileInfo';
+import { MovementState } from '../store/reducers/movementReducer';
 
 interface RenderedUnit {
   unit: Unit;
@@ -26,17 +27,19 @@ interface RenderedUnitList {
 export default class UnitLayer implements MapLayer {
   protected readonly renderedUnits: RenderedUnitList = {};
   protected previousUnits: UnitState;
+  protected previousMoves: MovementState;
 
   public constructor(
     protected readonly container: Container,
     protected readonly textureManager: TextureManager,
     protected readonly units: () => UnitState,
+    protected readonly moves: () => MovementState,
     protected readonly dp: DimensionsProvider
   ) {
-    const unitsSnap = units();
-    this.previousUnits = unitsSnap;
-    Object.keys(unitsSnap).forEach(id => {
-      const unit = unitsSnap[Number(id)];
+    this.previousUnits = units();
+    this.previousMoves = moves();
+    Object.keys(this.previousUnits).forEach(id => {
+      const unit = this.previousUnits[Number(id)];
       this.renderedUnits[Number(id)] = { unit, animation: [] };
     });
   }
@@ -90,19 +93,26 @@ export default class UnitLayer implements MapLayer {
     changed.forEach(key => {
       const id = Number(key);
       const curr = currentUnits[id];
-      const prev = this.previousUnits[id];
-      if (!Object.is(curr.position, prev.position)) {
-        const animation: UnitAnimation = {
-          start: new Point(prev.position.x, prev.position.y),
-          end: new Point(curr.position.x, curr.position.y),
-          progress: 0,
-        };
-        this.renderedUnits[id].animation.push(animation);
-        this.draw(false);
-      }
       this.renderedUnits[id].unit = curr;
+      this.removeUnit(this.renderedUnits[id]);
+      this.renderUnit(this.renderedUnits[id]);
     });
 
+    const currentMoves = this.moves();
+    if (currentMoves && currentMoves !== this.previousMoves) {
+      const { unit, movement } = currentMoves;
+      const pos = unit.position;
+      for (let i = 0; i < movement.length; i++) {
+        const move = movement[i];
+        this.renderedUnits[unit.id].animation.push({
+          start: Point.fromPosition(pos),
+          end: Point.fromPosition(move),
+          progress: 0,
+        });
+      }
+    }
+
+    this.previousMoves = currentMoves;
     this.previousUnits = currentUnits;
   };
 
@@ -170,14 +180,17 @@ export default class UnitLayer implements MapLayer {
       unit.unit.type,
       this.dp.getTileDimensions().width * 0.5
     );
-    const { x, y } =
-      unit.animation.length > 0
-        ? this.getAnimatedPosition(unit.animation[0])
-        : this.getStaticPosition(unit.unit);
+    const { x, y } = this.getCurrentPosition(unit);
     sprite.position.set(x, y);
     sprite.anchor.y = 0.75;
     this.container.addChild(sprite);
     unit.displayObject = sprite;
+  };
+
+  private getCurrentPosition = (unit: RenderedUnit): Position => {
+    return unit.animation.length > 0
+      ? this.getAnimatedPosition(unit.animation[0])
+      : this.getStaticPosition(unit.unit);
   };
 
   private getStaticPosition = (unit: Unit): Position => {
