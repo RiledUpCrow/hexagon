@@ -2,6 +2,7 @@ import React, { FunctionComponent, memo, useCallback, useState } from 'react';
 import Button from '../components/Button';
 import useStore from '../logic/useStore';
 import TileInfo from './TileInfo';
+import UnitInfo from './UnitInfo';
 import './UI.css';
 
 interface Props {
@@ -13,6 +14,7 @@ const UI: FunctionComponent<Props> = ({ endGame, ready }): JSX.Element => {
   const [open, setOpen] = useState(true);
   const close = useCallback(() => setOpen(false), [setOpen]);
   const tileData = useStore(s => s.selectedTile);
+  const unitData = useStore(s => s.selectedUnit);
 
   return (
     <div className={`UI-ui ${ready ? 'UI-ready' : ''}`}>
@@ -20,6 +22,7 @@ const UI: FunctionComponent<Props> = ({ endGame, ready }): JSX.Element => {
         {tileData && (
           <TileInfo tile={tileData.tile} position={tileData.position} />
         )}
+        {unitData && <UnitInfo unit={unitData} />}
         {open && (
           <div className="UI-paper">
             <h1 className="UI-title">This is UI</h1>
