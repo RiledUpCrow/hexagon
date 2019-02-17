@@ -41,7 +41,7 @@ export default class UnitLayer implements MapLayer {
     });
   }
 
-  public draw = (refresh: boolean): DisplayObject => {
+  public draw = (refresh: boolean): void => {
     if (refresh) {
       this.clear();
     }
@@ -54,8 +54,6 @@ export default class UnitLayer implements MapLayer {
         this.renderUnit(unit);
       }
     });
-
-    return this.container;
   };
 
   public update = (): void => {
@@ -108,7 +106,7 @@ export default class UnitLayer implements MapLayer {
     this.previousUnits = currentUnits;
   };
 
-  public runAnimations = (): void => {
+  public animate = (): void => {
     const progress = 3 / 60;
     Object.keys(this.renderedUnits).forEach(key => {
       const id = Number(key);

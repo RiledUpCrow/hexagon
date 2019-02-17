@@ -29,4 +29,5 @@ export default class BackgroundLayer implements MapLayer {
   };
 
   public update = () => undefined;
+  public animate = () => undefined;
 }

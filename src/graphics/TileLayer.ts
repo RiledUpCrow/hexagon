@@ -60,6 +60,8 @@ export default class TileLayer implements MapLayer {
     this.previousMap = currentMap;
   };
 
+  public animate = () => undefined;
+
   protected updateTile = (position: Position) => {
     const { x, y } = position;
     if (!this.isHidden(x, y)) {

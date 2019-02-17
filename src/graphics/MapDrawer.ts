@@ -25,8 +25,7 @@ export default class MapDrawer {
   }
 
   public drawMap = (force: boolean = false) => {
-    this.container.removeChildren();
-    this.layers.forEach(layer => this.container.addChild(layer.draw(force)));
+    this.layers.forEach(layer => layer.draw(force));
   };
 
   public moveBy = (x: number, y: number) => {

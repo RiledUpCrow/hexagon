@@ -42,12 +42,21 @@ const launch = (
     app.stage.interactive = true;
 
     const dp = new DimensionsProvider();
+
     const map = (): Map => store.getState().map!;
     const units = (): UnitState => store.getState().units;
-    const backgroundLayer = new BackgroundLayer(new Container(), dp);
-    const tileLayer = new TileLayer(new Container(), textureManager, map, dp);
-    const unitLayer = new UnitLayer(new Container(), textureManager, units, dp);
-    const layers = [backgroundLayer, tileLayer, unitLayer];
+
+    const backgroundContainer = new Container();
+    const tileContainer = new Container();
+    const unitContainer = new Container();
+    container.addChild(backgroundContainer, tileContainer, unitContainer);
+
+    const layers = [
+      new BackgroundLayer(backgroundContainer, dp),
+      new TileLayer(tileContainer, textureManager, map, dp),
+      new UnitLayer(unitContainer, textureManager, units, dp),
+    ];
+
     const drawer = new MapDrawer(
       layers,
       container,
@@ -65,7 +74,7 @@ const launch = (
     });
 
     const onTick = (): void => {
-      unitLayer.runAnimations();
+      layers.forEach(layer => layer.animate());
     };
 
     app.ticker.add(onTick);
