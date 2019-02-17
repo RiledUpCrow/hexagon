@@ -5,22 +5,25 @@ import DimensionsProvider from './DimensionsProvider';
 import MapLayer from './MapLayer';
 import { Position } from '../userInterface/TileInfo';
 import TextureManager from './TextureManager';
+import { RootState } from '../store/reducers';
 
 export default class TileLayer implements MapLayer {
   protected readonly tileRenderer: TileRenderer;
+  protected readonly map: () => Map;
   protected tiles: (DisplayObject | null)[][] = [];
   protected previousMap: Map;
 
   public constructor(
     protected readonly container: Container,
     protected readonly textureManager: TextureManager,
-    protected readonly map: () => Map,
+    protected readonly getState: () => RootState,
     protected readonly dp: DimensionsProvider
   ) {
+    this.map = () => getState().map!;
     this.tileRenderer = new TileRenderer(textureManager, dp);
-    this.previousMap = map();
+    this.previousMap = this.map();
     this.tiles = [];
-    map().tiles.forEach(column => {
+    this.map().tiles.forEach(column => {
       this.tiles.push(new Array(column.length).fill(null));
     });
   }

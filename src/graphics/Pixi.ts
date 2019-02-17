@@ -47,19 +47,8 @@ const launch = (
 
     const layers = [
       new BackgroundLayer(backgroundContainer, dp),
-      new TileLayer(
-        tileContainer,
-        textureManager,
-        () => store.getState().map!,
-        dp
-      ),
-      new UnitLayer(
-        unitContainer,
-        textureManager,
-        () => store.getState().units,
-        () => store.getState().movement,
-        dp
-      ),
+      new TileLayer(tileContainer, textureManager, store.getState, dp),
+      new UnitLayer(unitContainer, textureManager, store.getState, dp),
     ];
 
     const drawer = new MapDrawer(
@@ -81,7 +70,6 @@ const launch = (
     const onTick = (): void => {
       layers.forEach(layer => layer.animate());
     };
-
     app.ticker.add(onTick);
 
     const click = new Click(app.stage).addListener((x, y) => {

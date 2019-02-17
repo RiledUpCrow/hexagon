@@ -7,6 +7,7 @@ import Unit from '../data/Unit';
 import Point from './Point';
 import { Position } from '../userInterface/TileInfo';
 import { MovementState } from '../store/reducers/movementReducer';
+import { RootState } from '../store/reducers';
 
 interface RenderedUnit {
   unit: Unit;
@@ -25,6 +26,8 @@ interface RenderedUnitList {
 }
 
 export default class UnitLayer implements MapLayer {
+  protected readonly units: () => UnitState;
+  protected readonly moves: () => MovementState;
   protected readonly renderedUnits: RenderedUnitList = {};
   protected previousUnits: UnitState;
   protected previousMoves: MovementState;
@@ -32,12 +35,13 @@ export default class UnitLayer implements MapLayer {
   public constructor(
     protected readonly container: Container,
     protected readonly textureManager: TextureManager,
-    protected readonly units: () => UnitState,
-    protected readonly moves: () => MovementState,
+    protected readonly getState: () => RootState,
     protected readonly dp: DimensionsProvider
   ) {
-    this.previousUnits = units();
-    this.previousMoves = moves();
+    this.units = () => getState().units;
+    this.moves = () => getState().movement;
+    this.previousUnits = this.units();
+    this.previousMoves = this.moves();
     Object.keys(this.previousUnits).forEach(id => {
       const unit = this.previousUnits[Number(id)];
       this.renderedUnits[Number(id)] = { unit, animation: [] };
