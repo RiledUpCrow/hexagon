@@ -1,7 +1,8 @@
 import { AnyAction } from 'redux';
 import Unit from '../../data/Unit';
-import { RESET, LOAD_MAP } from '../actions';
+import { RESET, LOAD_MAP, UPDATE_UNIT } from '../actions';
 import LoadMapAction from '../actions/loadMapAction';
+import UpdateUnitAction from '../actions/updateUnitAction';
 
 export interface UnitState {
   [id: number]: Unit;
@@ -21,6 +22,13 @@ export default (
         result[unit.id] = unit;
       });
       return result;
+    }
+    case UPDATE_UNIT: {
+      const { unit } = action as UpdateUnitAction;
+      return {
+        ...state,
+        [unit.id]: { ...unit },
+      };
     }
     case RESET: {
       return defaultState;

@@ -2,7 +2,7 @@ import { Application, Container } from 'pixi.js';
 import { Store } from 'redux';
 import Map from '../data/Map';
 import Settings from '../data/Settings';
-import { RESET, SELECT_TILE, UPDATE_TILE } from '../store/actions';
+import { RESET, SELECT_TILE, SELECT_UNIT, UPDATE_UNIT } from '../store/actions';
 import { RootState } from '../store/reducers';
 import BackgroundLayer from './BackgroundLayer';
 import Click from './Click';
@@ -15,6 +15,9 @@ import TileLayer from './TileLayer';
 import Zoom from './Zoom';
 import UnitLayer from './UnitLayer';
 import { UnitState } from '../store/reducers/unitReducer';
+import SelectUnitAction from '../store/actions/selectUnitAction';
+import UpdateUnitAction from '../store/actions/updateUnitAction';
+import Unit from '../data/Unit';
 
 type Kill = () => void;
 
@@ -61,6 +64,12 @@ const launch = (
       layers.forEach(layer => layer.update());
     });
 
+    const onTick = (): void => {
+      unitLayer.runAnimations();
+    };
+
+    app.ticker.add(onTick);
+
     const click = new Click(app.stage).addListener((x, y) => {
       const local = dp.toLocalPoint({ x, y });
       const hex = dp.toHex(local);
@@ -72,13 +81,25 @@ const launch = (
         return;
       }
       store.dispatch({ type: SELECT_TILE, tile, position: hex });
-      // TODO remove this ⬇
-      store.dispatch({
-        type: UPDATE_TILE,
-        x: hex.x,
-        y: hex.y,
-        tile: { ...tile, groundFeature: tile.groundFeature ? null : 'FOREST' },
-      });
+      const selectedUnit = store.getState().selectedUnit;
+      if (selectedUnit) {
+        const unit: Unit = {
+          ...selectedUnit,
+          position: { x: hex.x, y: hex.y },
+        };
+        store.dispatch<UpdateUnitAction>({ type: UPDATE_UNIT, unit });
+      } else {
+        const currentUnits = units();
+        const currentUnitsArray = Object.keys(currentUnits).map(
+          key => currentUnits[Number(key)]
+        );
+        const unit = currentUnitsArray.find(
+          unit => unit.position.x === hex.x && unit.position.y === hex.y
+        );
+        if (unit) {
+          store.dispatch<SelectUnitAction>({ type: SELECT_UNIT, unit });
+        }
+      }
     });
     const drag = new Drag(app.ticker, app.stage).addListener((x, y) =>
       drawer.moveBy(x, y)
@@ -96,6 +117,7 @@ const launch = (
     resize();
 
     const tearDown = (): void => {
+      app.ticker.remove(onTick);
       storeUnsubscribe();
       store.dispatch({ type: RESET });
       window.removeEventListener('resize', resize);

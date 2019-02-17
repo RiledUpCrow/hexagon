@@ -25,6 +25,7 @@ interface RenderedUnitList {
 
 export default class UnitLayer implements MapLayer {
   protected readonly renderedUnits: RenderedUnitList = {};
+  protected previousUnits: UnitState;
 
   public constructor(
     protected readonly container: Container,
@@ -33,6 +34,7 @@ export default class UnitLayer implements MapLayer {
     protected readonly dp: DimensionsProvider
   ) {
     const unitsSnap = units();
+    this.previousUnits = unitsSnap;
     Object.keys(unitsSnap).forEach(id => {
       const unit = unitsSnap[Number(id)];
       this.renderedUnits[Number(id)] = { unit };
@@ -56,7 +58,74 @@ export default class UnitLayer implements MapLayer {
     return this.container;
   };
 
-  public update = (): void => {};
+  public update = (): void => {
+    const currentUnits = this.units();
+    if (currentUnits === this.previousUnits) {
+      return;
+    }
+    const currentIds = Object.keys(currentUnits);
+    const previousIds = Object.keys(this.previousUnits);
+
+    const added = currentIds.filter(
+      id => previousIds.indexOf(id) === undefined
+    );
+    added.forEach(id => {
+      const renderedUnit = { unit: currentUnits[Number(id)] };
+      this.renderedUnits[Number(id)] = renderedUnit;
+      this.renderUnit(renderedUnit);
+    });
+
+    const removed = previousIds.filter(
+      id => currentIds.indexOf(id) === undefined
+    );
+    removed.forEach(id => {
+      const renderedUnit = this.renderedUnits[Number(id)];
+      this.removeUnit(renderedUnit);
+      delete this.renderedUnits[Number(id)];
+    });
+
+    const changed = previousIds.filter(
+      id =>
+        currentUnits[Number(id)] &&
+        this.previousUnits[Number(id)] !== currentUnits[Number(id)]
+    );
+    changed.forEach(key => {
+      const id = Number(key);
+      const curr = currentUnits[id];
+      const prev = this.previousUnits[id];
+      if (!Object.is(curr.position, prev.position)) {
+        const animation: UnitAnimation = {
+          start: new Point(prev.position.x, prev.position.y),
+          end: new Point(curr.position.x, curr.position.y),
+          progress: 0,
+        };
+        this.renderedUnits[id].animation = animation;
+        this.draw(false);
+      }
+      this.renderedUnits[id].unit = curr;
+    });
+
+    this.previousUnits = currentUnits;
+  };
+
+  public runAnimations = (): void => {
+    const progress = 1 / 60;
+    Object.keys(this.renderedUnits).forEach(key => {
+      const id = Number(key);
+      const unit = this.renderedUnits[id];
+      if (unit.animation) {
+        if (unit.animation.progress >= 1) {
+          delete unit.animation;
+          return;
+        }
+        unit.animation.progress += progress;
+        if (unit.displayObject) {
+          const { x, y } = this.getAnimatedPosition(unit.animation);
+          unit.displayObject.position.set(x, y);
+        }
+      }
+    });
+  };
 
   protected clear = () => {
     Object.keys(this.renderedUnits).forEach(id => {
@@ -101,7 +170,7 @@ export default class UnitLayer implements MapLayer {
       this.dp.getTileDimensions().width * 0.5
     );
     const { x, y } = unit.animation
-      ? this.getAnimaterPosition(unit.animation)
+      ? this.getAnimatedPosition(unit.animation)
       : this.getStaticPosition(unit.unit);
     sprite.position.set(x, y);
     sprite.anchor.y = 0.75;
@@ -114,14 +183,19 @@ export default class UnitLayer implements MapLayer {
     return this.dp.getTileCoordinates(x, y);
   };
 
-  private getAnimaterPosition = (animation: UnitAnimation): Position => {
+  private getAnimatedPosition = (animation: UnitAnimation): Position => {
     const { start, end } = animation;
-    const startPoint = new Point(start.x, start.y);
-    const endPoint = new Point(end.x, end.y);
+    const { x: startX, y: startY } = this.dp.getTileCoordinates(
+      start.x,
+      start.y
+    );
+    const { x: endX, y: endY } = this.dp.getTileCoordinates(end.x, end.y);
+    const startPoint = new Point(startX, startY);
+    const endPoint = new Point(endX, endY);
     const direction = startPoint
       .getDirection(endPoint)
       .multiply(animation.progress);
-    return start.add(direction);
+    return startPoint.add(direction);
   };
 
   private isTileHidden = (xIndex: number, yIndex: number) => {
