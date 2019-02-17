@@ -109,7 +109,7 @@ export default class UnitLayer implements MapLayer {
   };
 
   public runAnimations = (): void => {
-    const progress = 1 / 60;
+    const progress = 3 / 60;
     Object.keys(this.renderedUnits).forEach(key => {
       const id = Number(key);
       const unit = this.renderedUnits[id];
@@ -192,9 +192,8 @@ export default class UnitLayer implements MapLayer {
     const { x: endX, y: endY } = this.dp.getTileCoordinates(end.x, end.y);
     const startPoint = new Point(startX, startY);
     const endPoint = new Point(endX, endY);
-    const direction = startPoint
-      .getDirection(endPoint)
-      .multiply(animation.progress);
+    const distance = (Math.cos(Math.PI * animation.progress) - 1) / -2;
+    const direction = startPoint.getDirection(endPoint).multiply(distance);
     return startPoint.add(direction);
   };
 
