@@ -10,7 +10,7 @@ import { Position } from '../userInterface/TileInfo';
 interface RenderedUnit {
   unit: Unit;
   displayObject?: DisplayObject;
-  animation?: UnitAnimation;
+  animation: UnitAnimation[];
 }
 
 interface UnitAnimation {
@@ -37,7 +37,7 @@ export default class UnitLayer implements MapLayer {
     this.previousUnits = unitsSnap;
     Object.keys(unitsSnap).forEach(id => {
       const unit = unitsSnap[Number(id)];
-      this.renderedUnits[Number(id)] = { unit };
+      this.renderedUnits[Number(id)] = { unit, animation: [] };
     });
   }
 
@@ -70,7 +70,7 @@ export default class UnitLayer implements MapLayer {
       id => previousIds.indexOf(id) === undefined
     );
     added.forEach(id => {
-      const renderedUnit = { unit: currentUnits[Number(id)] };
+      const renderedUnit = { unit: currentUnits[Number(id)], animation: [] };
       this.renderedUnits[Number(id)] = renderedUnit;
       this.renderUnit(renderedUnit);
     });
@@ -99,7 +99,7 @@ export default class UnitLayer implements MapLayer {
           end: new Point(curr.position.x, curr.position.y),
           progress: 0,
         };
-        this.renderedUnits[id].animation = animation;
+        this.renderedUnits[id].animation.push(animation);
         this.draw(false);
       }
       this.renderedUnits[id].unit = curr;
@@ -113,18 +113,20 @@ export default class UnitLayer implements MapLayer {
     Object.keys(this.renderedUnits).forEach(key => {
       const id = Number(key);
       const unit = this.renderedUnits[id];
-      if (unit.animation) {
-        if (unit.animation.progress >= 1) {
-          delete unit.animation;
+      if (unit.animation.length > 0) {
+        const animation = unit.animation[0];
+        if (animation.progress >= 1) {
+          unit.animation.splice(0, 1);
           return;
         }
-        unit.animation.progress += progress;
+        animation.progress += progress;
         if (unit.displayObject) {
-          const { x, y } = this.getAnimatedPosition(unit.animation);
+          const { x, y } = this.getAnimatedPosition(animation);
           unit.displayObject.position.set(x, y);
         }
       }
     });
+    this.draw(false);
   };
 
   protected clear = () => {
@@ -135,10 +137,11 @@ export default class UnitLayer implements MapLayer {
   };
 
   protected isHidden = (unit: RenderedUnit): boolean => {
-    if (unit.animation) {
+    if (unit.animation.length > 0) {
       // there's an animation, let's check if entire rectangle of movement is hidden
-      const { x: startX, y: startY } = unit.animation.start;
-      const { x: endX, y: endY } = unit.animation.end;
+      const animation = unit.animation[0];
+      const { x: startX, y: startY } = animation.start;
+      const { x: endX, y: endY } = animation.end;
       return [
         this.isTileHidden(Math.min(startX, endX), Math.min(startY, endY)),
         this.isTileHidden(Math.min(startX, endX), Math.max(startY, endY)),
@@ -169,9 +172,10 @@ export default class UnitLayer implements MapLayer {
       unit.unit.type,
       this.dp.getTileDimensions().width * 0.5
     );
-    const { x, y } = unit.animation
-      ? this.getAnimatedPosition(unit.animation)
-      : this.getStaticPosition(unit.unit);
+    const { x, y } =
+      unit.animation.length > 0
+        ? this.getAnimatedPosition(unit.animation[0])
+        : this.getStaticPosition(unit.unit);
     sprite.position.set(x, y);
     sprite.anchor.y = 0.75;
     this.container.addChild(sprite);
