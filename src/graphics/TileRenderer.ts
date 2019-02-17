@@ -34,10 +34,10 @@ export default class TileRenderer {
   };
 
   private getGroundFeature = (groundFeature: GroundFeature): DisplayObject => {
-    const sprite = this.textureManager.getGroundFeature(
-      groundFeature,
-      this.dp.getTileDimensions().width
-    );
+    const { width, height } = this.dp.getTileDimensions();
+    const sprite = this.textureManager.getGroundFeature(groundFeature, width);
+    const scale = (height + 1) / (this.dp.getSize() * 2);
+    sprite.height *= scale;
     return sprite;
   };
 }
