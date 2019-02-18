@@ -139,10 +139,9 @@ export default class DimensionsProvider {
    * a different border sizes.
    */
   public getBorderDimensions = (): Dimensions => {
-    const { width, height } = this.getCellDimensions();
     return {
-      width: width * 2,
-      height: height * 2,
+      width: this.screenWidth / 2,
+      height: this.screenHeight / 2,
     };
   };
 
