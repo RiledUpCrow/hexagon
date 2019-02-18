@@ -1,9 +1,9 @@
 import { AnyAction } from 'redux';
 import Map from '../../data/Map';
-import { LOAD_MAP, RESET, UPDATE_TILE, SELECT_TILE } from '../actions';
+import Tile from '../../data/Tile';
+import { LOAD_MAP, RESET, UPDATE_TILE } from '../actions';
 import LoadMapAction from '../actions/loadMapAction';
 import UpdateTileAction from '../actions/updateTileAction';
-import Tile from '../../data/Tile';
 
 type Tiles = (Tile | null)[][];
 

@@ -46,7 +46,8 @@ class Hex {
     const angleRad = (Math.PI / 180.0) * angleDeg;
     return new Point(
       this.center.x + this.size * Math.cos(angleRad),
-      this.center.y + this.size * Math.sin(angleRad)
+      this.center.y +
+        (this.size + 1) * Math.sin(angleRad) * Math.cos((30 * Math.PI) / 180)
     );
   };
 }

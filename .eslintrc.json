@@ -14,6 +14,7 @@
     "no-var": "error",
     "no-useless-constructor": "off",
     "no-console": "warn",
+    "no-loop-func": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-parameter-properties": "off"
   }

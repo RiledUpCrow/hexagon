@@ -15,6 +15,7 @@ import TextureManager from './TextureManager';
 import TileLayer from './TileLayer';
 import UnitLayer from './UnitLayer';
 import Zoom from './Zoom';
+import UnderlayLayer from './UnderlayLayer';
 
 type Kill = () => void;
 
@@ -42,12 +43,19 @@ const launch = (
 
     const backgroundContainer = new Container();
     const tileContainer = new Container();
+    const underlayContainer = new Container();
     const unitContainer = new Container();
-    container.addChild(backgroundContainer, tileContainer, unitContainer);
+    container.addChild(
+      backgroundContainer,
+      tileContainer,
+      underlayContainer,
+      unitContainer
+    );
 
     const layers = [
       new BackgroundLayer(backgroundContainer, dp),
       new TileLayer(tileContainer, textureManager, store.getState, dp),
+      new UnderlayLayer(underlayContainer, textureManager, store.getState, dp),
       new UnitLayer(unitContainer, textureManager, store.getState, dp),
     ];
 
