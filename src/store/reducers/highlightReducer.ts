@@ -5,10 +5,12 @@ export type HighlightState = Highlight[];
 
 const defaultState: HighlightState = [
   {
+    id: 0,
     tiles: [{ x: 4, y: 3 }, { x: 4, y: 4 }, { x: 5, y: 3 }, { x: 5, y: 4 }],
     color: 0xaa61a5,
   },
   {
+    id: 1,
     tiles: [
       { x: 12, y: 10 },
       { x: 12, y: 11 },
