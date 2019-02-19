@@ -1,6 +1,12 @@
 import { AnyAction } from 'redux';
 import Unit from '../../data/Unit';
-import { RESET, SELECT_UNIT, UPDATE_UNIT, MOVE_UNIT } from '../actions';
+import {
+  RESET,
+  SELECT_UNIT,
+  UPDATE_UNIT,
+  MOVE_UNIT,
+  DESELECT,
+} from '../actions';
 import SelectUnitAction from '../actions/selectUnitAction';
 import UpdateUnitAction from '../actions/updateUnitAction';
 import MoveUnitAction from '../actions/moveUnitAction';
@@ -32,6 +38,7 @@ export default (
       }
       return state;
     }
+    case DESELECT:
     case RESET: {
       return defaultState;
     }
