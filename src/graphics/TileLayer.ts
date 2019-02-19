@@ -1,7 +1,7 @@
 import { DisplayObject, Container } from 'pixi.js';
 import TileRenderer from './TileRenderer';
 import Map from '../data/Map';
-import DimensionsProvider from './DimensionsProvider';
+import DimensionsProvider, { Boundaries } from './DimensionsProvider';
 import MapLayer from './MapLayer';
 import { Position } from '../userInterface/TileInfo';
 import TextureManager from './TextureManager';
@@ -33,8 +33,10 @@ export default class TileLayer implements MapLayer {
       this.emptyTiles();
     }
 
+    const boundaries = this.dp.getTileIndexBoundaries();
+
     this.mapIterator().forEach((x, y) => {
-      if (this.isHidden(x, y)) {
+      if (this.isHidden(x, y, boundaries)) {
         this.removeTile(x, y);
       } else {
         this.createTile(x, y);
@@ -48,6 +50,7 @@ export default class TileLayer implements MapLayer {
 
   public update = (): void => {
     const currentMap = this.map();
+    const boundaries = this.dp.getTileIndexBoundaries();
     if (currentMap !== this.previousMap) {
       const changed: Position[] = [];
       const { tiles, width, height } = currentMap;
@@ -58,16 +61,16 @@ export default class TileLayer implements MapLayer {
           }
         }
       }
-      changed.forEach(position => this.updateTile(position));
+      changed.forEach(position => this.updateTile(position, boundaries));
     }
     this.previousMap = currentMap;
   };
 
   public animate = () => undefined;
 
-  protected updateTile = (position: Position) => {
+  protected updateTile = (position: Position, boundaries: Boundaries) => {
     const { x, y } = position;
-    if (!this.isHidden(x, y)) {
+    if (!this.isHidden(x, y, boundaries)) {
       this.removeTile(x, y);
       this.createTile(x, y);
     }
@@ -84,8 +87,12 @@ export default class TileLayer implements MapLayer {
     },
   });
 
-  protected isHidden = (xIndex: number, yIndex: number) => {
-    const { minX, maxX, minY, maxY } = this.dp.getTileIndexBoundaries();
+  protected isHidden = (
+    xIndex: number,
+    yIndex: number,
+    boundaries: Boundaries
+  ) => {
+    const { minX, maxX, minY, maxY } = boundaries;
     return xIndex < minX || xIndex > maxX || yIndex < minY || yIndex > maxY;
   };
 

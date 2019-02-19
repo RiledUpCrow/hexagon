@@ -16,7 +16,7 @@ interface Position {
   y: number;
 }
 
-interface Boundaries {
+export interface Boundaries {
   minX: number;
   maxX: number;
   minY: number;
