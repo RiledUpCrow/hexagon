@@ -11,23 +11,39 @@ export default class BackgroundLayer implements MapLayer {
   ) {}
 
   public draw = () => {
+    this.createBackground();
+    const { x, y } = this.dp.getPosition();
+    this.background!.position.set(-x, -y);
+  };
+
+  public update = () => {
+    this.removeBackground();
+    this.draw();
+  };
+
+  public animate = () => undefined;
+
+  protected createBackground = () => {
     if (this.background) {
-      this.container.removeChild(this.background);
+      return;
     }
-    const { minX, maxX, minY, maxY } = this.dp.getViewBoundaries();
+    const { width, height } = this.dp.getScreen();
     this.background = new Graphics()
       .beginFill(0x13062d)
-      .moveTo(minX, minY)
-      .lineTo(maxX, minY)
-      .lineTo(maxX, maxY)
-      .lineTo(minX, maxY)
+      .moveTo(0, 0)
+      .lineTo(width, 0)
+      .lineTo(width, height)
+      .lineTo(0, height)
       .closePath()
       .endFill();
     this.container.addChildAt(this.background, 0);
-
-    return this.container;
   };
 
-  public update = () => undefined;
-  public animate = () => undefined;
+  protected removeBackground = () => {
+    if (!this.background) {
+      return;
+    }
+    this.container.removeChild(this.background);
+    this.background = null;
+  };
 }

@@ -65,6 +65,13 @@ export default class DimensionsProvider {
   };
 
   /**
+   * Returns the screen dimensions.
+   */
+  public getScreen = (): Dimensions => {
+    return { width: this.screenWidth, height: this.screenHeight };
+  };
+
+  /**
    * Sets the dimensions of the map (in tiles).
    */
   public setMap = (width: number, height: number) => {
@@ -78,6 +85,13 @@ export default class DimensionsProvider {
   public setPosition = (x: number, y: number) => {
     this.posX = x;
     this.posY = y;
+  };
+
+  /**
+   * Returns the current container position.
+   */
+  public getPosition = (): Position => {
+    return { x: this.posX, y: this.posY };
   };
 
   /**
