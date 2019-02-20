@@ -2,46 +2,62 @@ import {
   Loader,
   Rectangle,
   Renderer,
-  SCALE_MODES,
   Sprite,
   Texture,
+  SCALE_MODES,
+  BaseTexture,
 } from 'pixi.js';
-import desertTxt from '../textures/desert.png';
-import forestTxt from '../textures/forest.png';
-import grasshillTxt from '../textures/grasshill.png';
-import grasslandTxt from '../textures/grassland.png';
-import mountainTxt from '../textures/mountain.png';
-import plainsTxt from '../textures/plains.png';
-import snowTxt from '../textures/snow.png';
-import tundraTxt from '../textures/tundra.png';
-import warriorTxt from '../textures/warrior.png';
-import waterTxt from '../textures/water.png';
+import atlas1 from '../textures/atlas1.png';
 import { GroundFeature as GF } from '../data/GroundFeature';
 import { GroundType as GT } from '../data/GroundType';
 import { UnitType as UT } from '../data/UnitType';
 
-type GroundFeatures = { [key in GF]: string };
-type GroundTypes = { [key in GT]: string };
-type UnitTypes = { [key in UT]: string };
+type GroundFeatures = { [key in GF]: AtlasPart };
+type GroundTypes = { [key in GT]: AtlasPart };
+type UnitTypes = { [key in UT]: AtlasPart };
+
+interface TextureAtlas {
+  [size: number]: { [key: string]: Texture };
+}
+
+type AtlasPart = (
+  size: number
+) => {
+  a: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+};
+
+const atlases = [atlas1];
+
+const coords = (x: number, y: number): AtlasPart => size => ({
+  a: atlas1,
+  x: (x * 64 * 4) / size,
+  y: (y * 92 * 4) / size,
+  w: (62 * 4) / size,
+  h: (90 * 4) / size,
+});
 
 export default class TextureManager {
   private loaded = false;
 
   public static readonly groundFeatures: GroundFeatures = {
-    FOREST: forestTxt,
+    FOREST: coords(0, 1),
   };
   public static readonly groundTypes: GroundTypes = {
-    GRASSLAND: grasslandTxt,
-    GRASS_HILL: grasshillTxt,
-    PLAINS: plainsTxt,
-    TUNDRA: tundraTxt,
-    DESERT: desertTxt,
-    SNOW: snowTxt,
-    WATER: waterTxt,
-    MOUNTAIN: mountainTxt,
+    GRASSLAND: coords(0, 0),
+    GRASS_HILL: coords(6, 0),
+    PLAINS: coords(2, 0),
+    TUNDRA: coords(1, 0),
+    DESERT: coords(3, 0),
+    SNOW: coords(4, 0),
+    WATER: coords(5, 0),
+    MOUNTAIN: coords(7, 0),
   };
   public static readonly unitTypes: UnitTypes = {
-    WARRIOR: warriorTxt,
+    WARRIOR: coords(1, 1),
   };
 
   private readonly textureKeys: string[] = [];
@@ -49,11 +65,25 @@ export default class TextureManager {
     [key: string]: { [size: number]: Texture };
   } = {};
 
-  private readonly SIZES = new Array(6)
-    .fill(null)
-    .map((_, index) => Math.pow(2, index));
+  private readonly SIZES = [1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 6, 8];
 
-  public constructor(private loader: Loader, private renderer: Renderer) {}
+  private readonly groundFeatureTextures: {
+    [size: number]: { [key: string]: Texture };
+  } = {};
+  private readonly groundTypeTextures: {
+    [size: number]: { [key: string]: Texture };
+  } = {};
+  private readonly unitTypeTextures: {
+    [size: number]: { [key: string]: Texture };
+  } = {};
+
+  public constructor(private loader: Loader, private renderer: Renderer) {
+    this.SIZES.forEach(size => {
+      this.groundFeatureTextures[size] = {};
+      this.groundTypeTextures[size] = {};
+      this.unitTypeTextures[size] = {};
+    });
+  }
 
   public load = (): Promise<void> => {
     return new Promise(resolve => {
@@ -70,12 +100,49 @@ export default class TextureManager {
           }
           const mipMaps: { [size: number]: Texture } = {};
           this.SIZES.forEach(size => {
-            mipMaps[size] = this.generateMipMap(
+            const base = this.generateMipMap(
               this.loader,
               this.renderer,
               key,
               size
             );
+            mipMaps[size] = base;
+            Object.keys(TextureManager.groundTypes).forEach(gt => {
+              const atlasPart = TextureManager.groundTypes[gt as GT];
+              const { a, x, y, w, h } = atlasPart(size);
+              if (key !== a) {
+                return;
+              }
+              const texture = new Texture(
+                base as any,
+                new Rectangle(x, y, w, h)
+              );
+              this.groundTypeTextures[size][gt] = texture;
+            });
+            Object.keys(TextureManager.groundFeatures).forEach(gf => {
+              const atlasPart = TextureManager.groundFeatures[gf as GF];
+              const { a, x, y, w, h } = atlasPart(size);
+              if (key !== a) {
+                return;
+              }
+              const texture = new Texture(
+                base as any,
+                new Rectangle(x, y, w, h)
+              );
+              this.groundFeatureTextures[size][gf] = texture;
+            });
+            Object.keys(TextureManager.unitTypes).forEach(ut => {
+              const atlasPart = TextureManager.unitTypes[ut as UT];
+              const { a, x, y, w, h } = atlasPart(size);
+              if (key !== a) {
+                return;
+              }
+              const texture = new Texture(
+                base as any,
+                new Rectangle(x, y, w, h)
+              );
+              this.unitTypeTextures[size][ut] = texture;
+            });
           });
           this.mipMaps[key] = mipMaps;
         });
@@ -90,23 +157,27 @@ export default class TextureManager {
     width: number,
     height?: number
   ): Sprite => {
-    return this.getSprite(TextureManager.groundFeatures[gf], width, height);
+    return this.getSprite(gf, this.groundFeatureTextures, width, height);
   };
 
   public getGroundType = (gt: GT, width: number, height?: number): Sprite => {
-    return this.getSprite(TextureManager.groundTypes[gt], width, height);
+    return this.getSprite(gt, this.groundTypeTextures, width, height);
   };
 
   public getUnitType = (ut: UT, width: number, height?: number): Sprite => {
-    return this.getSprite(TextureManager.unitTypes[ut], width, height);
+    return this.getSprite(ut, this.unitTypeTextures, width, height);
   };
 
-  private getSprite = (key: string, width: number, height?: number): Sprite => {
-    const mipMaps = this.mipMaps[key];
-    let bestTexture: Texture | null = null;
-    for (let i = 0; i < this.SIZES.length; i++) {
+  private getSprite = (
+    key: string,
+    atlas: TextureAtlas,
+    width: number,
+    height?: number
+  ): Sprite => {
+    let bestTexture: Texture = atlas[this.SIZES[0]][key];
+    for (let i = 1; i < this.SIZES.length; i++) {
       const size = this.SIZES[i];
-      const texture = mipMaps[size];
+      const texture = atlas[size][key];
       let target;
       if (height !== undefined) {
         target = height * devicePixelRatio * (width * devicePixelRatio);
@@ -120,7 +191,6 @@ export default class TextureManager {
         bestTexture = texture;
       }
     }
-
     const result = new Sprite(bestTexture!);
     if (height !== undefined) {
       result.height = height;
@@ -137,18 +207,7 @@ export default class TextureManager {
   private loadBaseTextures = (loader: Loader): void => {
     this.textureKeys.length = 0;
 
-    Object.keys(TextureManager.groundFeatures).forEach(key => {
-      const url = TextureManager.groundFeatures[key as GF];
-      this.textureKeys.push(url);
-    });
-
-    Object.keys(TextureManager.groundTypes).forEach(key => {
-      const url = TextureManager.groundTypes[key as GT];
-      this.textureKeys.push(url);
-    });
-
-    Object.keys(TextureManager.unitTypes).forEach(key => {
-      const url = TextureManager.unitTypes[key as UT];
+    atlases.forEach(url => {
       this.textureKeys.push(url);
     });
 
@@ -165,13 +224,13 @@ export default class TextureManager {
   ): Texture => {
     const base = loader.resources[key].texture;
     const sprite = new Sprite(base);
-    sprite.width = (sprite.width / size) * devicePixelRatio;
-    sprite.height = (sprite.height / size) * devicePixelRatio;
+    sprite.width = sprite.width / size;
+    sprite.height = sprite.height / size;
     const result = renderer.generateTexture(
       sprite,
       SCALE_MODES.LINEAR,
       1,
-      new Rectangle(0, 0, sprite.width, sprite.height + devicePixelRatio * 2)
+      new Rectangle(0, 0, 2048 / size, 2048 / size)
     );
     return result;
   };
