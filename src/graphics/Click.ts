@@ -11,16 +11,37 @@ export default class Click {
   private readonly primary: Listener[] = [];
   private readonly secondary: Listener[] = [];
   private type?: Type;
+  private delay?: NodeJS.Timeout;
   private clickStart?: Point;
 
   public constructor(private readonly stage: DisplayObject) {
     stage.on('pointerdown', event => {
-      this.type = event.data.button === 0 ? 'primary' : 'secondary';
+      switch (event.data.pointerType) {
+        case 'mouse': {
+          this.type = event.data.button === 0 ? 'primary' : 'secondary';
+          break;
+        }
+        case 'touch': {
+          this.type = 'primary';
+          if (this.delay) {
+            clearTimeout(this.delay);
+          }
+          this.delay = setTimeout(() => (this.type = 'secondary'), 500);
+          break;
+        }
+        default:
+          // dunno how to handle a pen - don't have one for testing
+          break;
+      }
       this.clickStart = Point.fromPixi(event.data.global);
     });
     stage.on('pointerup', event => {
       if (!this.clickStart) {
         return;
+      }
+      if (this.delay) {
+        clearTimeout(this.delay);
+        this.delay = undefined;
       }
       const clickEnd = Point.fromPixi(event.data.global);
       if (this.clickStart.distance(clickEnd) < THRESHOLD) {
