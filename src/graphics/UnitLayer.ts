@@ -12,6 +12,7 @@ import { RootState } from '../store/reducers';
 interface RenderedUnit {
   unit: Unit;
   displayObject?: DisplayObject;
+  drawn: boolean;
   animation: UnitAnimation[];
 }
 
@@ -44,7 +45,7 @@ export default class UnitLayer implements MapLayer {
     this.previousMoves = this.moves();
     Object.keys(this.previousUnits).forEach(id => {
       const unit = this.previousUnits[Number(id)];
-      this.renderedUnits[Number(id)] = { unit, animation: [] };
+      this.renderedUnits[Number(id)] = { unit, animation: [], drawn: false };
     });
   }
 
@@ -52,16 +53,15 @@ export default class UnitLayer implements MapLayer {
     Object.keys(this.renderedUnits).forEach(id => {
       const unit = this.renderedUnits[Number(id)];
       if (this.isHidden(unit)) {
-        this.removeUnit(unit);
+        this.hideUnit(unit);
       } else {
-        this.renderUnit(unit);
+        this.showUnit(unit);
       }
     });
   };
 
   public resize = (): void => {
     this.clear();
-    this.draw();
   };
 
   public update = (): void => {
@@ -76,7 +76,11 @@ export default class UnitLayer implements MapLayer {
       id => previousIds.indexOf(id) === undefined
     );
     added.forEach(id => {
-      const renderedUnit = { unit: currentUnits[Number(id)], animation: [] };
+      const renderedUnit = {
+        unit: currentUnits[Number(id)],
+        animation: [],
+        drawn: false,
+      };
       this.renderedUnits[Number(id)] = renderedUnit;
       this.renderUnit(renderedUnit);
     });
@@ -119,6 +123,8 @@ export default class UnitLayer implements MapLayer {
 
     this.previousMoves = currentMoves;
     this.previousUnits = currentUnits;
+
+    this.draw();
   };
 
   public animate = (): void => {
@@ -174,6 +180,7 @@ export default class UnitLayer implements MapLayer {
     }
     this.container.removeChild(unit.displayObject);
     unit.displayObject = undefined;
+    unit.drawn = false;
   };
 
   protected renderUnit = (unit: RenderedUnit) => {
@@ -188,8 +195,26 @@ export default class UnitLayer implements MapLayer {
     const { x, y } = this.getCurrentPosition(unit);
     sprite.position.set(x, y);
     sprite.anchor.y = 0.75;
-    this.container.addChild(sprite);
     unit.displayObject = sprite;
+  };
+
+  protected hideUnit = (unit: RenderedUnit) => {
+    if (!unit.drawn) {
+      return;
+    }
+    this.container.removeChild(unit.displayObject!);
+    unit.drawn = false;
+  };
+
+  protected showUnit = (unit: RenderedUnit) => {
+    if (unit.drawn) {
+      return;
+    }
+    if (!unit.displayObject) {
+      this.renderUnit(unit);
+    }
+    this.container.addChild(unit.displayObject!);
+    unit.drawn = true;
   };
 
   private getCurrentPosition = (unit: RenderedUnit): Position => {
