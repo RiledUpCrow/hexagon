@@ -61,7 +61,7 @@ export default class TextureManager {
     [key: string]: { [size: number]: Texture };
   } = {};
 
-  private readonly SIZES = [1, 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 6, 8];
+  private readonly SIZES = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6];
 
   private readonly textures: TextureAtlas = {};
 

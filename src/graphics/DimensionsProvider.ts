@@ -34,13 +34,28 @@ export default class DimensionsProvider {
    */
   private readonly tilt = 30;
 
-  private size = 1;
-  private screenWidth = 1;
-  private screenHeight = 1;
-  private mapWidth = 1;
-  private mapHeight = 1;
-  private posX = 1;
-  private posY = 1;
+  private size: number;
+  private screenWidth: number;
+  private screenHeight: number;
+  private mapWidth: number;
+  private mapHeight: number;
+  private posX: number;
+  private posY: number;
+
+  public constructor(
+    size: number,
+    screen: Dimensions,
+    map: Dimensions,
+    position: Position
+  ) {
+    this.size = size;
+    this.screenWidth = screen.width;
+    this.screenHeight = screen.height;
+    this.mapHeight = map.height;
+    this.mapWidth = map.width;
+    this.posX = position.x;
+    this.posY = position.y;
+  }
 
   /**
    * Sets the base size of the view.

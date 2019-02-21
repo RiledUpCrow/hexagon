@@ -11,6 +11,7 @@ export default class TileLayer implements MapLayer {
   protected readonly tileRenderer: TileRenderer;
   protected readonly map: () => Map;
   protected tiles: (DisplayObject | null)[][] = [];
+  protected drawn: boolean[][] = [];
   protected previousMap: Map;
 
   public constructor(
@@ -22,21 +23,12 @@ export default class TileLayer implements MapLayer {
     this.map = () => getState().map!;
     this.tileRenderer = new TileRenderer(textureManager, dp);
     this.previousMap = this.map();
-    this.tiles = [];
     this.map().tiles.forEach(column => {
       this.tiles.push(new Array(column.length).fill(null));
+      this.drawn.push(new Array(column.length).fill(false));
     });
     this.recreateAll();
-    this.draw();
   }
-
-  protected recreateAll = () => {
-    this.emptyTiles();
-    this.mapIterator().forEach((x, y) => {
-      this.createTile(x, y);
-    });
-    this.container.sortChildren();
-  };
 
   public draw = (forceRefresh: boolean = false) => {
     if (forceRefresh) {
@@ -47,11 +39,13 @@ export default class TileLayer implements MapLayer {
 
     this.mapIterator().forEach((x, y) => {
       if (this.isHidden(x, y, boundaries)) {
-        this.tiles[x][y]!.visible = false;
+        this.hideTile({ x, y });
       } else {
-        this.tiles[x][y]!.visible = true;
+        this.displayTile({ x, y });
       }
     });
+
+    this.container.sortChildren();
   };
 
   public update = (): void => {
@@ -74,10 +68,34 @@ export default class TileLayer implements MapLayer {
 
   public animate = () => undefined;
 
+  protected displayTile = (position: Position) => {
+    const { x, y } = position;
+    if (!this.drawn[x][y]) {
+      this.container.addChild(this.tiles[x][y]!);
+      this.drawn[x][y] = true;
+    }
+  };
+
+  protected hideTile = (position: Position) => {
+    const { x, y } = position;
+    if (this.drawn[x][y]) {
+      this.container.removeChild(this.tiles[x][y]!);
+      this.drawn[x][y] = false;
+    }
+  };
+
+  protected recreateAll = () => {
+    this.mapIterator().forEach((x, y) => {
+      this.removeTile(x, y);
+      this.createTile(x, y);
+    });
+    this.container.sortChildren();
+  };
+
   protected updateTile = (position: Position, boundaries: Boundaries) => {
     const { x, y } = position;
     if (!this.isHidden(x, y, boundaries)) {
-      this.removeTile(x, y, true);
+      this.removeTile(x, y);
       this.createTile(x, y);
     }
     this.container.sortChildren();
@@ -102,32 +120,17 @@ export default class TileLayer implements MapLayer {
     return xIndex < minX || xIndex > maxX || yIndex < minY || yIndex > maxY;
   };
 
-  protected emptyTiles = () => {
-    this.mapIterator().forEach((x, y) => this.removeTile(x, y, true));
-  };
-
-  protected removeTile = (
-    xIndex: number,
-    yIndex: number,
-    forceRefresh: boolean
-  ) => {
+  protected removeTile = (xIndex: number, yIndex: number) => {
     let renderedTile = this.tiles[xIndex][yIndex];
     if (!renderedTile) {
       return;
     }
-    if (forceRefresh) {
-      this.container.removeChild(renderedTile);
-      this.tiles[xIndex][yIndex] = null;
-    } else {
-      renderedTile.visible = false;
-    }
+    this.container.removeChild(renderedTile);
+    this.drawn[xIndex][yIndex] = false;
+    this.tiles[xIndex][yIndex] = null;
   };
 
   protected createTile = (xIndex: number, yIndex: number) => {
-    if (this.tiles[xIndex][yIndex]) {
-      this.tiles[xIndex][yIndex]!.visible = true;
-      return;
-    }
     const tile = this.map().tiles[xIndex][yIndex];
     if (!tile) {
       return;
@@ -136,7 +139,6 @@ export default class TileLayer implements MapLayer {
     const { x, y } = this.dp.getTileCoordinates(xIndex, yIndex);
     renderedTile.position.set(x, y);
     renderedTile.zIndex = this.map().height * yIndex + xIndex;
-    this.container.addChild(renderedTile);
     this.tiles[xIndex][yIndex] = renderedTile;
   };
 }

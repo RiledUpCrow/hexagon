@@ -45,7 +45,12 @@ const launch = (
     app.stage.addChild(container);
     app.stage.interactive = true;
 
-    const dp = new DimensionsProvider();
+    const dp = new DimensionsProvider(
+      size,
+      { width: div.clientWidth, height: div.clientHeight },
+      { width: mapWidth, height: mapHeight },
+      { x: 0, y: 0 }
+    );
 
     const backgroundContainer = new Container();
     const tileContainer = new Container();
