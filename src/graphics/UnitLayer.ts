@@ -48,11 +48,7 @@ export default class UnitLayer implements MapLayer {
     });
   }
 
-  public draw = (refresh: boolean): void => {
-    if (refresh) {
-      this.clear();
-    }
-
+  public draw = (): void => {
     Object.keys(this.renderedUnits).forEach(id => {
       const unit = this.renderedUnits[Number(id)];
       if (this.isHidden(unit)) {
@@ -61,6 +57,11 @@ export default class UnitLayer implements MapLayer {
         this.renderUnit(unit);
       }
     });
+  };
+
+  public resize = (): void => {
+    this.clear();
+    this.draw();
   };
 
   public update = (): void => {
@@ -138,7 +139,7 @@ export default class UnitLayer implements MapLayer {
         }
       }
     });
-    this.draw(false);
+    this.draw();
   };
 
   protected clear = () => {

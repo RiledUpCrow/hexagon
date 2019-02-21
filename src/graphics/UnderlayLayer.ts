@@ -22,13 +22,17 @@ export default class UnderlayLayer implements MapLayer {
     this.highlights = () => getState().highlight;
   }
 
-  public draw = (refresh: boolean): void => {
+  public draw = (): void => {
     const highlights = this.highlights();
     highlights.forEach(highlight => {
-      if (refresh) {
-        this.removeHighlight(highlight);
-      }
       this.renderHighlight(highlight);
+    });
+  };
+
+  public resize = (): void => {
+    const highlights = this.highlights();
+    highlights.forEach(highlight => {
+      this.removeHighlight(highlight);
     });
   };
 

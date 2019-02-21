@@ -30,11 +30,7 @@ export default class TileLayer implements MapLayer {
     this.recreateAll();
   }
 
-  public draw = (forceRefresh: boolean = false) => {
-    if (forceRefresh) {
-      this.recreateAll();
-    }
-
+  public draw = () => {
     const boundaries = this.dp.getTileIndexBoundaries();
 
     this.mapIterator().forEach((x, y) => {
@@ -46,6 +42,10 @@ export default class TileLayer implements MapLayer {
     });
 
     this.container.sortChildren();
+  };
+
+  public resize = () => {
+    this.recreateAll();
   };
 
   public update = (): void => {

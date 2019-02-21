@@ -1,5 +1,6 @@
 export default interface MapLayer {
-  draw: (refresh: boolean) => void;
+  draw: () => void;
+  resize: () => void;
   update: () => void;
   animate: () => void;
 }

@@ -16,6 +16,8 @@ export default class BackgroundLayer implements MapLayer {
     this.background!.position.set(-x, -y);
   };
 
+  public resize = () => undefined;
+
   public update = () => {
     this.removeBackground();
     this.draw();

@@ -24,8 +24,12 @@ export default class MapDrawer {
     this.originalSize = size;
   }
 
-  public drawMap = (force: boolean = false) => {
-    this.layers.forEach(layer => layer.draw(force));
+  public drawMap = () => {
+    this.layers.forEach(layer => layer.draw());
+  };
+
+  public resizeMap = () => {
+    this.layers.forEach(layer => layer.resize());
   };
 
   public moveBy = (x: number, y: number) => {
@@ -71,7 +75,7 @@ export default class MapDrawer {
       const afterGlobal = this.dp.toGlobalPoint(afterLocal);
       this.size = targetSize;
       this.updateDimensions();
-      this.drawMap(true);
+      this.resizeMap();
       this.moveBy(point.x - afterGlobal.x, point.y - afterGlobal.y);
     }
   };
