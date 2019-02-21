@@ -26,26 +26,32 @@ export default class TileLayer implements MapLayer {
     this.map().tiles.forEach(column => {
       this.tiles.push(new Array(column.length).fill(null));
     });
+    this.recreateAll();
+    this.draw();
   }
+
+  protected recreateAll = () => {
+    this.emptyTiles();
+    this.mapIterator().forEach((x, y) => {
+      this.createTile(x, y);
+    });
+    this.container.sortChildren();
+  };
 
   public draw = (forceRefresh: boolean = false) => {
     if (forceRefresh) {
-      this.emptyTiles();
+      this.recreateAll();
     }
 
     const boundaries = this.dp.getTileIndexBoundaries();
 
     this.mapIterator().forEach((x, y) => {
       if (this.isHidden(x, y, boundaries)) {
-        this.removeTile(x, y, forceRefresh);
+        this.tiles[x][y]!.visible = false;
       } else {
-        this.createTile(x, y);
+        this.tiles[x][y]!.visible = true;
       }
     });
-
-    this.container.sortChildren();
-
-    return this.container;
   };
 
   public update = (): void => {
