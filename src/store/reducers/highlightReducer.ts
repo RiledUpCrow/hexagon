@@ -1,15 +1,17 @@
-import Highlight from '../../data/Highlight';
+import { Highlight } from '../../data/Highlight';
 import { AnyAction } from 'redux';
 
 export type HighlightState = Highlight[];
 
 const defaultState: HighlightState = [
   {
+    type: 'range',
     id: 0,
     tiles: [{ x: 4, y: 3 }, { x: 4, y: 4 }, { x: 5, y: 3 }, { x: 5, y: 4 }],
     color: 0xaa61a5,
   },
   {
+    type: 'range',
     id: 1,
     tiles: [
       { x: 12, y: 10 },
