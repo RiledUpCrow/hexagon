@@ -27,7 +27,6 @@ export default class TileLayer implements MapLayer {
       this.tiles.push(new Array(column.length).fill(null));
       this.drawn.push(new Array(column.length).fill(false));
     });
-    this.recreateAll();
   }
 
   public draw = () => {
@@ -45,7 +44,9 @@ export default class TileLayer implements MapLayer {
   };
 
   public resize = () => {
-    this.recreateAll();
+    this.mapIterator().forEach((x, y) => {
+      this.removeTile(x, y);
+    });
   };
 
   public update = (): void => {
@@ -71,6 +72,9 @@ export default class TileLayer implements MapLayer {
   protected displayTile = (position: Position) => {
     const { x, y } = position;
     if (!this.drawn[x][y]) {
+      if (!this.tiles[x][y]) {
+        this.createTile(x, y);
+      }
       this.container.addChild(this.tiles[x][y]!);
       this.drawn[x][y] = true;
     }
@@ -82,14 +86,6 @@ export default class TileLayer implements MapLayer {
       this.container.removeChild(this.tiles[x][y]!);
       this.drawn[x][y] = false;
     }
-  };
-
-  protected recreateAll = () => {
-    this.mapIterator().forEach((x, y) => {
-      this.removeTile(x, y);
-      this.createTile(x, y);
-    });
-    this.container.sortChildren();
   };
 
   protected updateTile = (position: Position, boundaries: Boundaries) => {
