@@ -153,9 +153,9 @@ export default class TextureManager {
       result.height = height;
     } else {
       const scale = width / result.width;
-      result.height = result.height * scale;
+      result.height = result.height * scale * 0.98;
     }
-    result.width = width;
+    result.width = width * 0.98;
     result.anchor.set(0.5, 0.5);
 
     return result;
