@@ -11,6 +11,7 @@ export default class UnderlayLayer implements MapLayer {
   protected readonly highlights: () => Highlight[];
   protected readonly renderedHighlights: { [id: number]: DisplayObject } = {};
   protected readonly drawers: { [K in HighlightType]: HighlightDrawer };
+  protected previousHighlights: Highlight[];
 
   public constructor(
     protected readonly container: Container,
@@ -19,6 +20,7 @@ export default class UnderlayLayer implements MapLayer {
     protected readonly dp: DimensionsProvider
   ) {
     this.highlights = () => getState().highlight;
+    this.previousHighlights = this.highlights();
     this.drawers = { range: new RangeDrawer(dp) };
   }
 
@@ -36,7 +38,15 @@ export default class UnderlayLayer implements MapLayer {
     });
   };
 
-  public update = (): void => {};
+  public update = (): void => {
+    const currentHighlights = this.highlights();
+    if (currentHighlights === this.previousHighlights) {
+      return;
+    }
+    this.previousHighlights.forEach(h => this.removeHighlight(h));
+    currentHighlights.forEach(h => this.renderHighlight(h));
+    this.previousHighlights = currentHighlights;
+  };
 
   public animate = (): void => {};
 
