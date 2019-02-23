@@ -12,16 +12,14 @@ import MoveUnitAction from '../store/actions/moveUnitAction';
 import SelectUnitAction from '../store/actions/selectUnitAction';
 import { RootState } from '../store/reducers';
 import BackgroundLayer from './BackgroundLayer';
-import Click from './Click';
 import DimensionsProvider from './DimensionsProvider';
-import Drag from './Drag';
 import FpsCounter from './FpsCounter';
 import MapDrawer from './MapDrawer';
 import TextureManager from './TextureManager';
 import TileLayer from './TileLayer';
 import UnitLayer from './UnitLayer';
-import Zoom from './Zoom';
 import UnderlayLayer from './UnderlayLayer';
+import Controller from './Controller';
 
 type Kill = () => void;
 
@@ -91,8 +89,8 @@ const launch = (
     };
     app.ticker.add(onTick);
 
-    const click = new Click(app.stage)
-      .addListener((x, y) => {
+    const controller = new Controller(app.ticker, app.stage)
+      .registerPrimaryListener(({ x, y }) => {
         const local = dp.toLocalPoint({ x, y });
         const hex = dp.toHex(local);
         if (hex.x < 0 || hex.x >= mapWidth || hex.y < 0 || hex.y >= mapHeight) {
@@ -123,15 +121,12 @@ const launch = (
           }
         }
       })
-      .addListener(() => {
+      .registerSecondaryListener(() => {
         store.dispatch({ type: DESELECT });
-      }, 'secondary');
-    const drag = new Drag(app.ticker, app.stage).addListener((x, y) =>
-      drawer.moveBy(x, y)
-    );
-    const zoom = new Zoom(app.stage).addListener((zoom, point) =>
-      drawer.zoom(zoom, point)
-    );
+      })
+      .registerPrimaryDragListener(({ x, y }) => drawer.moveBy(x, y))
+      .registerZoomListener((zoom, point) => drawer.zoom(zoom, point));
+
     const counter = new FpsCounter(app);
 
     const resize = (): void => {
@@ -146,9 +141,7 @@ const launch = (
       storeUnsubscribe();
       store.dispatch({ type: RESET });
       window.removeEventListener('resize', resize);
-      click.stop();
-      drag.stop();
-      zoom.stop();
+      controller.stop();
       counter.stop();
       app.stage.removeChildren();
       container.destroy();
