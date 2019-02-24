@@ -12,12 +12,14 @@ import { GroundFeature as GF } from '../data/GroundFeature';
 import { GroundType as GT } from '../data/GroundType';
 import { UnitType as UT } from '../data/UnitType';
 
-type TextureName = GT | GF | UT;
+type Custom = 'SELECTED';
+
+type TextureName = GT | GF | UT | Custom;
 
 type AtlasParts = { [key in TextureName]: AtlasPart };
 
 interface TextureAtlas {
-  [size: number]: { [key: string]: Texture };
+  [size: number]: { [key: string]: Texture[] };
 }
 
 type AtlasPart = (
@@ -28,17 +30,19 @@ type AtlasPart = (
   y: number;
   w: number;
   h: number;
-};
+}[];
 
 const atlases = [atlas1];
 
-const coords = (x: number, y: number): AtlasPart => size => ({
-  a: atlas1,
-  x: (x * 64 * 4) / size,
-  y: (y * 92 * 4) / size,
-  w: (62 * 4) / size,
-  h: (90 * 4) / size,
-});
+const coords = (x: number, y: number): AtlasPart => size => [
+  {
+    a: atlas1,
+    x: (x * 64 * 4) / size,
+    y: (y * 92 * 4) / size,
+    w: (62 * 4) / size,
+    h: (90 * 4) / size,
+  },
+];
 
 export default class TextureManager {
   private loaded = false;
@@ -53,7 +57,45 @@ export default class TextureManager {
     SNOW: coords(4, 0),
     WATER: coords(5, 0),
     MOUNTAIN: coords(7, 0),
-    WARRIOR: coords(1, 1),
+    WARRIOR: size => [
+      {
+        a: atlas1,
+        x: (64 * 4) / size,
+        y: (92 * 4) / size,
+        w: (31 * 4) / size,
+        h: (45 * 4) / size,
+      },
+    ],
+    SELECTED: size => [
+      {
+        a: atlas1,
+        x: (96 * 4) / size,
+        y: (92 * 4) / size,
+        w: (31 * 4) / size,
+        h: (15 * 4) / size,
+      },
+      {
+        a: atlas1,
+        x: (128 * 4) / size,
+        y: (92 * 4) / size,
+        w: (31 * 4) / size,
+        h: (15 * 4) / size,
+      },
+      {
+        a: atlas1,
+        x: (160 * 4) / size,
+        y: (92 * 4) / size,
+        w: (31 * 4) / size,
+        h: (15 * 4) / size,
+      },
+      {
+        a: atlas1,
+        x: (192 * 4) / size,
+        y: (92 * 4) / size,
+        w: (31 * 4) / size,
+        h: (15 * 4) / size,
+      },
+    ],
   };
 
   private readonly textureKeys: string[] = [];
@@ -61,7 +103,7 @@ export default class TextureManager {
     [key: string]: { [size: number]: Texture };
   } = {};
 
-  private readonly SIZES = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6];
+  private readonly SIZES = [1, 2, 4, 8];
 
   private readonly textures: TextureAtlas = {};
 
@@ -95,15 +137,16 @@ export default class TextureManager {
             mipMaps[size] = base;
             Object.keys(this.atlasParts).forEach(name => {
               const atlasPart = this.atlasParts[name as TextureName];
-              const { a, x, y, w, h } = atlasPart(size);
-              if (key !== a) {
-                return;
-              }
-              const texture = new Texture(
-                (base as unknown) as BaseTexture,
-                new Rectangle(x, y, w, h)
-              );
-              this.textures[size][name] = texture;
+              const textures = atlasPart(size)
+                .filter(({ a }) => a === key)
+                .map(
+                  ({ x, y, w, h }) =>
+                    new Texture(
+                      (base as unknown) as BaseTexture,
+                      new Rectangle(x, y, w, h)
+                    )
+                );
+              this.textures[size][name] = textures;
             });
           });
           this.mipMaps[key] = mipMaps;
@@ -114,51 +157,54 @@ export default class TextureManager {
     });
   };
 
-  public getGroundFeature = (
-    gf: GF,
-    width: number,
-    height?: number
-  ): Sprite => {
-    return this.getSprite(gf, width, height);
+  public getGroundFeature = (gf: GF, width: number): [Sprite, () => void] => {
+    return this.getSprite(gf, width);
   };
 
-  public getGroundType = (gt: GT, width: number, height?: number): Sprite => {
-    return this.getSprite(gt, width, height);
+  public getGroundType = (gt: GT, width: number): [Sprite, () => void] => {
+    return this.getSprite(gt, width);
   };
 
-  public getUnitType = (ut: UT, width: number, height?: number): Sprite => {
-    return this.getSprite(ut, width, height);
+  public getUnitType = (ut: UT, width: number): [Sprite, () => void] => {
+    return this.getSprite(ut, width);
   };
 
-  private getSprite = (key: string, width: number, height?: number): Sprite => {
-    let bestTexture: Texture = this.textures[this.SIZES[0]][key];
+  public getCustom = (custom: Custom, width: number): [Sprite, () => void] => {
+    return this.getSprite(custom, width);
+  };
+
+  private getSprite = (key: string, width: number): [Sprite, () => void] => {
+    let bestTextures: Texture[] = this.textures[this.SIZES[0]][key];
     for (let i = 1; i < this.SIZES.length; i++) {
       const size = this.SIZES[i];
-      const texture = this.textures[size][key];
+      const texture = this.textures[size][key][0];
       let target;
-      if (height !== undefined) {
-        target = height * devicePixelRatio * (width * devicePixelRatio);
-      } else {
-        const scale = (width * devicePixelRatio) / texture.width;
-        const someHeight = texture.height * scale;
-        target = width * devicePixelRatio * someHeight;
-      }
+      const scale = (width * devicePixelRatio) / texture.width;
+      const someHeight = texture.height * scale;
+      target = width * devicePixelRatio * someHeight;
       const thisSize = texture.width * texture.height;
       if (thisSize > target) {
-        bestTexture = texture;
+        bestTextures = this.textures[size][key];
       }
     }
-    const result = new Sprite(bestTexture!);
-    if (height !== undefined) {
-      result.height = height;
-    } else {
-      const scale = width / result.width;
-      result.height = result.height * scale * 0.98;
-    }
-    result.width = width * 0.98;
+
+    let index = 0;
+    const result = new Sprite(bestTextures[0]!);
+
+    const scale = width / result.width;
+    result.height = result.height * scale;
+    result.width = width;
     result.anchor.set(0.5, 0.5);
 
-    return result;
+    const update = (): void => {
+      if (bestTextures.length === 0) {
+        return;
+      }
+      index += 0.05;
+      result.texture = bestTextures[Math.floor(index) % bestTextures.length];
+    };
+
+    return [result, update];
   };
 
   private loadBaseTextures = (loader: Loader): void => {

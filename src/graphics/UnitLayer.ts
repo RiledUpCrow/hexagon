@@ -8,12 +8,14 @@ import Point from './Point';
 import { Position } from '../userInterface/TileInfo';
 import { MovementState } from '../store/reducers/movementReducer';
 import { RootState } from '../store/reducers';
+import { SelectedUnitState } from '../store/reducers/selectedUnitReducer';
 
 interface RenderedUnit {
   unit: Unit;
   displayObject?: DisplayObject;
   drawn: boolean;
   animation: UnitAnimation[];
+  animate?: () => void;
 }
 
 interface UnitAnimation {
@@ -29,9 +31,11 @@ interface RenderedUnitList {
 export default class UnitLayer implements MapLayer {
   protected readonly units: () => UnitState;
   protected readonly moves: () => MovementState;
+  protected readonly selected: () => SelectedUnitState;
   protected readonly renderedUnits: RenderedUnitList = {};
   protected previousUnits: UnitState;
   protected previousMoves: MovementState;
+  protected previousSelected: SelectedUnitState;
 
   public constructor(
     protected readonly container: Container,
@@ -41,8 +45,10 @@ export default class UnitLayer implements MapLayer {
   ) {
     this.units = () => getState().units;
     this.moves = () => getState().movement;
+    this.selected = () => getState().selectedUnit;
     this.previousUnits = this.units();
     this.previousMoves = this.moves();
+    this.previousSelected = this.selected();
     Object.keys(this.previousUnits).forEach(id => {
       const unit = this.previousUnits[Number(id)];
       this.renderedUnits[Number(id)] = { unit, animation: [], drawn: false };
@@ -65,6 +71,13 @@ export default class UnitLayer implements MapLayer {
   };
 
   public update = (): void => {
+    this.updateUnits();
+    this.updateMoves();
+    this.updateSelected();
+    this.draw();
+  };
+
+  protected updateUnits = () => {
     const currentUnits = this.units();
     if (currentUnits === this.previousUnits) {
       return;
@@ -106,9 +119,15 @@ export default class UnitLayer implements MapLayer {
       this.removeUnit(this.renderedUnits[id]);
       this.renderUnit(this.renderedUnits[id]);
     });
+    this.previousUnits = currentUnits;
+  };
 
+  protected updateMoves = () => {
     const currentMoves = this.moves();
-    if (currentMoves && currentMoves !== this.previousMoves) {
+    if (currentMoves === this.previousMoves) {
+      return;
+    }
+    if (currentMoves) {
       const { unit, movement } = currentMoves;
       const pos = unit.position;
       for (let i = 0; i < movement.length; i++) {
@@ -120,11 +139,29 @@ export default class UnitLayer implements MapLayer {
         });
       }
     }
-
     this.previousMoves = currentMoves;
-    this.previousUnits = currentUnits;
+  };
 
-    this.draw();
+  protected updateSelected = () => {
+    const selected = this.selected();
+    if (this.previousSelected === selected) {
+      return;
+    }
+    if (this.previousSelected) {
+      const unit = this.renderedUnits[this.previousSelected.id];
+      if (unit) {
+        this.removeUnit(unit);
+        this.renderUnit(unit);
+      }
+    }
+    if (selected) {
+      const unit = this.renderedUnits[selected.id];
+      if (unit) {
+        this.removeUnit(unit);
+        this.renderUnit(unit);
+      }
+    }
+    this.previousSelected = selected;
   };
 
   public animate = (): void => {
@@ -132,6 +169,9 @@ export default class UnitLayer implements MapLayer {
     Object.keys(this.renderedUnits).forEach(key => {
       const id = Number(key);
       const unit = this.renderedUnits[id];
+      if (unit.animate) {
+        unit.animate();
+      }
       if (unit.animation.length > 0) {
         const animation = unit.animation[0];
         if (animation.progress >= 1) {
@@ -188,14 +228,36 @@ export default class UnitLayer implements MapLayer {
       return;
     }
 
-    const sprite = this.textureManager.getUnitType(
+    const selected = this.selected();
+    const isSelected = selected && selected.id === unit.unit.id;
+    const width = this.dp.getTileDimensions().width * 0.5;
+
+    const container = new Container();
+
+    const [sprite, updateSprite] = this.textureManager.getUnitType(
       unit.unit.type,
-      this.dp.getTileDimensions().width * 0.5
+      width
     );
-    const { x, y } = this.getCurrentPosition(unit);
-    sprite.position.set(x, y);
+    let update = updateSprite;
+    if (isSelected) {
+      const [selection, updateSelection] = this.textureManager.getCustom(
+        'SELECTED',
+        width
+      );
+      selection.anchor.y = 0.0;
+      container.addChild(selection);
+      update = () => {
+        updateSprite();
+        updateSelection();
+      };
+    }
     sprite.anchor.y = 0.75;
-    unit.displayObject = sprite;
+
+    container.addChild(sprite);
+    const { x, y } = this.getCurrentPosition(unit);
+    container.position.set(x, y);
+    unit.displayObject = container;
+    unit.animate = update;
   };
 
   protected hideUnit = (unit: RenderedUnit) => {

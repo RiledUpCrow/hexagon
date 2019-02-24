@@ -27,13 +27,17 @@ export default class TileRenderer {
 
   public getTileSprite = (tile: Tile): DisplayObject => {
     const { width } = this.dp.getTileDimensions();
-    const sprite = this.textureManager.getGroundType(tile.groundType, width);
+    const [sprite] = this.textureManager.getGroundType(tile.groundType, width);
+    sprite.width *= 0.98;
+    sprite.height *= 0.98;
     return sprite;
   };
 
   private getGroundFeature = (groundFeature: GroundFeature): DisplayObject => {
     const { width } = this.dp.getTileDimensions();
-    const sprite = this.textureManager.getGroundFeature(groundFeature, width);
+    const [sprite] = this.textureManager.getGroundFeature(groundFeature, width);
+    sprite.width *= 0.98;
+    sprite.height *= 0.98;
     return sprite;
   };
 }
