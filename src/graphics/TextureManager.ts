@@ -8,9 +8,12 @@ import {
   BaseTexture,
 } from 'pixi.js';
 import atlas1 from '../textures/atlas1.png';
+import rawData1 from '../textures/atlas1.json';
 import { GroundFeature as GF } from '../data/GroundFeature';
 import { GroundType as GT } from '../data/GroundType';
 import { UnitType as UT } from '../data/UnitType';
+import parseTextureData from '../logic/parseTextureData';
+import { TextureData } from '../data/TextureData';
 
 type Custom = 'SELECTED' | 'HIGHLIGHT';
 
@@ -22,89 +25,27 @@ interface TextureAtlas {
   [size: number]: { [key: string]: Texture[] };
 }
 
-type AtlasPart = (
-  size: number
-) => {
-  a: string;
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-}[];
+type AtlasPart = (size: number) => TextureData[];
 
 const atlases = [atlas1];
-
-const coords = (x: number, y: number): AtlasPart => size => [
-  {
-    a: atlas1,
-    x: (x * 64 * 4) / size,
-    y: (y * 92 * 4) / size,
-    w: (62 * 4) / size,
-    h: (90 * 4) / size,
-  },
-];
+const a1 = parseTextureData(atlas1, 2048);
 
 export default class TextureManager {
   private loaded = false;
 
   protected readonly atlasParts: AtlasParts = {
-    FOREST: coords(0, 1),
-    GRASSLAND: coords(0, 0),
-    GRASS_HILL: coords(6, 0),
-    PLAINS: coords(2, 0),
-    TUNDRA: coords(1, 0),
-    DESERT: coords(3, 0),
-    SNOW: coords(4, 0),
-    WATER: coords(5, 0),
-    MOUNTAIN: coords(7, 0),
-    WARRIOR: size => [
-      {
-        a: atlas1,
-        x: (64 * 4) / size,
-        y: (92 * 4) / size,
-        w: (31 * 4) / size,
-        h: (45 * 4) / size,
-      },
-    ],
-    SELECTED: size => [
-      {
-        a: atlas1,
-        x: (96 * 4) / size,
-        y: (92 * 4) / size,
-        w: (31 * 4) / size,
-        h: (15 * 4) / size,
-      },
-      {
-        a: atlas1,
-        x: (128 * 4) / size,
-        y: (92 * 4) / size,
-        w: (31 * 4) / size,
-        h: (15 * 4) / size,
-      },
-      {
-        a: atlas1,
-        x: (160 * 4) / size,
-        y: (92 * 4) / size,
-        w: (31 * 4) / size,
-        h: (15 * 4) / size,
-      },
-      {
-        a: atlas1,
-        x: (192 * 4) / size,
-        y: (92 * 4) / size,
-        w: (31 * 4) / size,
-        h: (15 * 4) / size,
-      },
-    ],
-    HIGHLIGHT: size => [
-      {
-        a: atlas1,
-        x: (224 * 4) / size,
-        y: (92 * 4) / size,
-        w: (62 * 4) / size,
-        h: (62 * 4) / size,
-      },
-    ],
+    FOREST: a1(rawData1.FOREST),
+    GRASSLAND: a1(rawData1.GRASSLAND),
+    GRASS_HILL: a1(rawData1.GRASS_HILL),
+    PLAINS: a1(rawData1.PLAINS),
+    TUNDRA: a1(rawData1.TUNDRA),
+    DESERT: a1(rawData1.DESERT),
+    SNOW: a1(rawData1.SNOW),
+    WATER: a1(rawData1.WATER),
+    MOUNTAIN: a1(rawData1.MOUNTAIN),
+    WARRIOR: a1(rawData1.WARRIOR),
+    SELECTED: a1(rawData1.SELECTED),
+    HIGHLIGHT: a1(rawData1.HIGHLIGHT),
   };
 
   private readonly textureKeys: string[] = [];
@@ -147,9 +88,9 @@ export default class TextureManager {
             Object.keys(this.atlasParts).forEach(name => {
               const atlasPart = this.atlasParts[name as TextureName];
               const textures = atlasPart(size)
-                .filter(({ a }) => a === key)
+                .filter(({ atlas: a }) => a === key)
                 .map(
-                  ({ x, y, w, h }) =>
+                  ({ x, y, width: w, height: h }) =>
                     new Texture(
                       (base as unknown) as BaseTexture,
                       new Rectangle(x, y, w, h)
@@ -203,7 +144,10 @@ export default class TextureManager {
     const scale = width / result.width;
     result.height = result.height * scale;
     result.width = width;
-    result.anchor.set(0.5, 0.5);
+    const { anchorX, anchorY } = this.atlasParts[key as TextureName](
+      this.SIZES[0]
+    )[0];
+    result.anchor.set(anchorX, anchorY);
 
     const update = (): void => {
       if (bestTextures.length === 0) {

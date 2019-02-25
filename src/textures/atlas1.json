@@ -1,0 +1,19 @@
+{
+  "GRASSLAND": [{ "x": 0, "y": 422, "width": 62, "height": 90 }],
+  "TUNDRA": [{ "x": 64, "y": 422, "width": 62, "height": 90 }],
+  "PLAINS": [{ "x": 128, "y": 422, "width": 62, "height": 90 }],
+  "DESERT": [{ "x": 192, "y": 422, "width": 62, "height": 90 }],
+  "SNOW": [{ "x": 256, "y": 422, "width": 62, "height": 90 }],
+  "WATER": [{ "x": 320, "y": 422, "width": 62, "height": 90 }],
+  "GRASS_HILL": [{ "x": 384, "y": 422, "width": 62, "height": 90 }],
+  "MOUNTAIN": [{ "x": 448, "y": 422, "width": 62, "height": 90 }],
+  "FOREST": [{ "x": 0, "y": 330, "width": 62, "height": 90 }],
+  "WARRIOR": [{ "x": 64, "y": 375, "width": 31, "height": 45, "anchorY": 400 }],
+  "SELECTED": [
+    { "x": 96, "y": 405, "width": 31, "height": 15 },
+    { "x": 128, "y": 405, "width": 31, "height": 15 },
+    { "x": 160, "y": 405, "width": 31, "height": 15 },
+    { "x": 192, "y": 405, "width": 31, "height": 15 }
+  ],
+  "HIGHLIGHT": [{ "x": 224, "y": 358, "width": 62, "height": 62 }]
+}
