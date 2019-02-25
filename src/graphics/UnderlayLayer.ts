@@ -6,12 +6,14 @@ import RangeDrawer from './highlight/RangeDrawer';
 import MapLayer from './MapLayer';
 import TextureManager from './TextureManager';
 import HighlightDrawer from './highlight/HighlightDrawer';
+import OutlineDrawer from './highlight/OutlineDrawer';
 
 export default class UnderlayLayer implements MapLayer {
   protected readonly highlights: () => Highlight[];
   protected readonly renderedHighlights: { [id: number]: DisplayObject } = {};
   protected readonly drawers: { [K in HighlightType]: HighlightDrawer };
   protected previousHighlights: Highlight[];
+  protected counter = 0;
 
   public constructor(
     protected readonly container: Container,
@@ -21,7 +23,10 @@ export default class UnderlayLayer implements MapLayer {
   ) {
     this.highlights = () => getState().highlight;
     this.previousHighlights = this.highlights();
-    this.drawers = { range: new RangeDrawer(dp) };
+    this.drawers = {
+      range: new RangeDrawer(dp),
+      outline: new OutlineDrawer(dp, textureManager),
+    };
   }
 
   public draw = (): void => {
@@ -48,13 +53,19 @@ export default class UnderlayLayer implements MapLayer {
     this.previousHighlights = currentHighlights;
   };
 
-  public animate = (): void => {};
+  public animate = (): void => {
+    this.counter++;
+    Object.keys(this.renderedHighlights).forEach(key => {
+      const area = this.renderedHighlights[Number(key)];
+      area.alpha = (Math.sin(this.counter / 15) + 1) * 0.125 + 0.5;
+    });
+  };
 
   protected renderHighlight = (highlight: Highlight): void => {
     if (this.renderedHighlights[highlight.id]) {
       return;
     }
-    const obj = this.drawers.range.draw(highlight);
+    const obj = this.drawers[highlight.type].draw(highlight);
     this.renderedHighlights[highlight.id] = obj;
     this.container.addChild(obj);
   };

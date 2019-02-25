@@ -12,7 +12,7 @@ import { GroundFeature as GF } from '../data/GroundFeature';
 import { GroundType as GT } from '../data/GroundType';
 import { UnitType as UT } from '../data/UnitType';
 
-type Custom = 'SELECTED';
+type Custom = 'SELECTED' | 'HIGHLIGHT';
 
 type TextureName = GT | GF | UT | Custom;
 
@@ -94,6 +94,15 @@ export default class TextureManager {
         y: (92 * 4) / size,
         w: (31 * 4) / size,
         h: (15 * 4) / size,
+      },
+    ],
+    HIGHLIGHT: size => [
+      {
+        a: atlas1,
+        x: (224 * 4) / size,
+        y: (92 * 4) / size,
+        w: (62 * 4) / size,
+        h: (62 * 4) / size,
       },
     ],
   };

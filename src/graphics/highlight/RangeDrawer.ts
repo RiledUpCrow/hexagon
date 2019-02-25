@@ -1,5 +1,5 @@
 import { DisplayObject, Graphics } from 'pixi.js';
-import { Range } from '../../data/Highlight';
+import { Highlight } from '../../data/Highlight';
 import DimensionsProvider from '../DimensionsProvider';
 import { Position } from '../../userInterface/UnitInfo';
 import Point from '../Point';
@@ -10,7 +10,10 @@ import HighlightDrawer from './HighlightDrawer';
 export default class RangeDrawer implements HighlightDrawer {
   public constructor(protected readonly dp: DimensionsProvider) {}
 
-  public draw = (highlight: Range): DisplayObject => {
+  public draw = (highlight: Highlight): DisplayObject => {
+    if (highlight.type !== 'range') {
+      throw new Error('Incorrect highlight type');
+    }
     const path = this.calculatePath(highlight.tiles);
     const shape = this.getShape(path, highlight.color);
     return shape;
