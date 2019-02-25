@@ -2,6 +2,7 @@ export interface TextureData extends RawTextureData {
   atlas: string;
   anchorX: number;
   anchorY: number;
+  frames: number;
 }
 
 export interface RawTextureData {
@@ -11,4 +12,5 @@ export interface RawTextureData {
   height: number;
   anchorX?: number;
   anchorY?: number;
+  frames?: number;
 }

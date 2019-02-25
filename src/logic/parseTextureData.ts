@@ -13,7 +13,7 @@ export default (atlas: string, textureSize: number = 2048) => (
   data: RawTextureData[]
 ) => (size: number): TextureData[] =>
   data.map(d => {
-    const { x, y, width, height, anchorX, anchorY } = d;
+    const { x, y, width, height, anchorX, anchorY, frames } = d;
     const scale = textureSize / SVG_POINTS;
     return {
       atlas,
@@ -23,5 +23,6 @@ export default (atlas: string, textureSize: number = 2048) => (
       height: (height * scale) / size,
       anchorX: anchorX === undefined ? 0.5 : (anchorX - x) / width,
       anchorY: anchorY === undefined ? 0.5 : 1 - (anchorY - y) / height,
+      frames: frames ? frames : 10,
     };
   });

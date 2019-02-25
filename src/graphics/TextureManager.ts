@@ -144,17 +144,24 @@ export default class TextureManager {
     const scale = width / result.width;
     result.height = result.height * scale;
     result.width = width;
-    const { anchorX, anchorY } = this.atlasParts[key as TextureName](
-      this.SIZES[0]
-    )[0];
+    const textureData = this.atlasParts[key as TextureName](this.SIZES[0]);
+    const { anchorX, anchorY } = textureData[0];
     result.anchor.set(anchorX, anchorY);
 
     const update = (): void => {
-      if (bestTextures.length === 0) {
+      if (bestTextures.length <= 1) {
         return;
       }
-      index += 0.05;
-      result.texture = bestTextures[Math.floor(index) % bestTextures.length];
+      index++;
+      const total = textureData.reduce((acc, next) => acc + next.frames, 0);
+      let frame = index % total;
+      for (let i = 0; i < textureData.length; i++) {
+        frame -= textureData[i].frames;
+        if (frame < 0) {
+          result.texture = bestTextures[i];
+          break;
+        }
+      }
     };
 
     return [result, update];
