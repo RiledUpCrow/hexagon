@@ -17,9 +17,7 @@ export default class MapDrawer {
     protected readonly dp: DimensionsProvider,
     protected size = 50,
     protected width = window.innerWidth,
-    protected height = window.innerHeight,
-    protected minZoom = 0.5,
-    protected maxZoom = 1.5
+    protected height = window.innerHeight
   ) {
     this.originalSize = size;
   }
@@ -60,8 +58,8 @@ export default class MapDrawer {
     const currentZoom = this.size / this.originalSize;
     let targetZoom = between(
       currentZoom - amount / 1000,
-      this.minZoom,
-      this.maxZoom
+      this.dp.minZoom,
+      this.dp.maxZoom
     );
     const targetSize = targetZoom * this.originalSize;
 

@@ -47,7 +47,9 @@ const launch = (
       size,
       { width: div.clientWidth, height: div.clientHeight },
       { width: mapWidth, height: mapHeight },
-      { x: 0, y: 0 }
+      { x: 0, y: 0 },
+      minZoom,
+      maxZoom
     );
 
     const backgroundContainer = new Container();
@@ -75,9 +77,7 @@ const launch = (
       dp,
       size,
       div.clientWidth,
-      div.clientHeight,
-      minZoom,
-      maxZoom
+      div.clientHeight
     );
 
     const storeUnsubscribe = store.subscribe(() => {

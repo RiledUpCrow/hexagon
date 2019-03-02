@@ -33,7 +33,7 @@ export class DefaultMap implements Map {
           feature = Math.random() > 0.5 ? 'FOREST' : null;
         }
         this.tiles[xIndex][yIndex] =
-          Math.random() >= 0 ? new DefaultTile(type, feature) : null;
+          Math.random() >= 0.25 ? new DefaultTile(type, feature) : null;
       }
     }
   }

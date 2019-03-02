@@ -75,6 +75,9 @@ export default class TileLayer implements MapLayer {
       if (!this.tiles[x][y]) {
         this.createTile(x, y);
       }
+      if (!this.tiles[x][y]) {
+        return;
+      }
       this.container.addChild(...this.tiles[x][y]!);
       this.drawn[x][y] = true;
     }

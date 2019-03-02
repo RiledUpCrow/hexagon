@@ -2,7 +2,7 @@
  * Represents something that is contained in a rectangle of a size, but not
  * attached to any actual position.
  */
-interface Dimensions {
+export interface Dimensions {
   width: number;
   height: number;
 }
@@ -41,12 +41,16 @@ export default class DimensionsProvider {
   private mapHeight: number;
   private posX: number;
   private posY: number;
+  public readonly minSize: number;
+  public readonly maxSize: number;
 
   public constructor(
     size: number,
     screen: Dimensions,
     map: Dimensions,
-    position: Position
+    position: Position,
+    public readonly minZoom: number,
+    public readonly maxZoom: number
   ) {
     this.size = size;
     this.screenWidth = screen.width;
@@ -55,6 +59,8 @@ export default class DimensionsProvider {
     this.mapWidth = map.width;
     this.posX = position.x;
     this.posY = position.y;
+    this.minSize = size * minZoom;
+    this.maxSize = size * maxZoom;
   }
 
   /**
@@ -156,11 +162,11 @@ export default class DimensionsProvider {
    * @returns an object with scales for both x and y axes
    *          (they can be slightly different)
    */
-  public getScale = (toSize: number) => {
+  public getScale = (toSize: number, size = this.size) => {
     const {
       width: fromTileWidth,
       height: fromTileHeight,
-    } = this.getTileDimensions(this.size);
+    } = this.getTileDimensions(size);
     const { width: toTileWidth, height: toTileHeight } = this.getTileDimensions(
       toSize
     );
@@ -191,18 +197,22 @@ export default class DimensionsProvider {
    * Boundaries are used to determine whether the map container can move to
    * a position.
    */
-  public getMapBoundaries = (): Boundaries => {
+  public getMapBoundaries = (size = this.size): Boundaries => {
     const {
       width: borderWidth,
       height: borderHeight,
     } = this.getBorderDimensions();
-    const { width, height } = this.getCellDimensions();
+    const { width: cellWidth, height: cellHeight } = this.getCellDimensions(
+      size
+    );
     return {
       maxX: borderWidth,
-      minX: width * -(this.mapWidth - 0.5) + (this.screenWidth - borderWidth),
+      minX:
+        cellWidth * -(this.mapWidth - 0.5) + (this.screenWidth - borderWidth),
       maxY: borderHeight,
       minY:
-        height * -(this.mapHeight - 0.5) + (this.screenHeight - borderHeight),
+        cellHeight * -(this.mapHeight - 0.5) +
+        (this.screenHeight - borderHeight),
     };
   };
 
@@ -222,9 +232,9 @@ export default class DimensionsProvider {
    * Calculates which tiles are visible inside specified boundaries and returns
    * their index ranges.
    */
-  public getTileIndexBoundaries = (): Boundaries => {
+  public getTileIndexBoundaries = (size = this.size): Boundaries => {
     const { minX, maxX, minY, maxY } = this.getViewBoundaries();
-    const { width, height } = this.getCellDimensions();
+    const { width, height } = this.getCellDimensions(size);
     return {
       minX: Math.floor(minX / width - 0.5),
       maxX: Math.ceil(maxX / width),
@@ -238,8 +248,12 @@ export default class DimensionsProvider {
    * map container. These are adjusted so that the center of 0,0 tile is
    * at 0,0 pixel.
    */
-  public getTileCoordinates = (xIndex: number, yIndex: number): Position => {
-    const { width, height } = this.getCellDimensions();
+  public getTileCoordinates = (
+    xIndex: number,
+    yIndex: number,
+    size = this.size
+  ): Position => {
+    const { width, height } = this.getCellDimensions(size);
     // odd rows get half a width of horizontal offset to achieve tiling effect
     const offset = yIndex % 2 !== 0 ? 0.5 : 0;
     const x = width * (xIndex + offset);
@@ -263,10 +277,14 @@ export default class DimensionsProvider {
     return result;
   };
 
-  public toHex = (local: Position): Position => {
+  public toHex = (local: Position, size = this.size): Position => {
     const { x, y } = local;
-    const { height: tileHeight, width: tileWidth } = this.getTileDimensions();
-    const { height: cellHeight, width: cellWidth } = this.getCellDimensions();
+    const { height: tileHeight, width: tileWidth } = this.getTileDimensions(
+      size
+    );
+    const { height: cellHeight, width: cellWidth } = this.getCellDimensions(
+      size
+    );
     const row = (y + tileHeight / 2) / cellHeight;
     const rowY = Math.floor(row);
     const oddRow = rowY % 2 === 1;
