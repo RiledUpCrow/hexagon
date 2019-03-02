@@ -21,7 +21,7 @@ export default class TileRenderer {
   };
 
   protected getTileSprite = (tile: Tile, position: Position): Sprite => {
-    const [sprite] = this.textureManager.getGroundType(
+    const [sprite] = this.textureManager.getSprite(
       tile.groundType,
       this.dp.getTileDimensions().width
     );
@@ -33,7 +33,7 @@ export default class TileRenderer {
     groundFeature: GroundFeature,
     position: Position
   ): Sprite => {
-    const [sprite] = this.textureManager.getGroundFeature(
+    const [sprite] = this.textureManager.getSprite(
       groundFeature,
       this.dp.getTileDimensions().width
     );

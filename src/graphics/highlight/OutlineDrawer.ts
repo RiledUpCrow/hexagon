@@ -18,7 +18,7 @@ export default class OutlineDrawer implements HighlightDrawer {
     const area = new Container();
     highlight.tiles.forEach(tile => {
       const { x, y } = this.dp.getTileCoordinates(tile.x, tile.y);
-      const [obj] = this.textureManager.getCustom('HIGHLIGHT', width);
+      const [obj] = this.textureManager.getSprite('HIGHLIGHT', width);
       obj.tint = highlight.color;
       obj.position.set(x, y);
       obj.width *= 0.98;

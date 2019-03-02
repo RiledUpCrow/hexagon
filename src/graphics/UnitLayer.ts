@@ -234,13 +234,13 @@ export default class UnitLayer implements MapLayer {
 
     const container = new Container();
 
-    const [sprite, updateSprite] = this.textureManager.getUnitType(
+    const [sprite, updateSprite] = this.textureManager.getSprite(
       unit.unit.type,
       width
     );
     let update = updateSprite;
     if (isSelected) {
-      const [selection, updateSelection] = this.textureManager.getCustom(
+      const [selection, updateSelection] = this.textureManager.getSprite(
         'SELECTED',
         width
       );

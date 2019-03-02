@@ -1,66 +1,55 @@
 import {
+  BaseTexture,
   Loader,
   Rectangle,
   Renderer,
+  SCALE_MODES,
   Sprite,
   Texture,
-  SCALE_MODES,
-  BaseTexture,
 } from 'pixi.js';
-import atlas1 from '../textures/atlas1.png';
-import rawData1 from '../textures/atlas1.json';
-import { GroundFeature as GF } from '../data/GroundFeature';
-import { GroundType as GT } from '../data/GroundType';
-import { UnitType as UT } from '../data/UnitType';
+import { TextureData, RawTextureData } from '../data/TextureData';
 import parseTextureData from '../logic/parseTextureData';
-import { TextureData } from '../data/TextureData';
+import rawData1 from '../textures/atlas1.json';
+import atlas1 from '../textures/atlas1.png';
 
-type Custom = 'SELECTED' | 'HIGHLIGHT';
-
-type TextureName = GT | GF | UT | Custom;
-
+type TextureName = keyof typeof rawData1;
+type AtlasPart = (size: number) => TextureData[];
 type AtlasParts = { [key in TextureName]: AtlasPart };
+
+interface MipMap {
+  [size: number]: Texture;
+}
 
 interface TextureAtlas {
   [size: number]: { [key: string]: Texture[] };
 }
 
-type AtlasPart = (size: number) => TextureData[];
+interface RawData {
+  [key: string]: RawTextureData[];
+}
 
-const atlases = [atlas1];
-const a1 = parseTextureData(atlas1, 2048);
+const atlases: [string, RawData][] = [[atlas1, rawData1]];
 
 export default class TextureManager {
-  private loaded = false;
+  protected readonly atlasParts: AtlasParts;
+  protected readonly textureUrls: string[] = [];
+  protected readonly mipMaps: { [key: string]: MipMap } = {};
+  protected readonly SIZES = [1, 2, 4, 8];
+  protected readonly textures: TextureAtlas = {};
+  protected loaded = false;
 
-  protected readonly atlasParts: AtlasParts = {
-    FOREST: a1(rawData1.FOREST),
-    GRASSLAND: a1(rawData1.GRASSLAND),
-    GRASS_HILL: a1(rawData1.GRASS_HILL),
-    PLAINS: a1(rawData1.PLAINS),
-    TUNDRA: a1(rawData1.TUNDRA),
-    DESERT: a1(rawData1.DESERT),
-    SNOW: a1(rawData1.SNOW),
-    WATER: a1(rawData1.WATER),
-    MOUNTAIN: a1(rawData1.MOUNTAIN),
-    WARRIOR: a1(rawData1.WARRIOR),
-    SELECTED: a1(rawData1.SELECTED),
-    HIGHLIGHT: a1(rawData1.HIGHLIGHT),
-  };
-
-  private readonly textureKeys: string[] = [];
-  private readonly mipMaps: {
-    [key: string]: { [size: number]: Texture };
-  } = {};
-
-  private readonly SIZES = [1, 2, 4, 8];
-
-  private readonly textures: TextureAtlas = {};
-
-  public constructor(private loader: Loader, private renderer: Renderer) {
+  public constructor(protected loader: Loader, protected renderer: Renderer) {
     this.SIZES.forEach(size => {
       this.textures[size] = {};
     });
+    const atlasParts: { [key: string]: AtlasPart } = {};
+    atlases.forEach(data => {
+      const [atlas, rawData] = data;
+      Object.keys(rawData).forEach(key => {
+        atlasParts[key] = parseTextureData(atlas, 2048)(rawData[key]);
+      });
+    });
+    this.atlasParts = atlasParts as AtlasParts;
   }
 
   public load = (): Promise<void> => {
@@ -72,58 +61,16 @@ export default class TextureManager {
       this.loaded = true;
       this.loadBaseTextures(this.loader);
       this.loader.load(() => {
-        this.textureKeys.forEach(key => {
-          if (this.mipMaps[key]) {
-            return;
-          }
-          const mipMaps: { [size: number]: Texture } = {};
-          this.SIZES.forEach(size => {
-            const base = this.generateMipMap(
-              this.loader,
-              this.renderer,
-              key,
-              size
-            );
-            mipMaps[size] = base;
-            Object.keys(this.atlasParts).forEach(name => {
-              const atlasPart = this.atlasParts[name as TextureName];
-              const textures = atlasPart(size)
-                .filter(({ atlas: a }) => a === key)
-                .map(
-                  ({ x, y, width: w, height: h }) =>
-                    new Texture(
-                      (base as unknown) as BaseTexture,
-                      new Rectangle(x, y, w, h)
-                    )
-                );
-              this.textures[size][name] = textures;
-            });
-          });
-          this.mipMaps[key] = mipMaps;
-        });
-
+        this.textureUrls.forEach(this.loadTexture);
         resolve();
       });
     });
   };
 
-  public getGroundFeature = (gf: GF, width: number): [Sprite, () => void] => {
-    return this.getSprite(gf, width);
-  };
-
-  public getGroundType = (gt: GT, width: number): [Sprite, () => void] => {
-    return this.getSprite(gt, width);
-  };
-
-  public getUnitType = (ut: UT, width: number): [Sprite, () => void] => {
-    return this.getSprite(ut, width);
-  };
-
-  public getCustom = (custom: Custom, width: number): [Sprite, () => void] => {
-    return this.getSprite(custom, width);
-  };
-
-  private getSprite = (key: string, width: number): [Sprite, () => void] => {
+  public getSprite = (
+    key: TextureName,
+    width: number
+  ): [Sprite, () => void] => {
     let bestTextures: Texture[] = this.textures[this.SIZES[0]][key];
     for (let i = 1; i < this.SIZES.length; i++) {
       const size = this.SIZES[i];
@@ -167,19 +114,40 @@ export default class TextureManager {
     return [result, update];
   };
 
-  private loadBaseTextures = (loader: Loader): void => {
-    this.textureKeys.length = 0;
-
-    atlases.forEach(url => {
-      this.textureKeys.push(url);
+  protected loadBaseTextures = (loader: Loader): void => {
+    this.textureUrls.length = 0;
+    atlases.forEach(([url]) => {
+      this.textureUrls.push(url);
     });
-
-    this.textureKeys.forEach(key => {
+    this.textureUrls.forEach(key => {
       loader.add(key);
     });
   };
 
-  private generateMipMap = (
+  protected loadTexture = (key: string): void => {
+    if (this.mipMaps[key]) {
+      return;
+    }
+    const mipMaps: MipMap = {};
+    this.SIZES.forEach(size => {
+      const base = this.generateMipMap(this.loader, this.renderer, key, size);
+      mipMaps[size] = base;
+      Object.keys(this.atlasParts).forEach(name => {
+        const atlasPart = this.atlasParts[name as TextureName];
+        const textures = atlasPart(size)
+          .filter(({ atlas: a }) => a === key)
+          .map(({ x, y, width, height }) => {
+            const baseTexture = (base as unknown) as BaseTexture;
+            const constraints = new Rectangle(x, y, width, height);
+            return new Texture(baseTexture, constraints);
+          });
+        this.textures[size][name] = textures;
+      });
+    });
+    this.mipMaps[key] = mipMaps;
+  };
+
+  protected generateMipMap = (
     loader: Loader,
     renderer: Renderer,
     key: string,
