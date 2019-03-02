@@ -1,9 +1,9 @@
-import MapLayer from './MapLayer';
-import { Container, Graphics, DisplayObject } from 'pixi.js';
+import { Container, Graphics } from 'pixi.js';
 import DimensionsProvider from './DimensionsProvider';
+import MapLayer from './MapLayer';
 
 export default class BackgroundLayer implements MapLayer {
-  private background: DisplayObject | null = null;
+  private background: Container | null = null;
 
   public constructor(
     protected readonly container: Container,
@@ -18,18 +18,19 @@ export default class BackgroundLayer implements MapLayer {
 
   public resize = () => undefined;
 
-  public update = () => {
-    this.removeBackground();
-    this.draw();
-  };
+  public update = () => undefined;
 
   public animate = () => undefined;
 
   protected createBackground = () => {
-    if (this.background) {
+    const { width, height } = this.dp.getScreen();
+    if (
+      this.background &&
+      this.background.width === width &&
+      this.background.height === height
+    ) {
       return;
     }
-    const { width, height } = this.dp.getScreen();
     this.background = new Graphics()
       .beginFill(0x13062d)
       .moveTo(0, 0)
