@@ -1,4 +1,4 @@
-import { DisplayObject, Container } from 'pixi.js';
+import { DisplayObject, Container, Sprite } from 'pixi.js';
 import TileRenderer from './TileRenderer';
 import Map from '../data/Map';
 import DimensionsProvider, { Boundaries } from './DimensionsProvider';
@@ -10,7 +10,7 @@ import { RootState } from '../store/reducers';
 export default class TileLayer implements MapLayer {
   protected readonly tileRenderer: TileRenderer;
   protected readonly map: () => Map;
-  protected tiles: (DisplayObject | null)[][] = [];
+  protected tiles: (Sprite[] | null)[][] = [];
   protected drawn: boolean[][] = [];
   protected previousMap: Map;
 
@@ -75,7 +75,7 @@ export default class TileLayer implements MapLayer {
       if (!this.tiles[x][y]) {
         this.createTile(x, y);
       }
-      this.container.addChild(this.tiles[x][y]!);
+      this.container.addChild(...this.tiles[x][y]!);
       this.drawn[x][y] = true;
     }
   };
@@ -83,7 +83,7 @@ export default class TileLayer implements MapLayer {
   protected hideTile = (position: Position) => {
     const { x, y } = position;
     if (this.drawn[x][y]) {
-      this.container.removeChild(this.tiles[x][y]!);
+      this.container.removeChild(...this.tiles[x][y]!);
       this.drawn[x][y] = false;
     }
   };
@@ -121,7 +121,7 @@ export default class TileLayer implements MapLayer {
     if (!renderedTile) {
       return;
     }
-    this.container.removeChild(renderedTile);
+    this.container.removeChild(...renderedTile);
     this.drawn[xIndex][yIndex] = false;
     this.tiles[xIndex][yIndex] = null;
   };
@@ -131,10 +131,11 @@ export default class TileLayer implements MapLayer {
     if (!tile) {
       return;
     }
-    const renderedTile = this.tileRenderer.drawTile(tile);
     const { x, y } = this.dp.getTileCoordinates(xIndex, yIndex);
-    renderedTile.position.set(x, y);
-    renderedTile.zIndex = this.map().height * yIndex + xIndex;
+    const renderedTile = this.tileRenderer.drawTile(tile, { x, y });
+    renderedTile.forEach(rt => {
+      rt.position.set(x, y);
+    });
     this.tiles[xIndex][yIndex] = renderedTile;
   };
 }

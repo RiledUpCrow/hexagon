@@ -1,43 +1,49 @@
-import { Container, DisplayObject } from 'pixi.js';
+import { Sprite } from 'pixi.js';
 import { GroundFeature } from '../data/GroundFeature';
-import TextureManager from './TextureManager';
-import DimensionsProvider from './DimensionsProvider';
 import Tile from '../data/Tile';
+import DimensionsProvider from './DimensionsProvider';
+import TextureManager from './TextureManager';
+import { Position } from '../userInterface/UnitInfo';
 
 export default class TileRenderer {
   public constructor(
-    private readonly textureManager: TextureManager,
-    private readonly dp: DimensionsProvider
+    protected readonly textureManager: TextureManager,
+    protected readonly dp: DimensionsProvider
   ) {}
 
-  public drawTile = (tile: Tile): DisplayObject => {
-    const container = new Container();
-    const tileObject = this.getTileSprite(tile);
-    container.addChild(tileObject);
-
-    const groundFeature = tile.groundFeature
-      ? this.getGroundFeature(tile.groundFeature)
-      : null;
-    if (groundFeature) {
-      container.addChild(groundFeature);
+  public drawTile = (tile: Tile, position: Position): Sprite[] => {
+    const container: Sprite[] = [];
+    container.push(this.getTileSprite(tile, position));
+    if (tile.groundFeature) {
+      container.push(this.getGroundFeature(tile.groundFeature, position));
     }
-
     return container;
   };
 
-  public getTileSprite = (tile: Tile): DisplayObject => {
-    const { width } = this.dp.getTileDimensions();
-    const [sprite] = this.textureManager.getGroundType(tile.groundType, width);
-    sprite.width *= 0.98;
-    sprite.height *= 0.98;
+  protected getTileSprite = (tile: Tile, position: Position): Sprite => {
+    const [sprite] = this.textureManager.getGroundType(
+      tile.groundType,
+      this.dp.getTileDimensions().width
+    );
+    sprite.zIndex = this.getZIndex(0, position);
     return sprite;
   };
 
-  private getGroundFeature = (groundFeature: GroundFeature): DisplayObject => {
-    const { width } = this.dp.getTileDimensions();
-    const [sprite] = this.textureManager.getGroundFeature(groundFeature, width);
-    sprite.width *= 0.98;
-    sprite.height *= 0.98;
+  protected getGroundFeature = (
+    groundFeature: GroundFeature,
+    position: Position
+  ): Sprite => {
+    const [sprite] = this.textureManager.getGroundFeature(
+      groundFeature,
+      this.dp.getTileDimensions().width
+    );
+    sprite.zIndex = this.getZIndex(1, position);
     return sprite;
+  };
+
+  protected getZIndex = (layer: number, position: Position): number => {
+    const { width, height } = this.dp.getMap();
+    const { x, y } = position;
+    return width * height * layer + height * y + x;
   };
 }

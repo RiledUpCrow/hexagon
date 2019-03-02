@@ -95,6 +95,13 @@ export default class DimensionsProvider {
   };
 
   /**
+   * Returns the dimensions of the map in tiles.
+   */
+  public getMap = (): Dimensions => {
+    return { height: this.mapHeight, width: this.mapWidth };
+  };
+
+  /**
    * Sets the position of the map container (in pixels).
    */
   public setPosition = (x: number, y: number) => {
