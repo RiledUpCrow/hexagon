@@ -1,8 +1,9 @@
 import { Container, Graphics } from 'pixi.js';
 import DimensionsProvider from './DimensionsProvider';
 import MapLayer from './MapLayer';
+import { Position } from '../userInterface/TileInfo';
 
-const SIZES = [3, 3.5, 4, 4.5, 5];
+const SIZES = [1.5, 1.75, 2, 2.25, 2.5];
 
 export default class BackgroundLayer implements MapLayer {
   protected background: Graphics | null = null;
@@ -14,7 +15,7 @@ export default class BackgroundLayer implements MapLayer {
   ) {
     this.createBackground();
     SIZES.forEach(size => {
-      this.stars[size] = this.generateStars(1000);
+      this.stars[size] = this.generateStars(500);
       this.container.addChild(this.stars[size]);
     });
   }
@@ -25,20 +26,26 @@ export default class BackgroundLayer implements MapLayer {
     this.background!.position.set(-x, -y);
     SIZES.forEach(size => {
       const stars = this.stars[size];
+      const { moveProgressX, moveProgressY } = this.getMoveProgress({ x, y });
       const { width: screenWidth, height: screenHeight } = this.dp.getScreen();
-      const { minX, maxX, minY, maxY } = this.dp.getMapBoundaries();
-      const width = maxX - minX;
-      const height = maxY - minY;
-      const scaleX = 1 - (x - minX) / width;
-      const scaleY = 1 - (y - minY) / height;
-      const maxXMove = width - width / size;
-      const maxYMove = height - height / size;
-      const moveX = maxXMove * scaleX;
-      const moveY = maxYMove * scaleY;
-      stars.position.set(-maxX + moveX, -maxY + moveY);
-      stars.width = width / size + screenWidth;
-      stars.height = height / size + screenHeight;
+      const maxXMove = screenWidth - screenWidth / size;
+      const maxYMove = screenHeight - screenHeight / size;
+      const moveX = maxXMove * moveProgressX;
+      const moveY = maxYMove * moveProgressY;
+      stars.position.set(-moveX * size - x, -moveY * size - y);
+      stars.width = screenWidth * size;
+      stars.height = screenHeight * size;
     });
+  };
+
+  protected getMoveProgress = (position: Position) => {
+    const { x, y } = position;
+    const { minX, maxX, minY, maxY } = this.dp.getMapBoundaries();
+    const width = maxX - minX;
+    const height = maxY - minY;
+    const moveProgressX = 1 - (x - minX) / width;
+    const moveProgressY = 1 - (y - minY) / height;
+    return { moveProgressX, moveProgressY };
   };
 
   public resize = () => undefined;
@@ -48,23 +55,17 @@ export default class BackgroundLayer implements MapLayer {
   public animate = () => undefined;
 
   protected generateStars = (amount: number): Graphics => {
+    const starSize = 8;
     const layer = new Graphics();
-    const { width: screenWidth, height: screenHeight } = this.dp.getScreen();
-    const { minX, maxX, minY, maxY } = this.dp.getMapBoundaries();
-    const width = maxX - minX + screenWidth;
-    const height = maxY - minY + screenHeight;
+    const { width, height } = this.dp.getScreen();
     for (let i = 0; i < amount; i++) {
-      const randomX = Math.floor(Math.random() * width);
-      const randomY = Math.floor(Math.random() * height);
+      const randomX = Math.floor(Math.random() * width * starSize);
+      const randomY = Math.floor(Math.random() * height * starSize);
       layer
         .beginFill(0xffffff, 0.5)
         .drawCircle(randomX, randomY, 4)
         .endFill();
     }
-    // layer
-    //   .lineStyle(8, 0xffffff)
-    //   .drawRect(8, 8, width - 8, height - 8)
-    //   .endFill();
     return layer;
   };
 
