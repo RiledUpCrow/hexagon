@@ -4,6 +4,8 @@ import MapLayer from './MapLayer';
 import { Position } from '../userInterface/TileInfo';
 
 const SIZES = [4, 5, 6, 7, 8];
+const DENSITY = 150;
+const RADIUS = 6;
 
 export default class BackgroundLayer implements MapLayer {
   protected background: Graphics | null = null;
@@ -15,7 +17,7 @@ export default class BackgroundLayer implements MapLayer {
   ) {
     this.createBackground();
     SIZES.forEach(size => {
-      this.stars[size] = this.generateStars(500);
+      this.stars[size] = this.generateStars(size * DENSITY);
       this.container.addChild(this.stars[size]);
     });
   }
@@ -95,7 +97,7 @@ export default class BackgroundLayer implements MapLayer {
       const randomY = Math.floor(Math.random() * height);
       layer
         .beginFill(0xffffff, 0.5)
-        .drawStar(randomX, randomY, 5, 4, 8)
+        .drawStar(randomX, randomY, 5, RADIUS, RADIUS * 2)
         .endFill();
     }
     return layer;
