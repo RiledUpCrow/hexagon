@@ -1,7 +1,7 @@
 import { Container, Graphics } from 'pixi.js';
+import { Position } from '../userInterface/TileInfo';
 import DimensionsProvider from './DimensionsProvider';
 import MapLayer from './MapLayer';
-import { Position } from '../userInterface/TileInfo';
 
 const SIZES = [4, 5, 6, 7, 8];
 const DENSITY = 150;

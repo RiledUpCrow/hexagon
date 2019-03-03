@@ -14,5 +14,5 @@ export default interface Map {
    * and represents columns. Child arrays are Y coordinate (from top do bottom)
    * and represent rows.
    */
-  tiles: (Tile | null)[][];
+  tiles: Tile[][];
 }

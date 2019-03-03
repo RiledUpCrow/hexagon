@@ -1,11 +1,11 @@
-import { DisplayObject, Container, Sprite } from 'pixi.js';
-import TileRenderer from './TileRenderer';
+import { Container, Sprite } from 'pixi.js';
 import Map from '../data/Map';
+import { RootState } from '../store/reducers';
+import { Position } from '../userInterface/TileInfo';
 import DimensionsProvider, { Boundaries } from './DimensionsProvider';
 import MapLayer from './MapLayer';
-import { Position } from '../userInterface/TileInfo';
 import TextureManager from './TextureManager';
-import { RootState } from '../store/reducers';
+import TileRenderer from './TileRenderer';
 
 export default class TileLayer implements MapLayer {
   protected readonly tileRenderer: TileRenderer;
@@ -131,13 +131,16 @@ export default class TileLayer implements MapLayer {
 
   protected createTile = (xIndex: number, yIndex: number) => {
     const tile = this.map().tiles[xIndex][yIndex];
-    if (!tile) {
+    if (!tile.discovered) {
       return;
     }
     const { x, y } = this.dp.getTileCoordinates(xIndex, yIndex);
     const renderedTile = this.tileRenderer.drawTile(tile, { x, y });
     renderedTile.forEach(rt => {
       rt.position.set(x, y);
+      if (!tile.visible) {
+        rt.tint = 0x606060;
+      }
     });
     this.tiles[xIndex][yIndex] = renderedTile;
   };

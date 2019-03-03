@@ -16,7 +16,7 @@ const groundTypes: GroundType[] = [
 ];
 
 export class DefaultMap implements Map {
-  public tiles: (Tile | null)[][] = [];
+  public tiles: Tile[][] = [];
 
   public constructor(public width: number, public height: number) {
     for (let xIndex = 0; xIndex < width; xIndex++) {
@@ -32,8 +32,11 @@ export class DefaultMap implements Map {
         ) {
           feature = Math.random() > 0.5 ? 'FOREST' : null;
         }
-        this.tiles[xIndex][yIndex] =
-          Math.random() >= 0.25 ? new DefaultTile(type, feature) : null;
+        this.tiles[xIndex][yIndex] = new DefaultTile(type, feature);
+        if (Math.random() >= 0.15) {
+          this.tiles[xIndex][yIndex].discovered = true;
+          this.tiles[xIndex][yIndex].visible = Math.random() >= 0.5;
+        }
       }
     }
   }

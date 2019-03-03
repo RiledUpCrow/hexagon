@@ -5,7 +5,7 @@ import { LOAD_MAP, RESET, UPDATE_TILE } from '../actions';
 import LoadMapAction from '../actions/loadMapAction';
 import UpdateTileAction from '../actions/updateTileAction';
 
-type Tiles = (Tile | null)[][];
+type Tiles = Tile[][];
 
 const updateMap = (tiles: Tiles, x: number, y: number, tile: Tile): Tiles => {
   const newTiles = tiles.map(col => [...col]);
