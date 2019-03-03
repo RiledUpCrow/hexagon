@@ -95,7 +95,7 @@ export default class BackgroundLayer implements MapLayer {
       const randomY = Math.floor(Math.random() * height);
       layer
         .beginFill(0xffffff, 0.5)
-        .drawCircle(randomX, randomY, 8)
+        .drawStar(randomX, randomY, 5, 4, 8)
         .endFill();
     }
     return layer;
