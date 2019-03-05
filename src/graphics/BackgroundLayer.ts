@@ -3,7 +3,7 @@ import { Position } from '../userInterface/TileInfo';
 import DimensionsProvider from './DimensionsProvider';
 import MapLayer from './MapLayer';
 
-const SIZES = [4, 5, 6, 7, 8];
+const SIZES = [4, 4.5, 5, 5.5, 6];
 const DENSITY = 150;
 const RADIUS = 6;
 
