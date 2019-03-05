@@ -123,12 +123,13 @@ const launch = (
               2
             );
             const route = pathfinder.getPath({ x: hex.x, y: hex.y });
-            console.log(route);
-            store.dispatch<MoveUnitAction>({
-              type: MOVE_UNIT,
-              unit: selectedUnit,
-              movement: route,
-            });
+            if (route.length > 0) {
+              store.dispatch<MoveUnitAction>({
+                type: MOVE_UNIT,
+                unit: selectedUnit,
+                movement: route,
+              });
+            }
           }
         }
       })

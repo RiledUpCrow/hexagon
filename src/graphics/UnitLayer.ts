@@ -129,7 +129,7 @@ export default class UnitLayer implements MapLayer {
     }
     if (currentMoves) {
       const { unit, movement } = currentMoves;
-      const pos = unit.position;
+      let pos = unit.position;
       for (let i = 0; i < movement.length; i++) {
         const move = movement[i];
         this.renderedUnits[unit.id].animation.push({
@@ -137,6 +137,7 @@ export default class UnitLayer implements MapLayer {
           end: Point.fromPosition(move),
           progress: 0,
         });
+        pos = move;
       }
     }
     this.previousMoves = currentMoves;
