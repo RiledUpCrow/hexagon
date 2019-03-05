@@ -33,9 +33,9 @@ export class DefaultMap implements Map {
           feature = Math.random() > 0.5 ? 'FOREST' : null;
         }
         this.tiles[xIndex][yIndex] = new DefaultTile(type, feature);
-        if (Math.random() >= 0.15) {
+        if (Math.random() >= 0) {
           this.tiles[xIndex][yIndex].discovered = true;
-          this.tiles[xIndex][yIndex].visible = Math.random() >= 0.5;
+          this.tiles[xIndex][yIndex].visible = Math.random() >= 0;
         }
       }
     }

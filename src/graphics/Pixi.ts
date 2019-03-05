@@ -20,6 +20,8 @@ import TileLayer from './TileLayer';
 import UnitLayer from './UnitLayer';
 import UnderlayLayer from './UnderlayLayer';
 import Controller from './Controller';
+import AStar from '../logic/movement/AStar';
+import InfantryMovement from '../logic/movement/InfantryMovement';
 
 type Kill = () => void;
 
@@ -113,10 +115,19 @@ const launch = (
           store.dispatch<SelectUnitAction>({ type: SELECT_UNIT, unit });
         } else {
           if (selectedUnit) {
+            const pathfinder = new AStar(
+              store.getState().map!,
+              new InfantryMovement(),
+              selectedUnit.position,
+              2,
+              2
+            );
+            const route = pathfinder.getPath({ x: hex.x, y: hex.y });
+            console.log(route);
             store.dispatch<MoveUnitAction>({
               type: MOVE_UNIT,
               unit: selectedUnit,
-              movement: [{ x: hex.x, y: hex.y }],
+              movement: route,
             });
           }
         }
