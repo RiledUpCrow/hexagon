@@ -117,7 +117,8 @@ export default class AStar implements Pathfinder {
       if (isSame(target)(current)) {
         const result = [current.position];
         let prev = current.parent;
-        while (prev !== null) {
+        // break the loop before `start` location is added, we don't want it
+        while (prev && prev.parent !== null) {
           result.push(prev.position);
           prev = prev.parent;
         }
