@@ -12,7 +12,7 @@ import parseTextureData from '../logic/parseTextureData';
 import rawData1 from '../textures/atlas1.json';
 import atlas1 from '../textures/atlas1.png';
 
-type TextureName = keyof typeof rawData1;
+export type TextureName = keyof typeof rawData1;
 type AtlasPart = (size: number) => TextureData[];
 type AtlasParts = { [key in TextureName]: AtlasPart };
 

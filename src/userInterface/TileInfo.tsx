@@ -16,19 +16,18 @@ interface Props {
 const names: { [type in GroundType]: string } = {
   DESERT: 'Desert',
   GRASSLAND: 'Grassland',
-  GRASS_HILL: 'Grassland, Hills',
   MOUNTAIN: 'Mountains',
   PLAINS: 'Plains',
   SNOW: 'Snow',
   TUNDRA: 'Tundra',
-  WATER: 'Ocean',
+  OCEAN: 'Ocean',
 };
 
 const TileInfo: FunctionComponent<Props> = ({
   tile,
   position,
 }): JSX.Element => {
-  const name = names[tile.groundType];
+  const name = names[tile.groundType] + (tile.hill ? ', Hill' : '');
   return (
     <div className="TileInfo-root">
       <h1 className="TileInfo-title">{name}</h1>

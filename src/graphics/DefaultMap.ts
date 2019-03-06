@@ -7,12 +7,11 @@ import { DefaultTile } from './DefaultTile';
 const groundTypes: GroundType[] = [
   'DESERT',
   'GRASSLAND',
-  'GRASS_HILL',
   'MOUNTAIN',
   'PLAINS',
   'SNOW',
   'TUNDRA',
-  'WATER',
+  'OCEAN',
 ];
 
 export class DefaultMap implements Map {
@@ -25,14 +24,12 @@ export class DefaultMap implements Map {
         const type =
           groundTypes[Math.floor(Math.random() * groundTypes.length)];
         let feature: GroundFeature | null = null;
-        if (
-          type === 'GRASSLAND' ||
-          type === 'GRASS_HILL' ||
-          type === 'PLAINS'
-        ) {
+        if (type === 'GRASSLAND' || type === 'PLAINS') {
           feature = Math.random() > 0.5 ? 'FOREST' : null;
         }
-        this.tiles[xIndex][yIndex] = new DefaultTile(type, feature);
+        const hill =
+          type !== 'OCEAN' && type !== 'MOUNTAIN' && Math.random() > 0.8;
+        this.tiles[xIndex][yIndex] = new DefaultTile(type, hill, feature);
         if (Math.random() >= 0) {
           this.tiles[xIndex][yIndex].discovered = true;
           this.tiles[xIndex][yIndex].visible = Math.random() >= 0;

@@ -10,6 +10,9 @@ export default class InfantryMovement implements MovementCosts {
     if (toTile.groundFeature === 'FOREST') {
       return Math.min(2, left);
     }
+    if (toTile.hill) {
+      return Math.min(2, left);
+    }
     switch (toTile.groundType) {
       case 'TUNDRA':
       case 'SNOW':
@@ -17,9 +20,6 @@ export default class InfantryMovement implements MovementCosts {
       case 'GRASSLAND':
       case 'DESERT': {
         return 1;
-      }
-      case 'GRASS_HILL': {
-        return Math.min(2, left);
       }
       default: {
         return null;

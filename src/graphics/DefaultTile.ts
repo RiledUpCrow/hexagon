@@ -8,6 +8,7 @@ export class DefaultTile implements Tile {
 
   public constructor(
     public groundType: GroundType,
+    public hill: boolean,
     public groundFeature: GroundFeature | null = null
   ) {}
 }
