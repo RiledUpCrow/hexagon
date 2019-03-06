@@ -115,31 +115,13 @@ export default class AStar implements Pathfinder {
 
       closedList.push(current);
       if (isSame(target)(current)) {
-        const result = [current.position];
-        let prev = current.parent;
-        // break the loop before `start` location is added, we don't want it
-        while (prev && prev.parent !== null) {
-          result.push(prev.position);
-          prev = prev.parent;
-        }
-        return result.reverse();
+        return this.generatePath(current);
       }
 
       getNeighbors(current.position, this.map.width, this.map.height).forEach(
         neighbor => {
-          const tile = this.map.tiles[neighbor.x][neighbor.y];
-          let toNode: Node;
-          try {
-            toNode = new DefNode(
-              this.map,
-              this.costs,
-              this.totalMovement,
-              target,
-              current,
-              neighbor,
-              tile
-            );
-          } catch (error) {
+          const toNode = this.newNode(target, current, neighbor);
+          if (!toNode) {
             return;
           }
           if (closedList.find(isSame(toNode.position))) {
@@ -148,15 +130,47 @@ export default class AStar implements Pathfinder {
           const duplicate = openList.findIndex(isSame(toNode.position));
           if (duplicate < 0) {
             openList.push(toNode);
-          } else {
-            if (openList[duplicate].fromStart > toNode.fromStart) {
-              openList[duplicate] = toNode;
-            }
+          } else if (openList[duplicate].fromStart > toNode.fromStart) {
+            openList[duplicate] = toNode;
           }
         }
       );
     }
 
     return [];
+  };
+
+  protected generatePath = (node: Node): Position[] => {
+    const result = [node.position];
+    let prev = node.parent;
+    // break the loop before `start` location is added, we don't want it
+    while (prev && prev.parent !== null) {
+      result.push(prev.position);
+      prev = prev.parent;
+    }
+    return result.reverse();
+  };
+
+  /**
+   * Helper method which quickly returns a new node or null if it's not walkable.
+   */
+  protected newNode = (
+    target: Position,
+    parent: Node,
+    position: Position
+  ): Node | null => {
+    try {
+      return new DefNode(
+        this.map,
+        this.costs,
+        this.totalMovement,
+        target,
+        parent,
+        position,
+        this.map.tiles[position.x][position.y]
+      );
+    } catch (error) {
+      return null;
+    }
   };
 }
