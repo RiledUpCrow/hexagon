@@ -34,7 +34,7 @@ export default class TextureManager {
   protected readonly atlasParts: AtlasParts;
   protected readonly textureUrls: string[] = [];
   protected readonly mipMaps: { [key: string]: MipMap } = {};
-  protected readonly SIZES = [1, 2, 4, 8];
+  protected readonly SIZES = [1, 1.5, 2, 3, 4, 6, 8];
   protected readonly textures: TextureAtlas = {};
   protected loaded = false;
 
@@ -75,12 +75,7 @@ export default class TextureManager {
     for (let i = 1; i < this.SIZES.length; i++) {
       const size = this.SIZES[i];
       const texture = this.textures[size][key][0];
-      let target;
-      const scale = (width * devicePixelRatio) / texture.width;
-      const someHeight = texture.height * scale;
-      target = width * devicePixelRatio * someHeight;
-      const thisSize = texture.width * texture.height;
-      if (thisSize > target) {
+      if (texture.width > width * devicePixelRatio) {
         bestTextures = this.textures[size][key];
       }
     }
