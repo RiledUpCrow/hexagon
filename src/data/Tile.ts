@@ -1,5 +1,6 @@
 import { GroundType } from './GroundType';
 import { GroundFeature } from './GroundFeature';
+import { Side } from '../logic/atSide';
 
 export default interface Tile {
   groundType: GroundType;
@@ -7,4 +8,5 @@ export default interface Tile {
   hill: boolean;
   discovered: boolean;
   visible: boolean;
+  rivers: Side[];
 }

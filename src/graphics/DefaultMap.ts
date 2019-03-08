@@ -3,6 +3,7 @@ import { GroundType } from '../data/GroundType';
 import Map from '../data/Map';
 import Tile from '../data/Tile';
 import { DefaultTile } from './DefaultTile';
+import { Side } from '../logic/atSide';
 
 const groundTypes: GroundType[] = [
   'DESERT',
@@ -29,7 +30,22 @@ export class DefaultMap implements Map {
         }
         const hill =
           type !== 'OCEAN' && type !== 'MOUNTAIN' && Math.random() > 0.8;
-        this.tiles[xIndex][yIndex] = new DefaultTile(type, hill, feature);
+
+        const sides: Side[] = [
+          'EAST',
+          'NORTH_EAST',
+          'NORTH_WEST',
+          'SOUTH_EAST',
+          'SOUTH_WEST',
+          'WEST',
+        ];
+        const chosenSides = sides.filter(() => Math.random() > 0.95);
+        this.tiles[xIndex][yIndex] = new DefaultTile(
+          type,
+          hill,
+          chosenSides,
+          feature
+        );
         if (Math.random() >= 0) {
           this.tiles[xIndex][yIndex].discovered = true;
           this.tiles[xIndex][yIndex].visible = Math.random() >= 0;

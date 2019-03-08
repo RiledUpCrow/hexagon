@@ -5,6 +5,15 @@ import DimensionsProvider from './DimensionsProvider';
 import TextureManager, { TextureName } from './TextureManager';
 import { Position } from '../userInterface/UnitInfo';
 import { GroundType } from '../data/GroundType';
+import { Side } from '../logic/atSide';
+
+const LAYER = {
+  BASE: 0,
+  TEXTURE: 1,
+  RIVER: 2,
+  SHAPE: 3,
+  FEATURES: 4,
+};
 
 export default class TileRenderer {
   public constructor(
@@ -24,21 +33,43 @@ export default class TileRenderer {
   protected getTileSprite = (tile: Tile, position: Position): Sprite[] => {
     const sprites: Sprite[] = [];
     const base = this.getBaseSprite(tile.groundType);
-    base.zIndex = this.getZIndex(0, position);
+    base.zIndex = this.getZIndex(LAYER.BASE, position);
     base.tint = this.getBaseColor(tile.groundType);
     sprites.push(base);
     const texture = this.getTextureSprite(tile.groundType);
     if (texture) {
-      texture.zIndex = this.getZIndex(1, position);
+      texture.zIndex = this.getZIndex(LAYER.TEXTURE, position);
       sprites.push(texture);
     }
+    tile.rivers.forEach(side => {
+      const river = this.getRiverSprite(side);
+      river.zIndex = this.getZIndex(LAYER.RIVER, position);
+      sprites.push(river);
+    });
     const shape = this.getShapeSprite(tile);
     if (shape) {
-      shape.zIndex = this.getZIndex(2, position);
+      shape.zIndex = this.getZIndex(LAYER.SHAPE, position);
       shape.tint = this.getBaseColor(tile.groundType);
       sprites.push(shape);
     }
     return sprites;
+  };
+
+  protected getRiverSprite = (side: Side): Sprite => {
+    switch (side) {
+      case 'EAST':
+        return this.getSprite('RIVER_EAST', 0.089483);
+      case 'NORTH_EAST':
+        return this.getSprite('RIVER_NORTH_EAST', 0.589338);
+      case 'NORTH_WEST':
+        return this.getSprite('RIVER_NORTH_WEST', 0.589338);
+      case 'SOUTH_EAST':
+        return this.getSprite('RIVER_SOUTH_EAST', 0.589338);
+      case 'SOUTH_WEST':
+        return this.getSprite('RIVER_SOUTH_WEST', 0.589338);
+      default:
+        return this.getSprite('RIVER_WEST', 0.089483);
+    }
   };
 
   protected getTextureSprite = (gt: GroundType): Sprite | null => {
@@ -95,10 +126,10 @@ export default class TileRenderer {
     }
   };
 
-  private getSprite = (name: TextureName): Sprite => {
+  private getSprite = (name: TextureName, scale: number = 1): Sprite => {
     return this.textureManager.getSprite(
       name,
-      this.dp.getTileDimensions().width
+      this.dp.getTileDimensions().width * scale
     )[0];
   };
 
@@ -110,7 +141,7 @@ export default class TileRenderer {
       groundFeature,
       this.dp.getTileDimensions().width
     );
-    sprite.zIndex = this.getZIndex(3, position);
+    sprite.zIndex = this.getZIndex(LAYER.FEATURES, position);
     return sprite;
   };
 
