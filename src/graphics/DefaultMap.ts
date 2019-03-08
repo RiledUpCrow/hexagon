@@ -31,15 +31,8 @@ export class DefaultMap implements Map {
         const hill =
           type !== 'OCEAN' && type !== 'MOUNTAIN' && Math.random() > 0.8;
 
-        const sides: Side[] = [
-          'EAST',
-          'NORTH_EAST',
-          'NORTH_WEST',
-          'SOUTH_EAST',
-          'SOUTH_WEST',
-          'WEST',
-        ];
-        const chosenSides = sides.filter(() => Math.random() > 0.95);
+        const sides: Side[] = ['SOUTH_EAST', 'SOUTH_WEST', 'WEST'];
+        const chosenSides = sides.filter(() => Math.random() > 0.9);
         this.tiles[xIndex][yIndex] = new DefaultTile(
           type,
           hill,

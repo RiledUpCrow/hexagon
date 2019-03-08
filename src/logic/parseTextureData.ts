@@ -21,8 +21,8 @@ export default (atlas: string, textureSize: number = 2048) => (
       y: ((SVG_POINTS - (y + height)) * scale) / size,
       width: (width * scale) / size,
       height: (height * scale) / size,
-      anchorX: anchorX === undefined ? 0.5 : (anchorX - x) / width,
-      anchorY: anchorY === undefined ? 0.5 : 1 - (anchorY - y) / height,
+      anchorX: anchorX === undefined ? 0.5 : 0.5 + anchorX / width,
+      anchorY: anchorY === undefined ? 0.5 : 0.5 - anchorY / height,
       frames: frames ? frames : 10,
     };
   });

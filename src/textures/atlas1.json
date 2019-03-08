@@ -10,7 +10,7 @@
   "OCEAN": [{ "x": 320, "y": 422, "width": 62, "height": 90 }],
   "MOUNTAIN": [{ "x": 448, "y": 422, "width": 62, "height": 90 }],
   "FOREST": [{ "x": 0, "y": 330, "width": 62, "height": 90 }],
-  "WARRIOR": [{ "x": 64, "y": 375, "width": 31, "height": 45, "anchorY": 400 }],
+  "WARRIOR": [{ "x": 64, "y": 375, "width": 31, "height": 45, "anchorY": -15 }],
   "SELECTED": [
     { "x": 96, "y": 405, "width": 31, "height": 15, "frames": 20 },
     { "x": 128, "y": 405, "width": 31, "height": 15, "frames": 20 },
@@ -20,48 +20,48 @@
   "HIGHLIGHT": [{ "x": 224, "y": 358, "width": 62, "height": 62 }],
   "RIVER_NORTH_EAST": [
     {
-      "x": 148,
+      "x": 141,
       "y": 385,
       "width": 36.538,
       "height": 18.693,
-      "anchorX": 150.76,
-      "anchorY": 371.0965
+      "anchorX": -15,
+      "anchorY": -23.25
     }
   ],
   "RIVER_EAST": [
-    { "x": 103, "y": 366, "width": 5.537, "height": 37.386, "anchorX": 74.765 }
+    { "x": 96, "y": 366, "width": 5.548, "height": 37.386, "anchorX": -31 }
   ],
   "RIVER_SOUTH_EAST": [
     {
-      "x": 110,
-      "y": 365,
+      "x": 103,
+      "y": 385,
       "width": 36.538,
       "height": 18.693,
-      "anchorX": 112.765,
-      "anchorY": 397.5965
+      "anchorX": 15,
+      "anchorY": -23.25
     }
   ],
   "RIVER_NORTH_WEST": [
     {
-      "x": 110,
+      "x": 103,
       "y": 385,
       "width": 36.538,
       "height": 18.693,
-      "anchorX": 143.7695,
-      "anchorY": 371.0965
+      "anchorX": 15,
+      "anchorY": -23.25
     }
   ],
   "RIVER_WEST": [
-    { "x": 96, "y": 366, "width": 5.548, "height": 37.386, "anchorX": 129.773 }
+    { "x": 96, "y": 366, "width": 5.548, "height": 37.386, "anchorX": 31 }
   ],
   "RIVER_SOUTH_WEST": [
     {
-      "x": 148,
-      "y": 365,
+      "x": 141,
+      "y": 385,
       "width": 36.538,
       "height": 18.693,
-      "anchorX": 181.765,
-      "anchorY": 397.5965
+      "anchorX": 15,
+      "anchorY": 23.25
     }
   ]
 }
