@@ -5,10 +5,10 @@ import Settings, { defaultSettings } from '../data/Settings';
 import useDispatch from '../logic/useDispatch';
 import useStore from '../logic/useStore';
 import './MainMenu.css';
-import { DefaultMap } from '../graphics/DefaultMap';
 import { LOAD_MAP } from '../store/actions';
 import LoadMapAction from '../store/actions/loadMapAction';
 import Unit from '../data/Unit';
+import Map from '../data/Map';
 
 interface Props {
   startGame: (settings: Settings) => void;
@@ -24,8 +24,10 @@ const MainMenu: FunctionComponent<Props> = ({ startGame }): JSX.Element => {
   const map = useStore(s => s.map);
   const dispatch = useDispatch();
 
-  const generateMap = useCallback(() => {
-    const map = new DefaultMap(mapWidth, mapHeight);
+  const generateMap = useCallback(async () => {
+    const map: Map = await fetch('/map')
+      .then(res => res.json())
+      .then(tiles => ({ width: mapWidth, height: mapHeight, tiles }));
     const units: Unit[] = [
       { id: 0, type: 'WARRIOR', position: { x: 1, y: 1 } },
       { id: 1, type: 'WARRIOR', position: { x: 1, y: 2 } },
