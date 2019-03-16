@@ -1,4 +1,4 @@
-import { Howl, Howler } from 'howler';
+import { Howl } from 'howler';
 import click from '../sounds/click.ogg';
 
 export const buttonClick = new Howl({
