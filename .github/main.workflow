@@ -33,7 +33,7 @@ action "Test" {
 
 action "Release" {
   uses = "actions/docker/cli@8cdf801b322af5f369e00d85e9cf3a7122f49108"
-  needs = ["Style", "Test", "Lint"]
+  needs = ["Style", "Lint", "Test"]
   args = "build -t co0sh/hexagon-ui:latest ."
 }
 
