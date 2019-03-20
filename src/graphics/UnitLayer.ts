@@ -1,14 +1,14 @@
-import MapLayer from './MapLayer';
-import { DisplayObject, Container } from 'pixi.js';
+import { Container, DisplayObject } from 'pixi.js';
+import Position from '../data/Position';
+import Unit from '../data/Unit';
+import { RootState } from '../store/reducers';
+import { MovementState } from '../store/reducers/movementReducer';
+import { SelectedUnitState } from '../store/reducers/selectedUnitReducer';
 import { UnitState } from '../store/reducers/unitReducer';
 import DimensionsProvider from './DimensionsProvider';
-import TextureManager from './TextureManager';
-import Unit from '../data/Unit';
+import MapLayer from './MapLayer';
 import Point from './Point';
-import { Position } from '../userInterface/TileInfo';
-import { MovementState } from '../store/reducers/movementReducer';
-import { RootState } from '../store/reducers';
-import { SelectedUnitState } from '../store/reducers/selectedUnitReducer';
+import TextureManager from './TextureManager';
 
 interface RenderedUnit {
   unit: Unit;

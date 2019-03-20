@@ -1,10 +1,10 @@
 import { DisplayObject, Graphics } from 'pixi.js';
 import { Highlight } from '../../data/Highlight';
-import DimensionsProvider from '../DimensionsProvider';
-import { Position } from '../../userInterface/UnitInfo';
-import Point from '../Point';
+import Position from '../../data/Position';
 import atSide, { Side } from '../../logic/atSide';
+import DimensionsProvider from '../DimensionsProvider';
 import Hex from '../Hex';
+import Point from '../Point';
 import HighlightDrawer from './HighlightDrawer';
 
 export default class RangeDrawer implements HighlightDrawer {

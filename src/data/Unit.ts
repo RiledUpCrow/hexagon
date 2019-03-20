@@ -1,5 +1,5 @@
+import Position from './Position';
 import { UnitType } from './UnitType';
-import { Position } from '../userInterface/TileInfo';
 
 export default interface Unit {
   id: number;

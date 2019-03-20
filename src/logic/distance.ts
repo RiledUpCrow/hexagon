@@ -1,4 +1,4 @@
-import { Position } from '../userInterface/TileInfo';
+import Position from '../data/Position';
 
 const toCube = (pos: Position): [number, number, number] => {
   const x = pos.x - (pos.y - (pos.y & 1)) / 2;

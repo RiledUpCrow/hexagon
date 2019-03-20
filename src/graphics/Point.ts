@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
+import Position from '../data/Position';
 import Vector from './Vector';
-import { Position } from '../userInterface/TileInfo';
 
 class Point implements Position {
   public constructor(public readonly x: number, public readonly y: number) {}

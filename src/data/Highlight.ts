@@ -1,4 +1,4 @@
-import { Position } from '../userInterface/UnitInfo';
+import Position from './Position';
 
 export type HighlightType = 'range' | 'outline';
 

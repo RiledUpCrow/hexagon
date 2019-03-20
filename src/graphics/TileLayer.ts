@@ -1,7 +1,7 @@
 import { Container, Sprite } from 'pixi.js';
 import Map from '../data/Map';
+import Position from '../data/Position';
 import { RootState } from '../store/reducers';
-import { Position } from '../userInterface/TileInfo';
 import DimensionsProvider, { Boundaries } from './DimensionsProvider';
 import MapLayer from './MapLayer';
 import TextureManager from './TextureManager';

@@ -1,5 +1,5 @@
+import Position from '../../data/Position';
 import Unit from '../../data/Unit';
-import { Position } from '../../userInterface/TileInfo';
 import { GameAction } from '../actions';
 
 export type MovementState = {

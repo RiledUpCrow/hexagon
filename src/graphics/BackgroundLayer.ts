@@ -1,5 +1,5 @@
 import { Container, Graphics } from 'pixi.js';
-import { Position } from '../userInterface/TileInfo';
+import Position from '../data/Position';
 import DimensionsProvider from './DimensionsProvider';
 import MapLayer from './MapLayer';
 

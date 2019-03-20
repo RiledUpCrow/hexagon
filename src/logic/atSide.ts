@@ -1,4 +1,4 @@
-import { Position } from '../userInterface/UnitInfo';
+import Position from '../data/Position';
 import Vector from '../graphics/Vector';
 
 export type Side =

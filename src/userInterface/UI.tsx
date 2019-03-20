@@ -1,8 +1,8 @@
 import React, { FunctionComponent, memo, useCallback, useState } from 'react';
 import Button from '../components/Button';
 import useStore from '../logic/useStore';
-import TileInfo from './TileInfo';
-import UnitInfo from './UnitInfo';
+import TileInfo from './game/TileInfo';
+import UnitInfo from './game/UnitInfo';
 import './UI.css';
 
 interface Props {

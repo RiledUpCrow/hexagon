@@ -1,5 +1,5 @@
+import Position from '../../data/Position';
 import Tile from '../../data/Tile';
-import { Position } from '../../userInterface/TileInfo';
 import { GameAction } from '../actions';
 
 export type SelectedTileState = {

@@ -1,11 +1,11 @@
 import { Sprite } from 'pixi.js';
 import { GroundFeature } from '../data/GroundFeature';
+import { GroundType } from '../data/GroundType';
+import Position from '../data/Position';
 import Tile from '../data/Tile';
+import { Side } from '../logic/atSide';
 import DimensionsProvider from './DimensionsProvider';
 import TextureManager, { TextureName } from './TextureManager';
-import { Position } from '../userInterface/UnitInfo';
-import { GroundType } from '../data/GroundType';
-import { Side } from '../logic/atSide';
 
 const LAYER = {
   BASE: 0,

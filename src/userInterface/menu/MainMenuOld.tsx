@@ -1,12 +1,12 @@
 import React, { FunctionComponent, memo, useCallback, useState } from 'react';
-import Button from '../components/Button';
-import NumberPicker from '../components/NumberPicker';
-import Map from '../data/Map';
-import { defaultSettings } from '../data/Settings';
-import Unit from '../data/Unit';
-import useDispatch from '../logic/useDispatch';
-import useStore from '../logic/useStore';
-import './MainMenu.css';
+import Button from '../../components/Button';
+import NumberPicker from '../../components/NumberPicker';
+import Map from '../../data/Map';
+import { defaultSettings } from '../../data/Settings';
+import Unit from '../../data/Unit';
+import useDispatch from '../../logic/useDispatch';
+import useStore from '../../logic/useStore';
+import './MainMenuOld.css';
 
 const MainMenu: FunctionComponent = (): JSX.Element => {
   const [mapWidth, setMapWidth] = useState(defaultSettings.mapWidth);

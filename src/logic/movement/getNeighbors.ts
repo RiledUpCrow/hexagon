@@ -1,4 +1,4 @@
-import { Position } from '../../userInterface/UnitInfo';
+import Position from '../../data/Position';
 import atSide from '../atSide';
 
 export default (position: Position, maxX: number, maxY: number): Position[] =>

@@ -1,12 +1,8 @@
 import React, { FunctionComponent, memo } from 'react';
+import { GroundType } from '../../data/GroundType';
+import Position from '../../data/Position';
+import Tile from '../../data/Tile';
 import './TileInfo.css';
-import { GroundType } from '../data/GroundType';
-import Tile from '../data/Tile';
-
-export interface Position {
-  x: number;
-  y: number;
-}
 
 interface Props {
   tile: Tile;

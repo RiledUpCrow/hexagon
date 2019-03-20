@@ -1,10 +1,10 @@
-import Pathfinder from './Pathfinder';
-import { Position } from '../../userInterface/UnitInfo';
 import Map from '../../data/Map';
-import MovementCosts from './MovementCosts';
+import Position from '../../data/Position';
+import Tile from '../../data/Tile';
 import distance from '../distance';
 import getNeighbors from './getNeighbors';
-import Tile from '../../data/Tile';
+import MovementCosts from './MovementCosts';
+import Pathfinder from './Pathfinder';
 
 interface Node {
   totalCost: number;

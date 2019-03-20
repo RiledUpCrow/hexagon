@@ -1,12 +1,7 @@
 import React, { FunctionComponent, memo } from 'react';
-import Unit from '../data/Unit';
-import { UnitType } from '../data/UnitType';
+import Unit from '../../data/Unit';
+import { UnitType } from '../../data/UnitType';
 import './UnitInfo.css';
-
-export interface Position {
-  x: number;
-  y: number;
-}
 
 interface Props {
   unit: Unit;
