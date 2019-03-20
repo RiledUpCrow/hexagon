@@ -7,7 +7,7 @@ export interface RouteState {
 }
 
 export const defaultState: RouteState = {
-  current: 'main_menu',
+  current: 'mainMenu',
   stack: [],
 };
 

@@ -1,10 +1,10 @@
 import React, { FunctionComponent, useCallback, useState } from 'react';
-import Settings from '../data/Settings';
-import './App.css';
-import Game from './Game';
-import MainMenu from './MainMenu';
-import UI from './UI';
 import { Store } from 'redux';
+import useStore from '../logic/useStore';
+import './App.css';
+import Content from './Content';
+import Game from './Game';
+import UI from './UI';
 
 interface Props {
   store: Store;
@@ -13,25 +13,18 @@ interface Props {
 const App: FunctionComponent<Props> = (): JSX.Element => {
   const [ready, setReady] = useState(false);
   const handleReady = useCallback(() => setReady(true), []);
-
-  const [game, setGame] = useState<Settings | null>(null);
-  const startGame = useCallback((settings: Settings) => {
-    setGame(settings);
-  }, []);
-  const endGame = useCallback(() => {
-    setReady(false);
-    setGame(null);
-  }, []);
+  const endGame = useCallback(() => setReady(false), []);
+  const game = useStore(s => s.game);
 
   return (
     <div className="App-root">
       {game ? (
         <>
-          <Game settings={game} onReady={handleReady} />
+          <Game settings={game.settings} onReady={handleReady} />
           <UI endGame={endGame} ready={ready} />
         </>
       ) : (
-        <MainMenu startGame={startGame} />
+        <Content />
       )}
     </div>
   );

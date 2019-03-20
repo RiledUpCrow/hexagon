@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import gameReducer, { GameState } from './gameReducer';
 import highlightReducer, { HighlightState } from './highlightReducer';
 import mapReducer, { MapState } from './mapReducer';
 import movementReducer, { MovementState } from './movementReducer';
@@ -17,6 +18,7 @@ export interface RootState {
   selectedUnit: SelectedUnitState;
   units: UnitState;
   route: RouteState;
+  game: GameState;
 }
 
 export default combineReducers<RootState>({
@@ -28,4 +30,5 @@ export default combineReducers<RootState>({
   selectedUnit: selectedUnitReducer,
   units: unitReducer,
   route: routeReducer,
+  game: gameReducer,
 });

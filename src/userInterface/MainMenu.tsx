@@ -1,19 +1,14 @@
 import React, { FunctionComponent, memo, useCallback, useState } from 'react';
 import Button from '../components/Button';
 import NumberPicker from '../components/NumberPicker';
-import Settings, { defaultSettings } from '../data/Settings';
+import Map from '../data/Map';
+import { defaultSettings } from '../data/Settings';
+import Unit from '../data/Unit';
 import useDispatch from '../logic/useDispatch';
 import useStore from '../logic/useStore';
 import './MainMenu.css';
-import LoadMapAction from '../store/actions/loadMapAction';
-import Unit from '../data/Unit';
-import Map from '../data/Map';
 
-interface Props {
-  startGame: (settings: Settings) => void;
-}
-
-const MainMenu: FunctionComponent<Props> = ({ startGame }): JSX.Element => {
+const MainMenu: FunctionComponent = (): JSX.Element => {
   const [mapWidth, setMapWidth] = useState(defaultSettings.mapWidth);
   const [mapHeight, setMapHeight] = useState(defaultSettings.mapHeight);
   const [size, setSize] = useState(defaultSettings.size);
@@ -36,14 +31,19 @@ const MainMenu: FunctionComponent<Props> = ({ startGame }): JSX.Element => {
   }, [mapWidth, mapHeight]);
 
   const handleStart = useCallback(() => {
-    startGame({
-      mapWidth,
-      mapHeight,
-      size,
-      maxZoom,
-      minZoom,
+    dispatch({
+      type: 'start_game',
+      gameData: {
+        settings: {
+          mapWidth,
+          mapHeight,
+          size,
+          maxZoom,
+          minZoom,
+        },
+      },
     });
-  }, [mapWidth, mapHeight, size, maxZoom, minZoom, startGame]);
+  }, [mapWidth, mapHeight, size, maxZoom, minZoom]);
 
   return (
     <div className="MainMenu-root">

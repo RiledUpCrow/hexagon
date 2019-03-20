@@ -8,6 +8,7 @@ import { SelectTileAction } from './selectTileAction';
 import SelectUnitAction from './selectUnitAction';
 import UpdateTileAction from './updateTileAction';
 import UpdateUnitAction from './updateUnitAction';
+import StartGameAction from './startGameAction';
 
 export type ActionType =
   | 'reset'
@@ -19,7 +20,8 @@ export type ActionType =
   | 'move_unit'
   | 'deselect'
   | 'navigate'
-  | 'back';
+  | 'back'
+  | 'start_game';
 
 export type GameAction =
   | ResetAction
@@ -31,4 +33,5 @@ export type GameAction =
   | UpdateUnitAction
   | DeselectAction
   | NavigateAction
-  | BackAction;
+  | BackAction
+  | StartGameAction;

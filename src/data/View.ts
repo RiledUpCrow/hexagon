@@ -1,11 +1,11 @@
 export type View =
-  | 'main_menu'
+  | 'mainMenu'
   | 'login'
   | 'register'
   | 'profile'
   | 'settings'
-  | 'list_games'
-  | 'list_servers'
-  | 'server_info'
-  | 'create_game'
-  | 'join_game';
+  | 'listGames'
+  | 'listServers'
+  | 'serverInfo'
+  | 'createGame'
+  | 'joinGame';
