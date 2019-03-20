@@ -1,10 +1,11 @@
 import { combineReducers } from 'redux';
-import selectedTileReducer, { SelectedTileState } from './selectedTileReducer';
-import mapReducer, { MapState } from './mapReducer';
-import unitReducer, { UnitState } from './unitReducer';
-import selectedUnitReducer, { SelectedUnitState } from './selectedUnitReducer';
-import movementReducer, { MovementState } from './movementReducer';
 import highlightReducer, { HighlightState } from './highlightReducer';
+import mapReducer, { MapState } from './mapReducer';
+import movementReducer, { MovementState } from './movementReducer';
+import routeReducer, { RouteState } from './routeReducer';
+import selectedTileReducer, { SelectedTileState } from './selectedTileReducer';
+import selectedUnitReducer, { SelectedUnitState } from './selectedUnitReducer';
+import unitReducer, { UnitState } from './unitReducer';
 import userReducer, { UserState } from './userReducer';
 
 export interface RootState {
@@ -15,6 +16,7 @@ export interface RootState {
   selectedTile: SelectedTileState;
   selectedUnit: SelectedUnitState;
   units: UnitState;
+  route: RouteState;
 }
 
 export default combineReducers<RootState>({
@@ -25,4 +27,5 @@ export default combineReducers<RootState>({
   selectedTile: selectedTileReducer,
   selectedUnit: selectedUnitReducer,
   units: unitReducer,
+  route: routeReducer,
 });
