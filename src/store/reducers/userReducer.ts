@@ -1,5 +1,5 @@
 import User from '../../data/User';
-import { AnyAction } from 'redux';
+import { GameAction } from '../actions';
 
 export type UserState = User | null;
 
@@ -7,7 +7,7 @@ const defaultState: UserState = null;
 
 const userReducer = (
   state: UserState = defaultState,
-  action: AnyAction
+  action: GameAction
 ): UserState => {
   switch (action.type) {
     default: {

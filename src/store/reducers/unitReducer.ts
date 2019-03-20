@@ -1,9 +1,5 @@
-import { AnyAction } from 'redux';
 import Unit from '../../data/Unit';
-import { RESET, LOAD_MAP, UPDATE_UNIT, MOVE_UNIT } from '../actions';
-import LoadMapAction from '../actions/loadMapAction';
-import UpdateUnitAction from '../actions/updateUnitAction';
-import MoveUnitAction from '../actions/moveUnitAction';
+import { GameAction } from '../actions';
 
 export interface UnitState {
   [id: number]: Unit;
@@ -13,32 +9,32 @@ const defaultState: UnitState = {};
 
 export default (
   state: UnitState = defaultState,
-  action: AnyAction
+  action: GameAction
 ): UnitState => {
   switch (action.type) {
-    case LOAD_MAP: {
-      const { units } = action as LoadMapAction;
+    case 'load_map': {
+      const { units } = action;
       const result: UnitState = {};
       units.forEach(unit => {
         result[unit.id] = unit;
       });
       return result;
     }
-    case UPDATE_UNIT: {
-      const { unit } = action as UpdateUnitAction;
+    case 'update_unit': {
+      const { unit } = action;
       return {
         ...state,
         [unit.id]: { ...unit },
       };
     }
-    case MOVE_UNIT: {
-      const { unit, movement } = action as MoveUnitAction;
+    case 'move_unit': {
+      const { unit, movement } = action;
       return {
         ...state,
         [unit.id]: { ...unit, position: movement[movement.length - 1] },
       };
     }
-    case RESET: {
+    case 'reset': {
       return defaultState;
     }
     default: {

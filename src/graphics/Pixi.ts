@@ -1,13 +1,6 @@
 import { Application, Container } from 'pixi.js';
 import { Store } from 'redux';
 import Settings from '../data/Settings';
-import {
-  MOVE_UNIT,
-  RESET,
-  SELECT_TILE,
-  SELECT_UNIT,
-  DESELECT,
-} from '../store/actions';
 import MoveUnitAction from '../store/actions/moveUnitAction';
 import SelectUnitAction from '../store/actions/selectUnitAction';
 import { RootState } from '../store/reducers';
@@ -22,6 +15,7 @@ import UnderlayLayer from './UnderlayLayer';
 import Controller from './Controller';
 import AStar from '../logic/movement/AStar';
 import InfantryMovement from '../logic/movement/InfantryMovement';
+import { GameAction } from '../store/actions';
 
 type Kill = () => void;
 
@@ -38,7 +32,7 @@ const launch = (
   { mapWidth, mapHeight, maxZoom, minZoom, size }: Settings,
   div: HTMLElement,
   onReady: () => void,
-  store: Store<RootState>
+  store: Store<RootState, GameAction>
 ): Kill => {
   const setup = (): (() => void) => {
     const container = new Container();
@@ -102,7 +96,7 @@ const launch = (
         if (!tile) {
           return;
         }
-        store.dispatch({ type: SELECT_TILE, tile, position: hex });
+        store.dispatch({ type: 'select_tile', tile, position: hex });
         const selectedUnit = store.getState().selectedUnit;
         const currentUnits = store.getState().units;
         const currentUnitsArray = Object.keys(currentUnits).map(
@@ -112,7 +106,7 @@ const launch = (
           unit => unit.position.x === hex.x && unit.position.y === hex.y
         );
         if (unit) {
-          store.dispatch<SelectUnitAction>({ type: SELECT_UNIT, unit });
+          store.dispatch<SelectUnitAction>({ type: 'select_unit', unit });
         } else {
           if (selectedUnit) {
             const pathfinder = new AStar(
@@ -125,7 +119,7 @@ const launch = (
             const route = pathfinder.getPath({ x: hex.x, y: hex.y });
             if (route.length > 0) {
               store.dispatch<MoveUnitAction>({
-                type: MOVE_UNIT,
+                type: 'move_unit',
                 unit: selectedUnit,
                 movement: route,
               });
@@ -134,7 +128,7 @@ const launch = (
         }
       })
       .registerSecondaryListener(() => {
-        store.dispatch({ type: DESELECT });
+        store.dispatch({ type: 'deselect' });
       })
       .registerPrimaryDragListener(({ x, y }) => drawer.moveBy(x, y))
       .registerZoomListener((zoom, point) => drawer.zoom(zoom, point));
@@ -151,7 +145,7 @@ const launch = (
     const tearDown = (): void => {
       app.ticker.remove(onTick);
       storeUnsubscribe();
-      store.dispatch({ type: RESET });
+      store.dispatch({ type: 'reset' });
       window.removeEventListener('resize', resize);
       controller.stop();
       counter.stop();

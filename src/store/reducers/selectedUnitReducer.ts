@@ -1,15 +1,5 @@
-import { AnyAction } from 'redux';
 import Unit from '../../data/Unit';
-import {
-  RESET,
-  SELECT_UNIT,
-  UPDATE_UNIT,
-  MOVE_UNIT,
-  DESELECT,
-} from '../actions';
-import SelectUnitAction from '../actions/selectUnitAction';
-import UpdateUnitAction from '../actions/updateUnitAction';
-import MoveUnitAction from '../actions/moveUnitAction';
+import { GameAction } from '../actions';
 
 export type SelectedUnitState = Unit | null;
 
@@ -17,29 +7,29 @@ const defaultState = null;
 
 export default (
   state: SelectedUnitState = defaultState,
-  action: AnyAction
+  action: GameAction
 ): SelectedUnitState => {
   switch (action.type) {
-    case SELECT_UNIT: {
-      const { unit } = action as SelectUnitAction;
+    case 'select_unit': {
+      const { unit } = action;
       return unit;
     }
-    case UPDATE_UNIT: {
-      const { unit } = action as UpdateUnitAction;
+    case 'update_unit': {
+      const { unit } = action;
       if (state && state.id === unit.id) {
         return unit;
       }
       return state;
     }
-    case MOVE_UNIT: {
-      const { unit, movement } = action as MoveUnitAction;
+    case 'move_unit': {
+      const { unit, movement } = action;
       if (state && state.id === unit.id) {
         return { ...unit, position: movement[movement.length - 1] };
       }
       return state;
     }
-    case DESELECT:
-    case RESET: {
+    case 'deselect':
+    case 'reset': {
       return defaultState;
     }
     default:

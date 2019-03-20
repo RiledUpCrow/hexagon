@@ -1,5 +1,5 @@
 import { Highlight } from '../../data/Highlight';
-import { AnyAction } from 'redux';
+import { GameAction } from '../actions';
 
 export type HighlightState = Highlight[];
 
@@ -25,7 +25,7 @@ const defaultState: HighlightState = [
 
 export default (
   state: HighlightState = defaultState,
-  action: AnyAction
+  action: GameAction
 ): HighlightState => {
   switch (action.type) {
     default: {

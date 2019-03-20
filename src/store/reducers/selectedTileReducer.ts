@@ -1,8 +1,6 @@
-import { Position } from '../../userInterface/TileInfo';
-import { AnyAction } from 'redux';
-import { SELECT_TILE, RESET, DESELECT } from '../actions';
-import { SelectTileAction } from '../actions/selectTileAction';
 import Tile from '../../data/Tile';
+import { Position } from '../../userInterface/TileInfo';
+import { GameAction } from '../actions';
 
 export type SelectedTileState = {
   position: Position;
@@ -13,15 +11,15 @@ const defaultState = null;
 
 export default (
   state: SelectedTileState = defaultState,
-  action: AnyAction
+  action: GameAction
 ): SelectedTileState => {
   switch (action.type) {
-    case SELECT_TILE: {
-      const { tile, position } = action as SelectTileAction;
+    case 'select_tile': {
+      const { tile, position } = action;
       return { tile, position };
     }
-    case DESELECT:
-    case RESET: {
+    case 'deselect':
+    case 'reset': {
       return defaultState;
     }
     default:

@@ -1,9 +1,6 @@
-import { AnyAction } from 'redux';
 import Map from '../../data/Map';
 import Tile from '../../data/Tile';
-import { LOAD_MAP, RESET, UPDATE_TILE } from '../actions';
-import LoadMapAction from '../actions/loadMapAction';
-import UpdateTileAction from '../actions/updateTileAction';
+import { GameAction } from '../actions';
 
 type Tiles = Tile[][];
 
@@ -19,15 +16,15 @@ const defaultState = null;
 
 export default (
   state: MapState = defaultState,
-  action: AnyAction
+  action: GameAction
 ): MapState => {
   switch (action.type) {
-    case LOAD_MAP: {
-      const { map } = action as LoadMapAction;
+    case 'load_map': {
+      const { map } = action;
       return map;
     }
-    case UPDATE_TILE: {
-      const { x, y, tile } = action as UpdateTileAction;
+    case 'update_tile': {
+      const { x, y, tile } = action;
       if (!state) {
         // this is a no-op, but let's have a warning
         console.log('Update of a non-existing map - bug?'); // eslint-disable-line no-console
@@ -36,7 +33,7 @@ export default (
       const tiles = updateMap(state.tiles, x, y, tile);
       return { ...state, tiles };
     }
-    case RESET: {
+    case 'reset': {
       return defaultState;
     }
     default:

@@ -1,9 +1,10 @@
 import { createStore } from 'redux';
-import reducer from './reducers';
+import reducer, { RootState } from './reducers';
 import { createContext } from 'react';
+import { GameAction } from './actions';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const store = createStore(
+const store = createStore<RootState, GameAction, void, void>(
   reducer,
   (window as any).__REDUX_DEVTOOLS_EXTENSION__ &&
     (window as any).__REDUX_DEVTOOLS_EXTENSION__()

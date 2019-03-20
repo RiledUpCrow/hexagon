@@ -5,7 +5,6 @@ import Settings, { defaultSettings } from '../data/Settings';
 import useDispatch from '../logic/useDispatch';
 import useStore from '../logic/useStore';
 import './MainMenu.css';
-import { LOAD_MAP } from '../store/actions';
 import LoadMapAction from '../store/actions/loadMapAction';
 import Unit from '../data/Unit';
 import Map from '../data/Map';
@@ -33,7 +32,7 @@ const MainMenu: FunctionComponent<Props> = ({ startGame }): JSX.Element => {
       { id: 1, type: 'WARRIOR', position: { x: 1, y: 2 } },
       { id: 2, type: 'WARRIOR', position: { x: 1, y: 3 } },
     ];
-    dispatch<LoadMapAction>({ type: LOAD_MAP, map, units });
+    dispatch({ type: 'load_map', map, units });
   }, [mapWidth, mapHeight]);
 
   const handleStart = useCallback(() => {
