@@ -1,7 +1,7 @@
 import React, { ComponentType, FunctionComponent, memo } from 'react';
 import { View } from '../data/View';
 import useStore from '../logic/useStore';
-import MainMenu from './menu/MainMenuOld';
+import MainMenu from './menu/MainMenu';
 
 type Routes = { [key in View]?: ComponentType };
 

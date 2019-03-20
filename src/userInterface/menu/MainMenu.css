@@ -1,4 +1,4 @@
-.MainMenuOld-root {
+.MainMenu-root {
   flex-grow: 1;
   width: 100%;
   max-width: 450px;
@@ -7,24 +7,18 @@
   align-items: center;
 }
 
-.MainMenuOld-title {
+.MainMenu-title {
+  font-size: 2.5em;
   text-align: center;
 }
 
-.MainMenuOld-settings {
+.MainMenu-buttons {
   flex-grow: 1;
   width: 100%;
 }
 
-.MainMenuOld-generate {
+.MainMenu-button {
   padding: 1em;
   display: flex;
   justify-content: center;
-}
-
-.MainMenuOld-start {
-  padding: 2em;
-  display: flex;
-  justify-content: center;
-  width: 100%;
 }

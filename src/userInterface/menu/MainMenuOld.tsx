@@ -8,7 +8,7 @@ import useDispatch from '../../logic/useDispatch';
 import useStore from '../../logic/useStore';
 import './MainMenuOld.css';
 
-const MainMenu: FunctionComponent = (): JSX.Element => {
+const MainMenuOld: FunctionComponent = (): JSX.Element => {
   const [mapWidth, setMapWidth] = useState(defaultSettings.mapWidth);
   const [mapHeight, setMapHeight] = useState(defaultSettings.mapHeight);
   const [size, setSize] = useState(defaultSettings.size);
@@ -46,9 +46,9 @@ const MainMenu: FunctionComponent = (): JSX.Element => {
   }, [mapWidth, mapHeight, size, maxZoom, minZoom]);
 
   return (
-    <div className="MainMenu-root">
-      <h1 className="MainMenu-title">Settings</h1>
-      <div className="MainMenu-settings">
+    <div className="MainMenuOld-root">
+      <h1 className="MainMenuOld-title">Settings</h1>
+      <div className="MainMenuOld-settings">
         <NumberPicker
           label="Map width"
           min={16}
@@ -89,11 +89,11 @@ const MainMenu: FunctionComponent = (): JSX.Element => {
           value={minZoom}
           onChange={setMinZoom}
         />
-        <div className="MainMenu-generate">
+        <div className="MainMenuOld-generate">
           <Button onClick={generateMap}>Generate Map</Button>
         </div>
       </div>
-      <div className="MainMenu-start">
+      <div className="MainMenuOld-start">
         <Button disabled={!map} size="large" wide onClick={handleStart}>
           Start
         </Button>
@@ -102,4 +102,4 @@ const MainMenu: FunctionComponent = (): JSX.Element => {
   );
 };
 
-export default memo(MainMenu);
+export default memo(MainMenuOld);
