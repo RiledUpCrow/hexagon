@@ -5,6 +5,7 @@ import useDispatch from '../../logic/useDispatch';
 import './Login.css';
 import Axios from 'axios';
 import User from '../../data/User';
+import Loader from '../../components/Loader';
 
 const Login: FunctionComponent = (): JSX.Element => {
   const [username, setUsername] = useState('');
@@ -40,21 +41,29 @@ const Login: FunctionComponent = (): JSX.Element => {
       <h1 className="Login-title">Login</h1>
       {Boolean(error) && <p className="Login-error">{error}</p>}
       <div className="Login-form">
-        <div className="Login-input">
-          <TextInput label="Username" value={username} onChange={setUsername} />
-        </div>
-        <div className="Login-input">
-          <TextInput label="Password" value={password} onChange={setPassword} />
-        </div>
-        <div className="Login-buttons">
-          <div className="Login-button">
-            <Button disabled={disabled} onClick={login}>
-              Login
-            </Button>
+        {loading && (
+          <div className="Login-loader">
+            <Loader />
           </div>
-          <div>
-            <Button onClick={cancel}>Cancel</Button>
-          </div>
+        )}
+        <TextInput label="Username" value={username} onChange={setUsername} />
+        <TextInput
+          label="Password"
+          value={password}
+          onChange={setPassword}
+          type="password"
+        />
+      </div>
+      <div className="Login-buttons">
+        <div className="Login-button">
+          <Button wide disabled={disabled} onClick={login}>
+            Login
+          </Button>
+        </div>
+        <div className="Login-button">
+          <Button wide onClick={cancel}>
+            Cancel
+          </Button>
         </div>
       </div>
     </div>

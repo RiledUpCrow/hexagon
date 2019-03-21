@@ -10,12 +10,14 @@ import './TextInput.css';
 interface Props {
   value: string;
   label: string;
+  type?: string;
   onChange: (value: string) => void;
 }
 
 const TextInput: FunctionComponent<Props> = ({
   value,
   label,
+  type,
   onChange,
 }): JSX.Element => {
   const handleChange = useCallback(
@@ -35,6 +37,7 @@ const TextInput: FunctionComponent<Props> = ({
         className="TextInput-input"
         id={id}
         value={value}
+        type={type}
         onChange={handleChange}
       />
     </div>

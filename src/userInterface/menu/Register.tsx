@@ -77,13 +77,19 @@ const Register: FunctionComponent = (): JSX.Element => {
           <TextInput label="Email" value={email} onChange={setEmail} />
         </div>
         <div className="Register-input">
-          <TextInput label="Password" value={password} onChange={setPassword} />
+          <TextInput
+            label="Password"
+            value={password}
+            onChange={setPassword}
+            type="password"
+          />
         </div>
         <div className="Register-input">
           <TextInput
             label="Repeat password"
             value={repeat}
             onChange={setRepeat}
+            type="password"
           />
         </div>
         <div className="Register-buttons">

@@ -1,0 +1,43 @@
+.Login-root {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.Login-title {
+  font-size: 3em;
+  text-align: center;
+}
+
+.Login-form {
+  position: relative;
+}
+
+.Login-loader {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.Login-buttons {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
+
+.Login-button {
+  flex-basis: 50%;
+  padding: 1em 0.5em;
+}
+
+.Login-button:last-child {
+  padding-left: 0;
+}
+
+.Login-button:first-child {
+  padding-right: 0;
+}
