@@ -57,6 +57,7 @@ const Register: FunctionComponent = (): JSX.Element => {
       };
       localStorage.setItem('user', JSON.stringify(user));
       dispatch({ type: 'login', user });
+      dispatch({ type: 'back' });
     } catch (error) {
       setLoading(false);
       setError(error.message);
