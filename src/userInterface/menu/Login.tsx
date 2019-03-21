@@ -21,10 +21,10 @@ const Login: FunctionComponent = (): JSX.Element => {
         name: username,
         password,
       });
-      const token = response.data.token;
+      const { token, profile } = response.data;
       const user: User = {
-        name: username,
-        email: '',
+        name: profile.name,
+        photo: profile.photo,
         token,
       };
       dispatch({ type: 'login', user });

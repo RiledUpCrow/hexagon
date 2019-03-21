@@ -49,10 +49,10 @@ const Register: FunctionComponent = (): JSX.Element => {
         password,
         email,
       });
-      const { token } = response.data.token;
+      const { token, profile } = response.data;
       const user: User = {
-        name: username,
-        email,
+        name: profile.name,
+        photo: profile.photo,
         token,
       };
       localStorage.setItem('user', JSON.stringify(user));
