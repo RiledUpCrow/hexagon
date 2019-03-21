@@ -1,5 +1,11 @@
-import React, { FunctionComponent, useCallback, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import { Store } from 'redux';
+import useDispatch from '../logic/useDispatch';
 import useStore from '../logic/useStore';
 import './App.css';
 import Content from './Content';
@@ -15,6 +21,16 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
   const handleReady = useCallback(() => setReady(true), []);
   const endGame = useCallback(() => setReady(false), []);
   const game = useStore(s => s.game);
+
+  const dispatch = useDispatch();
+  useLayoutEffect(() => {
+    const rawUser = localStorage.getItem('user');
+    if (!rawUser) {
+      return;
+    }
+    const user = JSON.parse(rawUser);
+    dispatch({ type: 'login', user });
+  }, []);
 
   return (
     <div className="App-root">

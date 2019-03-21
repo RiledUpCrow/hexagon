@@ -27,9 +27,16 @@ const TextInput: FunctionComponent<Props> = ({
   const id = useUniqueId();
 
   return (
-    <div>
-      <label htmlFor={id}>{label}</label>
-      <input type="number" id={id} value={value} onChange={handleChange} />
+    <div className="TextInput-root">
+      <label className="TextInput-label" htmlFor={id}>
+        {label}
+      </label>
+      <input
+        className="TextInput-input"
+        id={id}
+        value={value}
+        onChange={handleChange}
+      />
     </div>
   );
 };

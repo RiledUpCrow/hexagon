@@ -9,6 +9,8 @@ import SelectUnitAction from './selectUnitAction';
 import UpdateTileAction from './updateTileAction';
 import UpdateUnitAction from './updateUnitAction';
 import StartGameAction from './startGameAction';
+import LoginAction from './loginAction';
+import LogoutAction from './logoutAction';
 
 export type ActionType =
   | 'reset'
@@ -21,7 +23,9 @@ export type ActionType =
   | 'deselect'
   | 'navigate'
   | 'back'
-  | 'start_game';
+  | 'start_game'
+  | 'login'
+  | 'logout';
 
 export type GameAction =
   | ResetAction
@@ -34,4 +38,6 @@ export type GameAction =
   | DeselectAction
   | NavigateAction
   | BackAction
-  | StartGameAction;
+  | StartGameAction
+  | LoginAction
+  | LogoutAction;

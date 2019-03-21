@@ -14,6 +14,11 @@ const MainMenu: FunctionComponent = (): JSX.Element => {
   const toLogin = useCallback(navigate('login'), []);
   const toRegister = useCallback(navigate('register'), []);
 
+  const logout = useCallback(() => {
+    dispatch({ type: 'logout' });
+    localStorage.removeItem('user');
+  }, []);
+
   const button = (title: string, action: () => void): JSX.Element => (
     <div className="MainMenu-button">
       <Button wide onClick={action}>
@@ -28,6 +33,7 @@ const MainMenu: FunctionComponent = (): JSX.Element => {
       <div className="MainMenu-buttons">
         {!user && button('Login', toLogin)}
         {!user && button('Register', toRegister)}
+        {user && button('Logout', logout)}
       </div>
     </div>
   );

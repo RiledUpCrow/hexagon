@@ -10,6 +10,13 @@ const userReducer = (
   action: GameAction
 ): UserState => {
   switch (action.type) {
+    case 'login': {
+      const { user } = action;
+      return user;
+    }
+    case 'logout': {
+      return defaultState;
+    }
     default: {
       return state;
     }
