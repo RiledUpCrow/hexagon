@@ -9,28 +9,6 @@
   text-align: center;
 }
 
-.Login-errorContainer {
-  height: 1.5em;
-}
-
-.Login-error {
-  color: hsl(24, 80%, 57%);
-  line-height: 1.5em;
-  text-align: center;
-  margin: 0;
-  animation: Login-errorAnimation 300ms ease-in;
-}
-
-@keyframes Login-errorAnimation {
-  0% {
-    opacity: 0;
-    transform: translate(0, -1em);
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
 .Login-form {
   position: relative;
 }

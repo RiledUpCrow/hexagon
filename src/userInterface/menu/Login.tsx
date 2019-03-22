@@ -6,6 +6,7 @@ import './Login.css';
 import Axios, { AxiosError } from 'axios';
 import User from '../../data/User';
 import Loader from '../../components/Loader';
+import ErrorText from '../../components/ErrorText';
 
 const Login: FunctionComponent = (): JSX.Element => {
   const [username, setUsername] = useState('');
@@ -65,9 +66,7 @@ const Login: FunctionComponent = (): JSX.Element => {
           type="password"
         />
       </div>
-      <div className="Login-errorContainer">
-        {error && <p className="Login-error">{error}</p>}
-      </div>
+      <ErrorText error={error} />
       <div className="Login-buttons">
         <div className="Login-button">
           <Button wide disabled={disabled} onClick={login}>
