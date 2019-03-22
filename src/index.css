@@ -1,6 +1,7 @@
 * {
   box-sizing: border-box;
   font-family: 'Caesar Dressing', sans-serif;
+  overscroll-behavior: none;
 }
 
 body {
