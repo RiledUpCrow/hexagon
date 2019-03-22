@@ -20,7 +20,7 @@ const Login: FunctionComponent = (): JSX.Element => {
     try {
       setError('');
       setLoading(true);
-      const response = await Axios.post('/user/login', {
+      const response = await Axios.post('/api/user/login', {
         name: username,
         password,
       });

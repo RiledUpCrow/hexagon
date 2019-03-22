@@ -47,7 +47,7 @@ const Register: FunctionComponent = (): JSX.Element => {
   const register = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await Axios.post('/user/register', {
+      const response = await Axios.post('/api/user/register', {
         name: username,
         password,
         email,
