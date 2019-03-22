@@ -3,7 +3,7 @@ import Button from '../../components/Button';
 import TextInput from '../../components/TextInput';
 import useDispatch from '../../logic/useDispatch';
 import './Login.css';
-import Axios from 'axios';
+import Axios, { AxiosError } from 'axios';
 import User from '../../data/User';
 import Loader from '../../components/Loader';
 
@@ -17,6 +17,7 @@ const Login: FunctionComponent = (): JSX.Element => {
   const disabled = [loading, !username, !password].some(b => b);
   const login = useCallback(async () => {
     try {
+      setError('');
       setLoading(true);
       const response = await Axios.post('/user/login', {
         name: username,
@@ -32,14 +33,24 @@ const Login: FunctionComponent = (): JSX.Element => {
       dispatch({ type: 'back' });
     } catch (error) {
       setLoading(false);
-      setError(error.message);
+      const ae = error as AxiosError;
+      if (ae.response) {
+        if (ae.response.status === 400) {
+          setError(ae.response.data.message);
+        } else {
+          setError("This didn't work, probably a backend bug");
+        }
+      } else if (ae.request) {
+        setError('No connection');
+      } else {
+        setError("This didn't work, probably a frontend bug");
+      }
     }
   }, [username, password]);
 
   return (
     <div className="Login-root">
       <h1 className="Login-title">Login</h1>
-      {Boolean(error) && <p className="Login-error">{error}</p>}
       <div className="Login-form">
         {loading && (
           <div className="Login-loader">
@@ -53,6 +64,9 @@ const Login: FunctionComponent = (): JSX.Element => {
           onChange={setPassword}
           type="password"
         />
+      </div>
+      <div className="Login-errorContainer">
+        {error && <p className="Login-error">{error}</p>}
       </div>
       <div className="Login-buttons">
         <div className="Login-button">
