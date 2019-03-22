@@ -30,6 +30,7 @@ const Login: FunctionComponent = (): JSX.Element => {
         photo: profile.photo,
         token,
       };
+      localStorage.setItem('user', JSON.stringify(user));
       dispatch({ type: 'login', user });
       dispatch({ type: 'back' });
     } catch (error) {
