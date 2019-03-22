@@ -8,6 +8,9 @@
   text-align: center;
   margin: 0;
   animation: Error-animation 300ms ease-in;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 @keyframes Error-animation {
