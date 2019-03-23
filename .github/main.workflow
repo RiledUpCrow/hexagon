@@ -45,6 +45,7 @@ action "Push" {
 
 action "Deploy" {
   uses = "maddox/actions/ssh@master"
+  needs = ["Push"]
   args = "~/deploy-ui.sh"
   secrets = [
     "PRIVATE_KEY",
