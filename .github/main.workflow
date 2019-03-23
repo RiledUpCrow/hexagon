@@ -1,6 +1,6 @@
 workflow "CI" {
   on = "push"
-  resolves = ["Push"]
+  resolves = ["Deploy"]
 }
 
 action "Build" {
@@ -41,4 +41,15 @@ action "Push" {
   uses = "actions/docker/cli@8cdf801b322af5f369e00d85e9cf3a7122f49108"
   needs = ["Release", "Login"]
   args = "push co0sh/hexagon-ui:latest"
+}
+
+action "Deploy" {
+  uses = "maddox/actions/ssh@master"
+  args = "~/deploy-ui.sh"
+  secrets = [
+    "PRIVATE_KEY",
+    "PUBLIC_KEY",
+    "HOST",
+    "USER",
+  ]
 }
