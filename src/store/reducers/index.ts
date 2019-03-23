@@ -7,6 +7,7 @@ import routeReducer, { RouteState } from './routeReducer';
 import selectedTileReducer, { SelectedTileState } from './selectedTileReducer';
 import selectedUnitReducer, { SelectedUnitState } from './selectedUnitReducer';
 import unitReducer, { UnitState } from './unitReducer';
+import updateReducer, { UpdateState } from './updateReducer';
 import userReducer, { UserState } from './userReducer';
 
 export interface RootState {
@@ -19,6 +20,7 @@ export interface RootState {
   units: UnitState;
   route: RouteState;
   game: GameState;
+  update: UpdateState;
 }
 
 export default combineReducers<RootState>({
@@ -31,4 +33,5 @@ export default combineReducers<RootState>({
   units: unitReducer,
   route: routeReducer,
   game: gameReducer,
+  update: updateReducer,
 });

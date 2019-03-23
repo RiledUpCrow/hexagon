@@ -11,6 +11,7 @@ import UpdateUnitAction from './updateUnitAction';
 import StartGameAction from './startGameAction';
 import LoginAction from './loginAction';
 import LogoutAction from './logoutAction';
+import UpdateAction from './updateAction';
 
 export type ActionType =
   | 'reset'
@@ -25,7 +26,8 @@ export type ActionType =
   | 'back'
   | 'start_game'
   | 'login'
-  | 'logout';
+  | 'logout'
+  | 'update';
 
 export type GameAction =
   | ResetAction
@@ -40,4 +42,5 @@ export type GameAction =
   | BackAction
   | StartGameAction
   | LoginAction
-  | LogoutAction;
+  | LogoutAction
+  | UpdateAction;

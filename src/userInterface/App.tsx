@@ -11,6 +11,7 @@ import './App.css';
 import Content from './Content';
 import Game from './Game';
 import UI from './UI';
+import Notification from '../components/Notification';
 
 interface Props {
   store: Store;
@@ -21,6 +22,7 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
   const handleReady = useCallback(() => setReady(true), []);
   const endGame = useCallback(() => setReady(false), []);
   const game = useStore(s => s.game);
+  const update = useStore(s => s.update);
 
   const dispatch = useDispatch();
   useLayoutEffect(() => {
@@ -41,6 +43,9 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
         </>
       ) : (
         <Content />
+      )}
+      {update && (
+        <Notification text="New version available, close the game to update!" />
       )}
     </div>
   );

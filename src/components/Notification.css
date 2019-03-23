@@ -1,0 +1,25 @@
+.Notification-root {
+  padding: 1em;
+  margin: 2em;
+  color: rgba(0, 0, 0, 0.9);
+  background: rgb(51, 218, 87);
+  border: 5px solid rgb(30, 146, 26);
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.Notification-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  transition-duration: 300ms;
+  transition-timing-function: ease-in;
+}
+
+.Notification-show {
+  transform: translate(0, 0);
+}
+
+.Notification-hide {
+  transform: translate(-100%, 0);
+}
