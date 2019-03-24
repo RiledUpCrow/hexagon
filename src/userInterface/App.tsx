@@ -1,3 +1,4 @@
+import Axios from 'axios';
 import React, {
   FunctionComponent,
   useCallback,
@@ -5,13 +6,14 @@ import React, {
   useState,
 } from 'react';
 import { Store } from 'redux';
+import Notification from '../components/Notification';
 import useDispatch from '../logic/useDispatch';
 import useStore from '../logic/useStore';
 import './App.css';
 import Content from './Content';
 import Game from './Game';
 import UI from './UI';
-import Notification from '../components/Notification';
+import User from '../data/User';
 
 interface Props {
   store: Store;
@@ -30,8 +32,23 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
     if (!rawUser) {
       return;
     }
-    const user = JSON.parse(rawUser);
+    let user: User;
+    try {
+      user = JSON.parse(rawUser);
+    } catch (error) {
+      return;
+    }
     dispatch({ type: 'login', user });
+    Axios.get('/api/user/data', {
+      headers: { Authorization: `Bearer ${user.token}` },
+    })
+      .then(res => {
+        dispatch({ type: 'login', user: { ...user, ...res.data } });
+        localStorage.setItem('user', JSON.stringify(user));
+      })
+      .catch(() => {
+        // TODO notify the user?
+      });
   }, []);
 
   return (
