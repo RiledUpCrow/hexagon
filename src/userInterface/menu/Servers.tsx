@@ -3,6 +3,8 @@ import React, { FunctionComponent, memo, useState, useCallback } from 'react';
 import Button from '../../components/Button';
 import ErrorText from '../../components/ErrorText';
 import Loader from '../../components/Loader';
+import { Icon } from 'react-icons-kit';
+import { trash } from 'react-icons-kit/fa/trash';
 import TextInput from '../../components/TextInput';
 import useDispatch from '../../logic/useDispatch';
 import useRequest from '../../logic/useRequest';
@@ -31,6 +33,8 @@ const Servers: FunctionComponent = () => {
   );
 
   const doClaim = useCallback(() => claimRequest(claim), [claim]);
+
+  const back = useCallback(() => dispatch({ type: 'back' }), []);
 
   return (
     <div className="Servers-root">
@@ -66,11 +70,14 @@ const Servers: FunctionComponent = () => {
               size="small"
               onClick={() => abandonRequest(engine.id)}
             >
-              X
+              <Icon icon={trash} />
             </Button>
           </p>
         );
       })}
+      <Button wide onClick={back}>
+        Back
+      </Button>
     </div>
   );
 };
