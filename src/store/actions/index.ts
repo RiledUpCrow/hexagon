@@ -14,6 +14,7 @@ import StartGameAction from './startGameAction';
 import UpdateAction from './updateAction';
 import UpdateTileAction from './updateTileAction';
 import UpdateUnitAction from './updateUnitAction';
+import { AddGameAction } from './addGameAction';
 
 export type ActionType =
   | 'reset'
@@ -31,7 +32,8 @@ export type ActionType =
   | 'logout'
   | 'update'
   | 'add_engine'
-  | 'del_engine';
+  | 'del_engine'
+  | 'add_game';
 
 export type GameAction =
   | ResetAction
@@ -49,4 +51,5 @@ export type GameAction =
   | LogoutAction
   | UpdateAction
   | AddEngineAction
-  | DelEngineAction;
+  | DelEngineAction
+  | AddGameAction;

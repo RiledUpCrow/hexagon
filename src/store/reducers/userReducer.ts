@@ -38,6 +38,14 @@ const userReducer = (
       newUser.engines.splice(index, 1);
       return newUser;
     }
+    case 'add_game': {
+      if (!state) {
+        return state;
+      }
+      const { game } = action;
+      const newUser = { ...state, games: [...state.games, game] };
+      return newUser;
+    }
     default: {
       return state;
     }

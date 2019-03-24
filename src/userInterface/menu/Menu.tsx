@@ -7,11 +7,11 @@ import './Menu.css';
 interface Props {
   children: ReactNode;
   title: string;
-  loading: boolean;
+  loading?: boolean;
 }
 
 const Menu: FunctionComponent<Props> = props => {
-  const { children, title, loading } = props;
+  const { children, title, loading = false } = props;
 
   const dispatch = useDispatch();
   const back = useCallback(() => dispatch({ type: 'back' }), []);

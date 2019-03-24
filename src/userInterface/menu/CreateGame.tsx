@@ -31,8 +31,9 @@ const CreateGame: FunctionComponent<Props> = props => {
         mapHeight,
         maxPlayers: players,
       }),
-    () => {
-      // TODO add the game to the list of games
+    res => {
+      const game = res.data;
+      dispatch({ type: 'add_game', game });
       dispatch({ type: 'navigate', view: 'mainMenu' });
     },
     [mapHeight, mapWidth, players]
