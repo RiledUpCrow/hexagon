@@ -1,13 +1,18 @@
 import { View } from '../../data/View';
 import { GameAction } from '../actions';
 
+interface Route {
+  view: View;
+  param?: string;
+}
+
 export interface RouteState {
-  current: View;
-  stack: View[];
+  current: Route;
+  stack: Route[];
 }
 
 export const defaultState: RouteState = {
-  current: 'mainMenu',
+  current: { view: 'mainMenu' },
   stack: [],
 };
 
@@ -17,10 +22,10 @@ export default (
 ): RouteState => {
   switch (action.type) {
     case 'navigate': {
-      const { view } = action;
+      const { view, param } = action;
       const newStack = [...state.stack, state.current];
       return {
-        current: view,
+        current: { view, param },
         stack: newStack,
       };
     }

@@ -1,7 +1,5 @@
 import Axios from 'axios';
 import React, { FunctionComponent, memo, useCallback, useState } from 'react';
-import { Icon } from 'react-icons-kit';
-import { trash } from 'react-icons-kit/fa/trash';
 import useDispatch from '../../logic/useDispatch';
 import useRequest from '../../logic/useRequest';
 import useStore from '../../logic/useStore';
@@ -9,6 +7,7 @@ import Button from '../components/Button';
 import ErrorText from '../components/ErrorText';
 import Loader from '../components/Loader';
 import TextInput from '../components/TextInput';
+import EngineItem from './EngineItem';
 import './EngineList.css';
 
 const EngineList: FunctionComponent = () => {
@@ -23,12 +22,6 @@ const EngineList: FunctionComponent = () => {
       dispatch({ type: 'add_engine', engine: res.data });
       setClaim('');
     },
-    []
-  );
-
-  const [abandonRequest, abandonLoading, abandonError] = useRequest(
-    (id: string) => Axios.post('/api/engine/abandon', { id }),
-    (res, id) => dispatch({ type: 'del_engine', engineId: id }),
     []
   );
 
@@ -54,26 +47,15 @@ const EngineList: FunctionComponent = () => {
             </Button>
           </div>
         </div>
-        <ErrorText error={claimError || abandonError} />
-        {(claimLoading || abandonLoading) && (
+        <ErrorText error={claimError} />
+        {claimLoading && (
           <div className="EngineList-loader">
             <Loader />
           </div>
         )}
       </div>
       {user.engines.map(engine => {
-        return (
-          <p key={engine.id}>
-            {engine.id}: {engine.online ? 'Online' : 'Offline'}{' '}
-            <Button
-              disabled={abandonLoading}
-              size="small"
-              onClick={() => abandonRequest(engine.id)}
-            >
-              <Icon icon={trash} />
-            </Button>
-          </p>
-        );
+        return <EngineItem key={engine.id} engine={engine} />;
       })}
       <Button wide onClick={back}>
         Back

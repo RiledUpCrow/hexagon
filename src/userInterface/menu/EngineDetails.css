@@ -1,0 +1,44 @@
+.EngineDetails-root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+}
+
+.EngineDetails-title {
+  text-align: center;
+}
+
+.EngineDetails-line {
+  display: flex;
+  justify-content: space-between;
+}
+
+.EngineDetails-online {
+  color: green;
+}
+
+.EngineDetails-offline {
+  color: red;
+}
+
+.EngineDetails-icon {
+  margin-right: 0.5em;
+}
+
+.EngineDetails-button {
+  display: flex;
+  flex-direction: column;
+  padding: 1em 0;
+}
+
+.EngineDetails-loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

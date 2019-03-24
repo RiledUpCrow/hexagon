@@ -6,6 +6,6 @@ export type View =
   | 'settings'
   | 'listGames'
   | 'listEngines'
-  | 'serverInfo'
+  | 'engine'
   | 'createGame'
   | 'joinGame';

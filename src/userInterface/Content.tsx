@@ -5,8 +5,9 @@ import Login from './menu/Login';
 import MainMenu from './menu/MainMenu';
 import Register from './menu/Register';
 import EngineList from './menu/EngineList';
+import EngineDetails from './menu/EngineDetails';
 
-type Routes = { [key in View]?: ComponentType };
+type Routes = { [key in View]?: ComponentType<{ param?: string }> };
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const routes: Routes = {
@@ -14,18 +15,19 @@ const routes: Routes = {
   login: Login as any,
   register: Register as any,
   listEngines: EngineList as any,
+  engine: EngineDetails as any,
 };
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 const Content: FunctionComponent = (): JSX.Element => {
   const route = useStore(s => s.route.current);
-  const Component = routes[route];
+  const Component = routes[route.view];
 
   if (!Component) {
     return <div />;
   }
 
-  return <Component />;
+  return <Component param={route.param} />;
 };
 
 export default memo(Content);

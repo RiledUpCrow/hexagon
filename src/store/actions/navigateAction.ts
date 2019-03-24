@@ -5,4 +5,5 @@ import { View } from '../../data/View';
 export interface NavigateAction extends Action<ActionType> {
   type: 'navigate';
   view: View;
+  param?: string;
 }
