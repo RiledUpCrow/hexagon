@@ -1,14 +1,14 @@
-import React, { FunctionComponent, memo, useCallback, useState } from 'react';
+import Axios from 'axios';
+import React, { FunctionComponent, memo, useState } from 'react';
 import { defaultSettings } from '../../data/Settings';
 import useDispatch from '../../logic/useDispatch';
+import useRequest from '../../logic/useRequest';
 import useStore from '../../logic/useStore';
 import Button from '../components/Button';
-import Loader from '../components/Loader';
+import ErrorText from '../components/ErrorText';
 import NumberPicker from '../components/NumberPicker';
 import './CreateGame.css';
-import useRequest from '../../logic/useRequest';
-import ErrorText from '../components/ErrorText';
-import Axios from 'axios';
+import Menu from './Menu';
 
 interface Props {
   param: string;
@@ -23,14 +23,13 @@ const CreateGame: FunctionComponent<Props> = props => {
   const [players, setPlayers] = useState(2);
 
   const dispatch = useDispatch();
-  const back = useCallback(() => dispatch({ type: 'back' }), []);
 
   const [generateMap, loading, error] = useRequest(
     () =>
       Axios.post(`/api/engine/createGame/${engineId}`, {
         mapWidth,
         mapHeight,
-        players,
+        maxPlayers: players,
       }),
     () => {
       // TODO add the game to the list of games
@@ -44,52 +43,41 @@ const CreateGame: FunctionComponent<Props> = props => {
   }
 
   return (
-    <div className="CreateGame-root">
-      <h1 className="CreateGame-title">New game</h1>
-      <div className="CreateGame-settings">
-        <NumberPicker
-          label="Map width"
-          min={16}
-          max={128}
-          step={16}
-          value={mapWidth}
-          onChange={setMapWidth}
-        />
-        <NumberPicker
-          label="Map height"
-          min={10}
-          max={80}
-          step={10}
-          value={mapHeight}
-          onChange={setMapHeight}
-        />
-        <NumberPicker
-          label="Players"
-          min={2}
-          max={16}
-          step={1}
-          value={players}
-          onChange={setPlayers}
-        />
-        <ErrorText error={error} />
-        <Button
-          disabled={loading}
-          className="CreateGame-button"
-          onClick={generateMap}
-          color="secondary"
-        >
-          Generate Map
-        </Button>
-      </div>
-      <Button className="CreateGame-button" onClick={back}>
-        Back
+    <Menu title="New game" loading={loading}>
+      <NumberPicker
+        label="Map width"
+        min={16}
+        max={128}
+        step={16}
+        value={mapWidth}
+        onChange={setMapWidth}
+      />
+      <NumberPicker
+        label="Map height"
+        min={10}
+        max={80}
+        step={10}
+        value={mapHeight}
+        onChange={setMapHeight}
+      />
+      <NumberPicker
+        label="Players"
+        min={2}
+        max={16}
+        step={1}
+        value={players}
+        onChange={setPlayers}
+      />
+      <ErrorText error={error} />
+      <Button
+        disabled={loading}
+        className="CreateGame-button"
+        onClick={generateMap}
+        color="secondary"
+      >
+        Generate Map
       </Button>
-      {loading && (
-        <div className="CreateGame-loader">
-          <Loader />
-        </div>
-      )}
-    </div>
+    </Menu>
   );
 };
 

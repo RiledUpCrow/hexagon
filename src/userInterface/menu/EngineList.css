@@ -1,14 +1,3 @@
-.EngineList-root {
-  display: flex;
-  flex-direction: column;
-  max-width: 300px;
-  width: 100%;
-}
-
-.EngineList-title {
-  text-align: center;
-}
-
 .EngineList-claim {
   display: flex;
   flex-direction: column;
@@ -22,25 +11,4 @@
 
 .EngineList-claimButton {
   padding-bottom: 1em;
-}
-
-.EngineList-engines {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
-.EngineList-button {
-  margin: 1em 0;
-}
-
-.EngineList-loader {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }

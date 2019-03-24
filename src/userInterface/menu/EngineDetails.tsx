@@ -12,6 +12,7 @@ import Button from '../components/Button';
 import './EngineDetails.css';
 import Loader from '../components/Loader';
 import ErrorText from '../components/ErrorText';
+import Menu from './Menu';
 
 interface Props {
   param: string;
@@ -30,7 +31,6 @@ const EngineDetails: FunctionComponent<Props> = props => {
     []
   );
   const abandon = useCallback(() => abandonRequest(engine!.id), [engine]);
-  const back = useCallback(() => dispatch({ type: 'back' }), []);
   const toCreateGame = useCallback(
     () => dispatch({ type: 'navigate', view: 'createGame', param: engineId }),
     []
@@ -41,8 +41,7 @@ const EngineDetails: FunctionComponent<Props> = props => {
   }
 
   return (
-    <div className="EngineDetails-root">
-      <h1 className="EngineDetails-title">Engine</h1>
+    <Menu title="Engine" loading={abandonLoading}>
       <div className="EngineDetails-line">
         <div>Name:</div>
         <div>{engine.name}</div>
@@ -60,33 +59,19 @@ const EngineDetails: FunctionComponent<Props> = props => {
         )}
       </div>
       <ErrorText error={abandonError} />
-      <div className="EngineDetails-buttons">
-        <Button
-          className="EngineDetails-button"
-          onClick={toCreateGame}
-          color="secondary"
-        >
-          <Icon size={20} icon={rocket} className="EngineDetails-icon" />
-          Create game
-        </Button>
-        <Button
-          className="EngineDetails-button"
-          onClick={abandon}
-          color="danger"
-        >
-          <Icon size={20} icon={trash} className="EngineDetails-icon" />
-          Abandon
-        </Button>
-      </div>
-      <Button className="EngineDetails-button" onClick={back}>
-        Back
+      <Button
+        className="EngineDetails-button"
+        onClick={toCreateGame}
+        color="secondary"
+      >
+        <Icon size={20} icon={rocket} className="EngineDetails-icon" />
+        Create game
       </Button>
-      {abandonLoading && (
-        <div className="EngineDetails-loader">
-          <Loader />
-        </div>
-      )}
-    </div>
+      <Button className="EngineDetails-button" onClick={abandon} color="danger">
+        <Icon size={20} icon={trash} className="EngineDetails-icon" />
+        Abandon
+      </Button>
+    </Menu>
   );
 };
 

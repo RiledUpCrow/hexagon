@@ -9,6 +9,7 @@ import Loader from '../components/Loader';
 import TextInput from '../components/TextInput';
 import EngineItem from './EngineItem';
 import './EngineList.css';
+import Menu from './Menu';
 
 const EngineList: FunctionComponent = () => {
   const user = useStore(s => s.user)!;
@@ -27,11 +28,8 @@ const EngineList: FunctionComponent = () => {
 
   const doClaim = useCallback(() => claimRequest(claim), [claim]);
 
-  const back = useCallback(() => dispatch({ type: 'back' }), []);
-
   return (
-    <div className="EngineList-root">
-      <h1 className="EngineList-title">Engines</h1>
+    <Menu title="Engines" loading={claimLoading}>
       <div className="EngineList-claim">
         <div className="EngineList-claimInput">
           <TextInput
@@ -48,21 +46,11 @@ const EngineList: FunctionComponent = () => {
           </div>
         </div>
         <ErrorText error={claimError} />
-        {claimLoading && (
-          <div className="EngineList-loader">
-            <Loader />
-          </div>
-        )}
       </div>
-      <div className="EngineList-engines">
-        {user.engines.map(engine => {
-          return <EngineItem key={engine.id} engine={engine} />;
-        })}
-      </div>
-      <Button className="EngineList-button" onClick={back}>
-        Back
-      </Button>
-    </div>
+      {user.engines.map(engine => {
+        return <EngineItem key={engine.id} engine={engine} />;
+      })}
+    </Menu>
   );
 };
 

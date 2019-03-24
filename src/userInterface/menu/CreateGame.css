@@ -1,33 +1,3 @@
-.CreateGame-root {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  max-width: 300px;
-  width: 100%;
-}
-
-.CreateGame-title {
-  text-align: center;
-}
-
-.CreateGame-settings {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
 .CreateGame-button {
   margin: 1em 0;
-}
-
-.CreateGame-loader {
-  position: absolute;
-  pointer-events: none;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }

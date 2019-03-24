@@ -1,15 +1,3 @@
-.EngineDetails-root {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  max-width: 300px;
-  width: 100%;
-}
-
-.EngineDetails-title {
-  text-align: center;
-}
-
 .EngineDetails-line {
   display: flex;
   justify-content: space-between;
@@ -28,24 +16,6 @@
   margin-right: 0.5em;
 }
 
-.EngineDetails-buttons {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
 .EngineDetails-button {
   margin: 1em 0;
-}
-
-.EngineDetails-loader {
-  position: absolute;
-  pointer-events: none;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }

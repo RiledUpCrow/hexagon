@@ -1,0 +1,22 @@
+.Menu-root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-width: 450px;
+  width: 100%;
+  padding: 0 1em;
+}
+
+.Menu-title {
+  text-align: center;
+}
+
+.Menu-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.Menu-button {
+  margin: 1em 0;
+}
