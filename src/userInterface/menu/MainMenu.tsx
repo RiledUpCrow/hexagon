@@ -13,6 +13,7 @@ const MainMenu: FunctionComponent = (): JSX.Element => {
     dispatch({ type: 'navigate', view });
   const toLogin = useCallback(navigate('login'), []);
   const toRegister = useCallback(navigate('register'), []);
+  const toServers = useCallback(navigate('listServers'), []);
 
   const logout = useCallback(() => {
     dispatch({ type: 'logout' });
@@ -33,6 +34,7 @@ const MainMenu: FunctionComponent = (): JSX.Element => {
       <div className="MainMenu-buttons">
         {!user && button('Login', toLogin)}
         {!user && button('Register', toRegister)}
+        {user && button('Servers', toServers)}
         {user && button('Logout', logout)}
       </div>
     </div>
