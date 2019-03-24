@@ -5,6 +5,8 @@ import React, {
   useCallback,
   useMemo,
   useState,
+  useRef,
+  useEffect,
 } from 'react';
 import Button from '../../components/Button';
 import ErrorText from '../../components/ErrorText';
@@ -69,6 +71,20 @@ const Register: FunctionComponent = (): JSX.Element => {
   );
   const cancel = useCallback(() => dispatch({ type: 'back' }), []);
 
+  const usernameInput = useRef<HTMLInputElement>(null);
+  const emailInput = useRef<HTMLInputElement>(null);
+  const passwordInput = useRef<HTMLInputElement>(null);
+  const repeatInput = useRef<HTMLInputElement>(null);
+  const focusUsername = useCallback(() => usernameInput.current!.focus(), []);
+  const focusEmail = useCallback(() => emailInput.current!.focus(), []);
+  const focusPassword = useCallback(() => passwordInput.current!.focus(), []);
+  const focusRepeat = useCallback(() => repeatInput.current!.focus(), []);
+  useEffect(() => {
+    if (error) {
+      focusUsername();
+    }
+  }, [error]);
+
   return (
     <div className="Login-root">
       <h1 className="Login-title">Register</h1>
@@ -78,19 +94,40 @@ const Register: FunctionComponent = (): JSX.Element => {
             <Loader />
           </div>
         )}
-        <TextInput label="Username" value={username} onChange={setUsername} />
-        <TextInput label="Email" value={email} onChange={setEmail} />
         <TextInput
+          inputRef={usernameInput}
+          autoFocus
+          disabled={loading}
+          label="Username"
+          value={username}
+          onChange={setUsername}
+          onEnter={focusEmail}
+        />
+        <TextInput
+          inputRef={emailInput}
+          disabled={loading}
+          label="Email"
+          value={email}
+          onChange={setEmail}
+          onEnter={focusPassword}
+        />
+        <TextInput
+          inputRef={passwordInput}
+          disabled={loading}
           label="Password"
           value={password}
           onChange={setPassword}
           type="password"
+          onEnter={focusRepeat}
         />
         <TextInput
+          inputRef={repeatInput}
+          disabled={loading}
           label="Repeat password"
           value={repeat}
           onChange={setRepeat}
           type="password"
+          onEnter={register}
         />
       </div>
       <ErrorText error={error} />

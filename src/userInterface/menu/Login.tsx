@@ -1,5 +1,12 @@
 import Axios from 'axios';
-import React, { FunctionComponent, memo, useCallback, useState } from 'react';
+import React, {
+  FunctionComponent,
+  memo,
+  useCallback,
+  useState,
+  useRef,
+  useEffect,
+} from 'react';
 import Button from '../../components/Button';
 import ErrorText from '../../components/ErrorText';
 import Loader from '../../components/Loader';
@@ -45,6 +52,15 @@ const Login: FunctionComponent = (): JSX.Element => {
   ]);
   const cancel = useCallback(() => dispatch({ type: 'back' }), []);
 
+  const passwordInput = useRef<HTMLInputElement>(null);
+  const focus = useCallback(() => passwordInput.current!.focus(), []);
+
+  useEffect(() => {
+    if (error) {
+      focus();
+    }
+  }, [error]);
+
   return (
     <div className="Login-root">
       <h1 className="Login-title">Login</h1>
@@ -54,12 +70,22 @@ const Login: FunctionComponent = (): JSX.Element => {
             <Loader />
           </div>
         )}
-        <TextInput label="Username" value={username} onChange={setUsername} />
         <TextInput
+          disabled={loading}
+          autoFocus
+          label="Username"
+          value={username}
+          onChange={setUsername}
+          onEnter={focus}
+        />
+        <TextInput
+          inputRef={passwordInput}
+          disabled={loading}
           label="Password"
           value={password}
           onChange={setPassword}
           type="password"
+          onEnter={login}
         />
       </div>
       <ErrorText error={error} />

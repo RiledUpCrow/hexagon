@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import React, { FunctionComponent, memo, useState } from 'react';
+import React, { FunctionComponent, memo, useState, useCallback } from 'react';
 import Button from '../../components/Button';
 import ErrorText from '../../components/ErrorText';
 import Loader from '../../components/Loader';
@@ -30,14 +30,22 @@ const Servers: FunctionComponent = () => {
     []
   );
 
+  const doClaim = useCallback(() => claimRequest(claim), [claim]);
+
   return (
     <div className="Servers-root">
       <h1 className="Servers-title">Servers</h1>
       <div className="Servers-claim">
         <div className="Servers-claimInput">
-          <TextInput label="Claim server" value={claim} onChange={setClaim} />
+          <TextInput
+            label="Claim server"
+            value={claim}
+            onChange={setClaim}
+            disabled={claimLoading}
+            onEnter={doClaim}
+          />
           <div className="Servers-claimButton">
-            <Button disabled={claimLoading} onClick={() => claimRequest(claim)}>
+            <Button disabled={claimLoading} onClick={doClaim}>
               Claim
             </Button>
           </div>
