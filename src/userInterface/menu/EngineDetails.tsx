@@ -4,6 +4,7 @@ import Icon from 'react-icons-kit';
 import { trash } from 'react-icons-kit/fa/trash';
 import { check } from 'react-icons-kit/fa/check';
 import { times } from 'react-icons-kit/fa/times';
+import { rocket } from 'react-icons-kit/fa/rocket';
 import useDispatch from '../../logic/useDispatch';
 import useRequest from '../../logic/useRequest';
 import useStore from '../../logic/useStore';
@@ -30,6 +31,10 @@ const EngineDetails: FunctionComponent<Props> = props => {
   );
   const abandon = useCallback(() => abandonRequest(engine!.id), [engine]);
   const back = useCallback(() => dispatch({ type: 'back' }), []);
+  const toCreateGame = useCallback(
+    () => dispatch({ type: 'navigate', view: 'createGame', param: engineId }),
+    []
+  );
 
   if (!engine) {
     return <h1>This engine does not exist</h1>;
@@ -56,6 +61,14 @@ const EngineDetails: FunctionComponent<Props> = props => {
       </div>
       <ErrorText error={abandonError} />
       <div className="EngineDetails-buttons">
+        <Button
+          className="EngineDetails-button"
+          onClick={toCreateGame}
+          color="secondary"
+        >
+          <Icon size={20} icon={rocket} className="EngineDetails-icon" />
+          Create game
+        </Button>
         <Button
           className="EngineDetails-button"
           onClick={abandon}

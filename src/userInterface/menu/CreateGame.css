@@ -1,4 +1,4 @@
-.EngineDetails-root {
+.CreateGame-root {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -6,39 +6,21 @@
   width: 100%;
 }
 
-.EngineDetails-title {
+.CreateGame-title {
   text-align: center;
 }
 
-.EngineDetails-line {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5em;
-}
-
-.EngineDetails-online {
-  color: green;
-}
-
-.EngineDetails-offline {
-  color: red;
-}
-
-.EngineDetails-icon {
-  margin-right: 0.5em;
-}
-
-.EngineDetails-buttons {
+.CreateGame-settings {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
-.EngineDetails-button {
+.CreateGame-button {
   margin: 1em 0;
 }
 
-.EngineDetails-loader {
+.CreateGame-loader {
   position: absolute;
   pointer-events: none;
   top: 0;
