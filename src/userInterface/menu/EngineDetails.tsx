@@ -44,28 +44,30 @@ const EngineDetails: FunctionComponent<Props> = props => {
       </div>
       <div className="EngineDetails-line">
         <div>Status:</div>
-        <div>
-          {engine.online ? (
-            <>
-              Online <Icon className="EngineDetails-online" icon={check} />
-            </>
-          ) : (
-            <>
-              Offline <Icon className="EngineDetails-offline" icon={times} />
-            </>
-          )}
-        </div>
+        {engine.online ? (
+          <div>
+            Online <Icon className="EngineDetails-online" icon={check} />
+          </div>
+        ) : (
+          <div>
+            Offline <Icon className="EngineDetails-offline" icon={times} />
+          </div>
+        )}
       </div>
-      <div className="EngineDetails-button">
-        <Button onClick={abandon} color="danger">
+      <ErrorText error={abandonError} />
+      <div className="EngineDetails-buttons">
+        <Button
+          className="EngineDetails-button"
+          onClick={abandon}
+          color="danger"
+        >
           <Icon size={20} icon={trash} className="EngineDetails-icon" />
           Abandon
         </Button>
       </div>
-      <ErrorText error={abandonError} />
-      <div className="EngineDetails-button">
-        <Button onClick={back}>Back</Button>
-      </div>
+      <Button className="EngineDetails-button" onClick={back}>
+        Back
+      </Button>
       {abandonLoading && (
         <div className="EngineDetails-loader">
           <Loader />

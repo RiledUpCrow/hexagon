@@ -54,10 +54,12 @@ const EngineList: FunctionComponent = () => {
           </div>
         )}
       </div>
-      {user.engines.map(engine => {
-        return <EngineItem key={engine.id} engine={engine} />;
-      })}
-      <Button wide onClick={back}>
+      <div className="EngineList-engines">
+        {user.engines.map(engine => {
+          return <EngineItem key={engine.id} engine={engine} />;
+        })}
+      </div>
+      <Button className="EngineList-button" onClick={back}>
         Back
       </Button>
     </div>

@@ -1,10 +1,10 @@
 .MainMenu-root {
   flex-grow: 1;
-  width: 100%;
-  max-width: 450px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 300px;
+  width: 100%;
 }
 
 .MainMenu-title {
@@ -18,7 +18,7 @@
 }
 
 .MainMenu-button {
-  padding: 1em;
+  padding: 1em 0;
   display: flex;
   justify-content: center;
 }

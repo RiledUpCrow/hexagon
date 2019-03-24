@@ -1,6 +1,8 @@
 .EngineList-root {
   display: flex;
   flex-direction: column;
+  max-width: 300px;
+  width: 100%;
 }
 
 .EngineList-title {
@@ -20,6 +22,16 @@
 
 .EngineList-claimButton {
   padding-bottom: 1em;
+}
+
+.EngineList-engines {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.EngineList-button {
+  margin: 1em 0;
 }
 
 .EngineList-loader {

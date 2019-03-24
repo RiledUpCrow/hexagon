@@ -2,7 +2,8 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  min-width: 300px;
+  max-width: 300px;
+  width: 100%;
 }
 
 .EngineDetails-title {
@@ -12,6 +13,7 @@
 .EngineDetails-line {
   display: flex;
   justify-content: space-between;
+  padding: 0.5em;
 }
 
 .EngineDetails-online {
@@ -26,10 +28,14 @@
   margin-right: 0.5em;
 }
 
-.EngineDetails-button {
+.EngineDetails-buttons {
   display: flex;
   flex-direction: column;
-  padding: 1em 0;
+  flex-grow: 1;
+}
+
+.EngineDetails-button {
+  margin: 1em 0;
 }
 
 .EngineDetails-loader {
