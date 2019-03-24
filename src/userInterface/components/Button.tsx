@@ -9,7 +9,7 @@ interface Props {
   wide?: boolean;
   disabled?: boolean;
   className?: string;
-  color?: 'primary' | 'secondary';
+  color?: 'primary' | 'secondary' | 'danger';
   onClick: () => void;
 }
 

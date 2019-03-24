@@ -3,12 +3,8 @@ $light: 15%;
 $desaturate: 50%;
 
 $primary: hsl(194, 66%, 40%);
-$primary-dark: darken($primary, $dark);
-$primary-light: lighten($primary, $light);
-
 $secondary: hsl(133, 66%, 40%);
-$secondary-dark: darken($secondary, $dark);
-$secondary-light: lighten($secondary, $light);
+$danger: hsl(14, 67%, 40%);
 
 .Button-button {
   text-transform: uppercase;
@@ -41,42 +37,37 @@ $secondary-light: lighten($secondary, $light);
   border-width: 7px;
 }
 
-.Button-primary {
-  background: $primary;
-  border-color: $primary-dark;
+@mixin color($color) {
+  $color-dark: darken($color, $dark);
+  $color-light: lighten($color, $light);
+
+  background: $color;
+  border-color: $color-dark;
   &:hover {
-    border-color: $primary-light;
+    border-color: $color-light;
   }
   &:active {
-    border-color: $primary;
-    background-color: $primary-dark;
+    border-color: $color;
+    background-color: $color-dark;
   }
   &:focus {
     box-shadow: inset 0 0 30px 0 hsla(0, 100%, 100%, 0.75);
-    border-color: $primary-light;
+    border-color: $color-light;
   }
   &:disabled {
-    background: desaturate($primary, $amount: $desaturate);
-    border-color: desaturate($primary-dark, $amount: $desaturate);
+    background: desaturate($color, $amount: $desaturate);
+    border-color: desaturate($color-dark, $amount: $desaturate);
   }
 }
 
+.Button-primary {
+  @include color($primary);
+}
+
 .Button-secondary {
-  background: $secondary;
-  border-color: $secondary-dark;
-  &:hover {
-    border-color: $secondary-light;
-  }
-  &:active {
-    border-color: $secondary;
-    background-color: $secondary-dark;
-  }
-  &:focus {
-    box-shadow: inset 0 0 30px 0 hsla(0, 100%, 100%, 0.75);
-    border-color: $secondary-light;
-  }
-  &:disabled {
-    background: desaturate($secondary, $amount: $desaturate);
-    border-color: desaturate($secondary-dark, $amount: $desaturate);
-  }
+  @include color($secondary);
+}
+
+.Button-danger {
+  @include color($danger);
 }
