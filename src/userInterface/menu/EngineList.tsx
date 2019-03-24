@@ -9,9 +9,9 @@ import TextInput from '../../components/TextInput';
 import useDispatch from '../../logic/useDispatch';
 import useRequest from '../../logic/useRequest';
 import useStore from '../../logic/useStore';
-import './Servers.css';
+import './EngineList.css';
 
-const Servers: FunctionComponent = () => {
+const EngineList: FunctionComponent = () => {
   const user = useStore(s => s.user)!;
   const dispatch = useDispatch();
 
@@ -37,18 +37,18 @@ const Servers: FunctionComponent = () => {
   const back = useCallback(() => dispatch({ type: 'back' }), []);
 
   return (
-    <div className="Servers-root">
-      <h1 className="Servers-title">Servers</h1>
-      <div className="Servers-claim">
-        <div className="Servers-claimInput">
+    <div className="EngineList-root">
+      <h1 className="EngineList-title">Engines</h1>
+      <div className="EngineList-claim">
+        <div className="EngineList-claimInput">
           <TextInput
-            label="Claim server"
+            label="Claim engine"
             value={claim}
             onChange={setClaim}
             disabled={claimLoading}
             onEnter={doClaim}
           />
-          <div className="Servers-claimButton">
+          <div className="EngineList-claimButton">
             <Button disabled={claimLoading} onClick={doClaim}>
               Claim
             </Button>
@@ -56,7 +56,7 @@ const Servers: FunctionComponent = () => {
         </div>
         <ErrorText error={claimError || abandonError} />
         {(claimLoading || abandonLoading) && (
-          <div className="Servers-loader">
+          <div className="EngineList-loader">
             <Loader />
           </div>
         )}
@@ -82,4 +82,4 @@ const Servers: FunctionComponent = () => {
   );
 };
 
-export default memo(Servers);
+export default memo(EngineList);

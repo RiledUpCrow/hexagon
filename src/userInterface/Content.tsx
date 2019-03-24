@@ -4,7 +4,7 @@ import useStore from '../logic/useStore';
 import Login from './menu/Login';
 import MainMenu from './menu/MainMenu';
 import Register from './menu/Register';
-import Servers from './menu/Servers';
+import EngineList from './menu/EngineList';
 
 type Routes = { [key in View]?: ComponentType };
 
@@ -13,7 +13,7 @@ const routes: Routes = {
   mainMenu: MainMenu as any,
   login: Login as any,
   register: Register as any,
-  listServers: Servers as any,
+  listEngines: EngineList as any,
 };
 /* eslint-enable @typescript-eslint/no-explicit-any */
 

@@ -5,7 +5,7 @@ export type View =
   | 'profile'
   | 'settings'
   | 'listGames'
-  | 'listServers'
+  | 'listEngines'
   | 'serverInfo'
   | 'createGame'
   | 'joinGame';

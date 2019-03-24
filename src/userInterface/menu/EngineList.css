@@ -1,28 +1,28 @@
-.Servers-root {
+.EngineList-root {
   display: flex;
   flex-direction: column;
 }
 
-.Servers-title {
+.EngineList-title {
   text-align: center;
 }
 
-.Servers-claim {
+.EngineList-claim {
   display: flex;
   flex-direction: column;
   position: relative;
 }
 
-.Servers-claimInput {
+.EngineList-claimInput {
   display: flex;
   align-items: flex-end;
 }
 
-.Servers-claimButton {
+.EngineList-claimButton {
   padding-bottom: 1em;
 }
 
-.Servers-loader {
+.EngineList-loader {
   position: absolute;
   top: 0;
   left: 0;
