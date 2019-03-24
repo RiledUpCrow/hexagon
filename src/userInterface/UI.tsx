@@ -1,5 +1,5 @@
 import React, { FunctionComponent, memo, useCallback, useState } from 'react';
-import Button from '../components/Button';
+import Button from './components/Button';
 import useStore from '../logic/useStore';
 import TileInfo from './game/TileInfo';
 import UnitInfo from './game/UnitInfo';

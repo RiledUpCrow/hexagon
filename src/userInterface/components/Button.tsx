@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useCallback } from 'react';
 import './Button.css';
-import { buttonClick } from '../logic/sound';
+import { buttonClick } from '../../logic/sound';
 
 type Size = 'small' | 'normal' | 'large';
 

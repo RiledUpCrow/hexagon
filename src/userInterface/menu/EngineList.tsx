@@ -1,14 +1,14 @@
 import Axios from 'axios';
-import React, { FunctionComponent, memo, useState, useCallback } from 'react';
-import Button from '../../components/Button';
-import ErrorText from '../../components/ErrorText';
-import Loader from '../../components/Loader';
+import React, { FunctionComponent, memo, useCallback, useState } from 'react';
 import { Icon } from 'react-icons-kit';
 import { trash } from 'react-icons-kit/fa/trash';
-import TextInput from '../../components/TextInput';
 import useDispatch from '../../logic/useDispatch';
 import useRequest from '../../logic/useRequest';
 import useStore from '../../logic/useStore';
+import Button from '../components/Button';
+import ErrorText from '../components/ErrorText';
+import Loader from '../components/Loader';
+import TextInput from '../components/TextInput';
 import './EngineList.css';
 
 const EngineList: FunctionComponent = () => {

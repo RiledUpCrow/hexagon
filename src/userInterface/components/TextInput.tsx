@@ -6,7 +6,7 @@ import React, {
   useCallback,
   RefObject,
 } from 'react';
-import useUniqueId from '../logic/useUniqueId';
+import useUniqueId from '../../logic/useUniqueId';
 import './TextInput.css';
 
 interface Props {

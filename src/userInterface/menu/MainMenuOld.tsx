@@ -1,6 +1,6 @@
 import React, { FunctionComponent, memo, useCallback, useState } from 'react';
-import Button from '../../components/Button';
-import NumberPicker from '../../components/NumberPicker';
+import Button from '../components/Button';
+import NumberPicker from '../components/NumberPicker';
 import Map from '../../data/Map';
 import { defaultSettings } from '../../data/Settings';
 import Unit from '../../data/Unit';

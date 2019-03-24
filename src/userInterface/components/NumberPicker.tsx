@@ -1,7 +1,7 @@
 import React, { FunctionComponent, memo, useCallback } from 'react';
 import './NumberPicker.css';
 import Button from './Button';
-import between from '../logic/between';
+import between from '../../logic/between';
 import { Icon } from 'react-icons-kit';
 import { stepBackward } from 'react-icons-kit/fa/stepBackward';
 import { stepForward } from 'react-icons-kit/fa/stepForward';

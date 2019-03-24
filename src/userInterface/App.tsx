@@ -8,7 +8,7 @@ import React, {
   useState,
 } from 'react';
 import { Store } from 'redux';
-import Notification from '../components/Notification';
+import Notification from './components/Notification';
 import User from '../data/User';
 import useDispatch from '../logic/useDispatch';
 import useRequest from '../logic/useRequest';

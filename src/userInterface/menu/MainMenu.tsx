@@ -1,5 +1,5 @@
 import React, { FunctionComponent, memo, useCallback } from 'react';
-import Button from '../../components/Button';
+import Button from '../components/Button';
 import { View } from '../../data/View';
 import useDispatch from '../../logic/useDispatch';
 import useStore from '../../logic/useStore';
