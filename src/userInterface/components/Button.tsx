@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useCallback } from 'react';
-import './Button.css';
+import './Button.scss';
 import { buttonClick } from '../../logic/sound';
 
 type Size = 'small' | 'normal' | 'large';
@@ -8,6 +8,8 @@ interface Props {
   size?: Size;
   wide?: boolean;
   disabled?: boolean;
+  className?: string;
+  color?: 'primary' | 'secondary';
   onClick: () => void;
 }
 
@@ -17,6 +19,8 @@ const Button: FunctionComponent<Props> = ({
   disabled = false,
   onClick,
   children,
+  color = 'primary',
+  className = '',
 }): JSX.Element => {
   const handleClick = useCallback(() => {
     buttonClick.play();
@@ -25,7 +29,9 @@ const Button: FunctionComponent<Props> = ({
   return (
     <button
       disabled={disabled}
-      className={`Button-button Button-${size} ${wide ? 'Button-wide' : ''}`}
+      className={`Button-button Button-${size} ${
+        wide ? 'Button-wide' : ''
+      } Button-${color} ${className}`}
       onClick={handleClick}
     >
       {children}
