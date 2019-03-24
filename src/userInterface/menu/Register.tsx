@@ -1,4 +1,4 @@
-import Axios, { AxiosError } from 'axios';
+import Axios from 'axios';
 import React, {
   FunctionComponent,
   memo,
@@ -12,6 +12,7 @@ import Loader from '../../components/Loader';
 import TextInput from '../../components/TextInput';
 import User from '../../data/User';
 import useDispatch from '../../logic/useDispatch';
+import useRequest from '../../logic/useRequest';
 import './Login.css';
 import './Register.css';
 
@@ -27,8 +28,28 @@ const Register: FunctionComponent = (): JSX.Element => {
   const repeatInvalid = useMemo(() => false, [repeat]);
 
   const dispatch = useDispatch();
-
-  const [loading, setLoading] = useState(false);
+  const [registerRequest, loading, error] = useRequest(
+    (username: string, email: string, password: string) =>
+      Axios.post('/api/user/register', {
+        name: username,
+        password,
+        email,
+      }),
+    res => {
+      const { token, profile } = res.data;
+      const user: User = {
+        name: profile.name,
+        photo: profile.photo,
+        token,
+        engines: profile.engines,
+        games: profile.games,
+      };
+      localStorage.setItem('user', JSON.stringify(user));
+      dispatch({ type: 'login', user });
+      dispatch({ type: 'back' });
+    },
+    []
+  );
 
   const disabled = [
     loading,
@@ -42,44 +63,10 @@ const Register: FunctionComponent = (): JSX.Element => {
     !repeat,
   ].some(b => b);
 
-  const [error, setError] = useState('');
-
-  const register = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await Axios.post('/api/user/register', {
-        name: username,
-        password,
-        email,
-      });
-      const { token, profile } = response.data;
-      const user: User = {
-        name: profile.name,
-        photo: profile.photo,
-        token,
-        engines: profile.engines,
-        games: profile.games,
-      };
-      localStorage.setItem('user', JSON.stringify(user));
-      dispatch({ type: 'login', user });
-      dispatch({ type: 'back' });
-    } catch (error) {
-      setLoading(false);
-      setLoading(false);
-      const ae = error as AxiosError;
-      if (ae.response) {
-        if (ae.response.status === 400) {
-          setError(ae.response.data.message);
-        } else {
-          setError("This didn't work, probably a backend bug");
-        }
-      } else if (ae.request) {
-        setError('No connection');
-      } else {
-        setError("This didn't work, probably a frontend bug");
-      }
-    }
-  }, [username, email, password]);
+  const register = useCallback(
+    () => registerRequest(username, email, password),
+    [username, email, password]
+  );
   const cancel = useCallback(() => dispatch({ type: 'back' }), []);
 
   return (

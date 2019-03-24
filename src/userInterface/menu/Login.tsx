@@ -1,30 +1,28 @@
+import Axios from 'axios';
 import React, { FunctionComponent, memo, useCallback, useState } from 'react';
 import Button from '../../components/Button';
-import TextInput from '../../components/TextInput';
-import useDispatch from '../../logic/useDispatch';
-import './Login.css';
-import Axios, { AxiosError } from 'axios';
-import User from '../../data/User';
-import Loader from '../../components/Loader';
 import ErrorText from '../../components/ErrorText';
+import Loader from '../../components/Loader';
+import TextInput from '../../components/TextInput';
+import User from '../../data/User';
+import useDispatch from '../../logic/useDispatch';
+import useRequest from '../../logic/useRequest';
+import './Login.css';
 
 const Login: FunctionComponent = (): JSX.Element => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+
   const dispatch = useDispatch();
-  const cancel = useCallback(() => dispatch({ type: 'back' }), []);
-  const disabled = [loading, !username, !password].some(b => b);
-  const login = useCallback(async () => {
-    try {
-      setError('');
-      setLoading(true);
-      const response = await Axios.post('/api/user/login', {
+
+  const [loginRequest, loading, error] = useRequest(
+    (username: string, password: string) =>
+      Axios.post('/api/user/login', {
         name: username,
         password,
-      });
-      const { token, profile } = response.data;
+      }),
+    res => {
+      const { token, profile } = res.data;
       const user: User = {
         name: profile.name,
         photo: profile.photo,
@@ -35,22 +33,17 @@ const Login: FunctionComponent = (): JSX.Element => {
       localStorage.setItem('user', JSON.stringify(user));
       dispatch({ type: 'login', user });
       dispatch({ type: 'back' });
-    } catch (error) {
-      setLoading(false);
-      const ae = error as AxiosError;
-      if (ae.response) {
-        if (ae.response.status === 400) {
-          setError(ae.response.data.message);
-        } else {
-          setError("This didn't work, probably a backend bug");
-        }
-      } else if (ae.request) {
-        setError('No connection');
-      } else {
-        setError("This didn't work, probably a frontend bug");
-      }
-    }
-  }, [username, password]);
+    },
+    []
+  );
+
+  const disabled = [loading, !username, !password].some(b => b);
+
+  const login = useCallback(() => loginRequest(username, password), [
+    username,
+    password,
+  ]);
+  const cancel = useCallback(() => dispatch({ type: 'back' }), []);
 
   return (
     <div className="Login-root">

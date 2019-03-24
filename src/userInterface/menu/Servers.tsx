@@ -1,11 +1,11 @@
-import Axios, { AxiosError } from 'axios';
-import React, { FunctionComponent, memo, useCallback, useState } from 'react';
+import Axios from 'axios';
+import React, { FunctionComponent, memo, useState } from 'react';
 import Button from '../../components/Button';
 import ErrorText from '../../components/ErrorText';
 import Loader from '../../components/Loader';
 import TextInput from '../../components/TextInput';
-import Engine from '../../data/Engine';
 import useDispatch from '../../logic/useDispatch';
+import useRequest from '../../logic/useRequest';
 import useStore from '../../logic/useStore';
 import './Servers.css';
 
@@ -14,66 +14,21 @@ const Servers: FunctionComponent = () => {
   const dispatch = useDispatch();
 
   const [claim, setClaim] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const doClaim = useCallback(async () => {
-    setLoading(true);
-    setError('');
-    try {
-      const response = await Axios.post(
-        '/api/engine/claim',
-        {
-          adminToken: claim,
-        },
-        { headers: { Authorization: `Bearer ${user.token}` } }
-      );
-      const engine: Engine = response.data;
-      dispatch({ type: 'add_engine', engine });
-      setClaim('');
-    } catch (error) {
-      setLoading(false);
-      const ae = error as AxiosError;
-      if (ae.response) {
-        if (ae.response.status === 400) {
-          setError(ae.response.data.message);
-        } else {
-          setError("This didn't work, probably a backend bug");
-        }
-      } else if (ae.request) {
-        setError('No connection');
-      } else {
-        setError("This didn't work, probably a frontend bug");
-      }
-    }
-    setLoading(false);
-  }, [claim]);
 
-  const doAbandon = (id: string) => async () => {
-    setLoading(true);
-    try {
-      await Axios.post(
-        '/api/engine/abandon',
-        { id },
-        { headers: { Authorization: `Bearer ${user.token}` } }
-      );
-      dispatch({ type: 'del_engine', engineId: id });
-    } catch (error) {
-      setLoading(false);
-      const ae = error as AxiosError;
-      if (ae.response) {
-        if (ae.response.status === 400) {
-          setError(ae.response.data.message);
-        } else {
-          setError("This didn't work, probably a backend bug");
-        }
-      } else if (ae.request) {
-        setError('No connection');
-      } else {
-        setError("This didn't work, probably a frontend bug");
-      }
-    }
-    setLoading(false);
-  };
+  const [claimRequest, claimLoading, claimError] = useRequest(
+    (claim: string) => Axios.post('/api/engine/claim', { adminToken: claim }),
+    res => {
+      dispatch({ type: 'add_engine', engine: res.data });
+      setClaim('');
+    },
+    []
+  );
+
+  const [abandonRequest, abandonLoading, abandonError] = useRequest(
+    (id: string) => Axios.post('/api/engine/abandon', { id }),
+    (res, id) => dispatch({ type: 'del_engine', engineId: id }),
+    []
+  );
 
   return (
     <div className="Servers-root">
@@ -82,13 +37,13 @@ const Servers: FunctionComponent = () => {
         <div className="Servers-claimInput">
           <TextInput label="Claim server" value={claim} onChange={setClaim} />
           <div className="Servers-claimButton">
-            <Button disabled={loading} onClick={doClaim}>
+            <Button disabled={claimLoading} onClick={() => claimRequest(claim)}>
               Claim
             </Button>
           </div>
         </div>
-        <ErrorText error={error} />
-        {loading && (
+        <ErrorText error={claimError || abandonError} />
+        {(claimLoading || abandonLoading) && (
           <div className="Servers-loader">
             <Loader />
           </div>
@@ -98,7 +53,11 @@ const Servers: FunctionComponent = () => {
         return (
           <p key={engine.id}>
             {engine.id}: {engine.online ? 'Online' : 'Offline'}{' '}
-            <Button size="small" onClick={doAbandon(engine.id)}>
+            <Button
+              disabled={abandonLoading}
+              size="small"
+              onClick={() => abandonRequest(engine.id)}
+            >
               X
             </Button>
           </p>

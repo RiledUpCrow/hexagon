@@ -2,18 +2,21 @@ import Axios from 'axios';
 import React, {
   FunctionComponent,
   useCallback,
+  useEffect,
   useLayoutEffect,
+  useRef,
   useState,
 } from 'react';
 import { Store } from 'redux';
 import Notification from '../components/Notification';
+import User from '../data/User';
 import useDispatch from '../logic/useDispatch';
+import useRequest from '../logic/useRequest';
 import useStore from '../logic/useStore';
 import './App.css';
 import Content from './Content';
 import Game from './Game';
 import UI from './UI';
-import User from '../data/User';
 
 interface Props {
   store: Store;
@@ -27,29 +30,46 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
   const update = useStore(s => s.update);
 
   const dispatch = useDispatch();
+  const [userRequest] = useRequest(
+    (user: User) =>
+      Axios.get('/api/user/data', {
+        headers: { Authorization: `Bearer ${user.token}` },
+      }),
+    (res, user) => {
+      dispatch({ type: 'login', user: { ...user, ...res.data } });
+      localStorage.setItem('user', JSON.stringify(user));
+    },
+    []
+  );
+
   useLayoutEffect(() => {
-    const rawUser = localStorage.getItem('user');
-    if (!rawUser) {
-      return;
-    }
-    let user: User;
     try {
-      user = JSON.parse(rawUser);
+      const rawUser = localStorage.getItem('user');
+      if (!rawUser) {
+        return;
+      }
+      const user = JSON.parse(rawUser);
+      dispatch({ type: 'login', user });
+      userRequest(user);
     } catch (error) {
       return;
     }
-    dispatch({ type: 'login', user });
-    Axios.get('/api/user/data', {
-      headers: { Authorization: `Bearer ${user.token}` },
-    })
-      .then(res => {
-        dispatch({ type: 'login', user: { ...user, ...res.data } });
-        localStorage.setItem('user', JSON.stringify(user));
-      })
-      .catch(() => {
-        // TODO notify the user?
-      });
   }, []);
+
+  const user = useStore(s => s.user);
+  const authInterceptorId = useRef<number | null>(null);
+  useEffect(() => {
+    if (authInterceptorId.current !== null) {
+      Axios.interceptors.request.eject(authInterceptorId.current);
+    }
+    if (user) {
+      const id = Axios.interceptors.request.use(config => {
+        config.headers = { Authorization: `Bearer ${user.token}` };
+        return config;
+      });
+      authInterceptorId.current = id;
+    }
+  }, [user]);
 
   return (
     <div className="App-root">
