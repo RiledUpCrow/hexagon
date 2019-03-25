@@ -36,8 +36,9 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
         headers: { Authorization: `Bearer ${user.token}` },
       }),
     (res, user) => {
-      dispatch({ type: 'login', user: { ...res.data, token: user.token } });
-      localStorage.setItem('user', JSON.stringify(user));
+      const updatedUser = { ...res.data, token: user.token };
+      dispatch({ type: 'login', user: updatedUser });
+      localStorage.setItem('user', JSON.stringify(updatedUser));
     },
     []
   );
