@@ -52,7 +52,7 @@ export default class TileLayer implements MapLayer {
   public update = (): void => {
     const currentMap = this.map();
     const boundaries = this.dp.getTileIndexBoundaries();
-    if (currentMap !== this.previousMap) {
+    if (currentMap && currentMap !== this.previousMap) {
       const changed: Position[] = [];
       const { tiles, width, height } = currentMap;
       for (let x = 0; x < width; x++) {
