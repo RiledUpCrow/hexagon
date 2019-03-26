@@ -23,13 +23,16 @@ interface Props {
 }
 
 const App: FunctionComponent<Props> = (): JSX.Element => {
+  const dispatch = useDispatch();
+
   const [ready, setReady] = useState(false);
   const handleReady = useCallback(() => setReady(true), []);
-  const endGame = useCallback(() => setReady(false), []);
+  const endGame = useCallback(() => {
+    setReady(false);
+    dispatch({ type: 'reset' });
+  }, []);
   const game = useStore(s => s.game);
   const update = useStore(s => s.update);
-
-  const dispatch = useDispatch();
   const [userRequest] = useRequest(
     (user: User) =>
       Axios.get('/api/user/data', {

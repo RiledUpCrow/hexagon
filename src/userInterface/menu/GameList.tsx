@@ -18,10 +18,10 @@ const GameList: FunctionComponent = () => {
   const [fetchGame, loading, error] = useRequest(
     (id: string) =>
       Axios.post(`/api/game/message/${id}`, {
-        message: 'get_data',
+        type: 'getData',
       }),
     res => {
-      const map = res.data as Map;
+      const map = res.data.data as Map;
       const units: Unit[] = [
         { id: 0, type: 'WARRIOR', position: { x: 1, y: 1 } },
         { id: 1, type: 'WARRIOR', position: { x: 1, y: 2 } },
