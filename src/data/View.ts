@@ -8,4 +8,5 @@ export type View =
   | 'listEngines'
   | 'engine'
   | 'createGame'
-  | 'joinGame';
+  | 'joinGame'
+  | 'game';

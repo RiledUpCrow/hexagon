@@ -10,6 +10,7 @@ import Button from '../../components/Button';
 import ErrorText from '../../components/ErrorText';
 import Menu from '../Menu';
 import './GameList.css';
+import GameItem from './GameItem';
 
 const GameList: FunctionComponent = () => {
   const games = useStore(s => s.user!.games);
@@ -46,15 +47,11 @@ const GameList: FunctionComponent = () => {
     <Menu title="Games" loading={loading}>
       <ErrorText error={error} />
       {games.map(game => (
-        <Button
+        <GameItem
           key={game.id}
-          disabled={!game.online}
-          color="secondary"
-          onClick={() => fetchGame(game.id)}
-          className="GameList-button"
-        >
-          {game.id}
-        </Button>
+          game={game}
+          onStart={() => fetchGame(game.id)}
+        />
       ))}
     </Menu>
   );

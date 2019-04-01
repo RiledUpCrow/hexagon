@@ -13,6 +13,9 @@ $danger: hsl(14, 67%, 40%);
   border-radius: 20px;
   outline: none;
   transition-duration: 100ms;
+  text-overflow: clip;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .Button-wide {

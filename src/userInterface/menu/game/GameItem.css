@@ -1,0 +1,8 @@
+.GameItem-root {
+  display: flex;
+}
+
+.GameItem-wide {
+  flex-grow: 1;
+  margin-right: 0.5em;
+}

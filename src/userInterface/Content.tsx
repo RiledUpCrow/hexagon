@@ -8,6 +8,7 @@ import GameList from './menu/game/GameList';
 import MainMenu from './menu/MainMenu';
 import Login from './menu/profile/Login';
 import Register from './menu/profile/Register';
+import GameDetails from './menu/game/GameDetails';
 
 type Routes = { [key in View]?: ComponentType<{ param?: string }> };
 
@@ -20,6 +21,7 @@ const routes: Routes = {
   engine: EngineDetails as any,
   createGame: CreateGame as any,
   listGames: GameList as any,
+  game: GameDetails as any,
 };
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
