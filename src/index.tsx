@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'typeface-caesar-dressing';
+import 'typeface-chewy';
 import './index.css';
 import App from './userInterface/App';
 import * as serviceWorker from './serviceWorker';

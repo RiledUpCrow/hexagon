@@ -16,7 +16,7 @@
     "react-icons-kit": "^1.2.1",
     "react-scripts": "^2.1.8",
     "redux": "^4.0.1",
-    "typeface-caesar-dressing": "0.0.71",
+    "typeface-chewy": "0.0.72",
     "typescript": "^3.3.3333"
   },
   "scripts": {
