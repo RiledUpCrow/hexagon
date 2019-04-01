@@ -1,4 +1,5 @@
 import { AddEngineAction } from './addEngineAction';
+import { AddGameAction } from './addGameAction';
 import { BackAction } from './backAction';
 import { DelEngineAction } from './delEngineAction';
 import { DeselectAction } from './deselectAction';
@@ -7,6 +8,7 @@ import LoginAction from './loginAction';
 import LogoutAction from './logoutAction';
 import MoveUnitAction from './moveUnitAction';
 import { NavigateAction } from './navigateAction';
+import { RenameGameAction } from './renameGameAction';
 import { ResetAction } from './resetAction';
 import { SelectTileAction } from './selectTileAction';
 import SelectUnitAction from './selectUnitAction';
@@ -14,7 +16,6 @@ import StartGameAction from './startGameAction';
 import UpdateAction from './updateAction';
 import UpdateTileAction from './updateTileAction';
 import UpdateUnitAction from './updateUnitAction';
-import { AddGameAction } from './addGameAction';
 
 export type ActionType =
   | 'reset'
@@ -33,7 +34,8 @@ export type ActionType =
   | 'update'
   | 'add_engine'
   | 'del_engine'
-  | 'add_game';
+  | 'add_game'
+  | 'rename_game';
 
 export type GameAction =
   | ResetAction
@@ -52,4 +54,5 @@ export type GameAction =
   | UpdateAction
   | AddEngineAction
   | DelEngineAction
-  | AddGameAction;
+  | AddGameAction
+  | RenameGameAction;

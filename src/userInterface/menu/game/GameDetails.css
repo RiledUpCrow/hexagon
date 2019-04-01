@@ -13,6 +13,10 @@
   flex-direction: column;
 }
 
-.EngineDetails-button {
+.GameDetails-button {
   margin: 0.5em 0;
+}
+
+.GameDetails-name {
+  text-align: center;
 }

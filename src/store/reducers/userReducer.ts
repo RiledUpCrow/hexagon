@@ -1,5 +1,6 @@
 import User from '../../data/User';
 import { GameAction } from '../actions';
+import Game from '../../data/Game';
 
 export type UserState = User | null;
 
@@ -44,6 +45,20 @@ const userReducer = (
       }
       const { game } = action;
       const newUser = { ...state, games: [...state.games, game] };
+      return newUser;
+    }
+    case 'rename_game': {
+      if (!state) {
+        return state;
+      }
+      const { game, name } = action;
+      const gameIndex = state.games.findIndex(g => g.id === game.id);
+      if (gameIndex < 0) {
+        return state;
+      }
+      const newUser = { ...state, games: [...state.games] };
+      const newGame: Game = { ...game, displayName: name };
+      newUser.games.splice(gameIndex, 1, newGame);
       return newUser;
     }
     default: {

@@ -32,7 +32,7 @@ const GameItem: FunctionComponent<Props> = props => {
         onClick={onStart}
         className="GameItem-wide"
       >
-        {game.id}
+        {game.displayName}
       </Button>
       <Button onClick={toGameDetails} className="GameItem-narrow">
         <Icon icon={cog} />
