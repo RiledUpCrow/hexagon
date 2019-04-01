@@ -3,17 +3,17 @@ import React, {
   FunctionComponent,
   memo,
   useCallback,
-  useState,
-  useRef,
   useEffect,
+  useRef,
+  useState,
 } from 'react';
-import Button from '../components/Button';
-import ErrorText from '../components/ErrorText';
-import Loader from '../components/Loader';
-import TextInput from '../components/TextInput';
-import User from '../../data/User';
-import useDispatch from '../../logic/useDispatch';
-import useRequest from '../../logic/useRequest';
+import User from '../../../data/User';
+import useDispatch from '../../../logic/useDispatch';
+import useRequest from '../../../logic/useRequest';
+import Button from '../../components/Button';
+import ErrorText from '../../components/ErrorText';
+import Loader from '../../components/Loader';
+import TextInput from '../../components/TextInput';
 import './Login.css';
 
 const Login: FunctionComponent = (): JSX.Element => {

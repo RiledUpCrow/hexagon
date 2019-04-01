@@ -8,13 +8,13 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import User from '../../data/User';
-import useDispatch from '../../logic/useDispatch';
-import useRequest from '../../logic/useRequest';
-import Button from '../components/Button';
-import ErrorText from '../components/ErrorText';
-import Loader from '../components/Loader';
-import TextInput from '../components/TextInput';
+import User from '../../../data/User';
+import useDispatch from '../../../logic/useDispatch';
+import useRequest from '../../../logic/useRequest';
+import Button from '../../components/Button';
+import ErrorText from '../../components/ErrorText';
+import Loader from '../../components/Loader';
+import TextInput from '../../components/TextInput';
 import './Login.css';
 import './Register.css';
 

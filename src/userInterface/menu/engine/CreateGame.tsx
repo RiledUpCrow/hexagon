@@ -1,14 +1,14 @@
 import Axios from 'axios';
 import React, { FunctionComponent, memo, useState } from 'react';
-import { defaultSettings } from '../../data/Settings';
-import useDispatch from '../../logic/useDispatch';
-import useRequest from '../../logic/useRequest';
-import useStore from '../../logic/useStore';
-import Button from '../components/Button';
-import ErrorText from '../components/ErrorText';
-import NumberPicker from '../components/NumberPicker';
+import { defaultSettings } from '../../../data/Settings';
+import useDispatch from '../../../logic/useDispatch';
+import useRequest from '../../../logic/useRequest';
+import useStore from '../../../logic/useStore';
+import Button from '../../components/Button';
+import ErrorText from '../../components/ErrorText';
+import NumberPicker from '../../components/NumberPicker';
+import Menu from '../Menu';
 import './CreateGame.css';
-import Menu from './Menu';
 
 interface Props {
   param: string;

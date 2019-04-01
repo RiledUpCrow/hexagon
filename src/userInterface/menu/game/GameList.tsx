@@ -1,15 +1,15 @@
-import React, { FunctionComponent, memo } from 'react';
-import './GameList.css';
-import Menu from './Menu';
-import useStore from '../../logic/useStore';
-import Button from '../components/Button';
-import useRequest from '../../logic/useRequest';
 import Axios from 'axios';
-import useDispatch from '../../logic/useDispatch';
-import Unit from '../../data/Unit';
-import { defaultSettings } from '../../data/Settings';
-import Map from '../../data/Map';
-import ErrorText from '../components/ErrorText';
+import React, { FunctionComponent, memo } from 'react';
+import Map from '../../../data/Map';
+import { defaultSettings } from '../../../data/Settings';
+import Unit from '../../../data/Unit';
+import useDispatch from '../../../logic/useDispatch';
+import useRequest from '../../../logic/useRequest';
+import useStore from '../../../logic/useStore';
+import Button from '../../components/Button';
+import ErrorText from '../../components/ErrorText';
+import Menu from '../Menu';
+import './GameList.css';
 
 const GameList: FunctionComponent = () => {
   const games = useStore(s => s.user!.games);

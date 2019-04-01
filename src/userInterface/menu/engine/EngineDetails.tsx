@@ -1,18 +1,17 @@
 import Axios from 'axios';
 import React, { FunctionComponent, memo, useCallback } from 'react';
 import Icon from 'react-icons-kit';
-import { trash } from 'react-icons-kit/fa/trash';
 import { check } from 'react-icons-kit/fa/check';
-import { times } from 'react-icons-kit/fa/times';
 import { rocket } from 'react-icons-kit/fa/rocket';
-import useDispatch from '../../logic/useDispatch';
-import useRequest from '../../logic/useRequest';
-import useStore from '../../logic/useStore';
-import Button from '../components/Button';
+import { times } from 'react-icons-kit/fa/times';
+import { trash } from 'react-icons-kit/fa/trash';
+import useDispatch from '../../../logic/useDispatch';
+import useRequest from '../../../logic/useRequest';
+import useStore from '../../../logic/useStore';
+import Button from '../../components/Button';
+import ErrorText from '../../components/ErrorText';
+import Menu from '../Menu';
 import './EngineDetails.css';
-import Loader from '../components/Loader';
-import ErrorText from '../components/ErrorText';
-import Menu from './Menu';
 
 interface Props {
   param: string;

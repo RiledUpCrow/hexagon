@@ -1,8 +1,8 @@
 import React, { FunctionComponent, memo, useCallback } from 'react';
-import Engine from '../../data/Engine';
-import useDispatch from '../../logic/useDispatch';
+import Engine from '../../../data/Engine';
+import useDispatch from '../../../logic/useDispatch';
+import Button from '../../components/Button';
 import './EngineItem.css';
-import Button from '../components/Button';
 
 interface Props {
   engine: Engine;

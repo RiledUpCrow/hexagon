@@ -1,13 +1,13 @@
 import React, { ComponentType, FunctionComponent, memo } from 'react';
 import { View } from '../data/View';
 import useStore from '../logic/useStore';
-import Login from './menu/Login';
+import CreateGame from './menu/engine/CreateGame';
+import EngineDetails from './menu/engine/EngineDetails';
+import EngineList from './menu/engine/EngineList';
+import GameList from './menu/game/GameList';
 import MainMenu from './menu/MainMenu';
-import Register from './menu/Register';
-import EngineList from './menu/EngineList';
-import EngineDetails from './menu/EngineDetails';
-import CreateGame from './menu/CreateGame';
-import GameList from './menu/GameList';
+import Login from './menu/profile/Login';
+import Register from './menu/profile/Register';
 
 type Routes = { [key in View]?: ComponentType<{ param?: string }> };
 
