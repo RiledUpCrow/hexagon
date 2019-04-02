@@ -4,6 +4,7 @@ import Icon from 'react-icons-kit';
 import { check } from 'react-icons-kit/fa/check';
 import { rocket } from 'react-icons-kit/fa/rocket';
 import { times } from 'react-icons-kit/fa/times';
+import { cog } from 'react-icons-kit/fa/cog';
 import { trash } from 'react-icons-kit/fa/trash';
 import useDispatch from '../../../logic/useDispatch';
 import useRequest from '../../../logic/useRequest';
@@ -56,6 +57,38 @@ const EngineDetails: FunctionComponent<Props> = props => {
             Offline <Icon className="EngineDetails-offline" icon={times} />
           </div>
         )}
+      </div>
+      <div className="EngineDetails-line">
+        <div>Games</div>
+        <div>
+          {engine.games.map(game => (
+            <div className="EngineDetails-gameControls">
+              <span className="EngineDetails-gameName">
+                {game.displayName}{' '}
+              </span>
+              <Button
+                size="small"
+                className="EngineDetails-gameControl"
+                onClick={() =>
+                  dispatch({
+                    type: 'navigate',
+                    view: 'game',
+                    param: game.id,
+                  })
+                }
+              >
+                <Icon icon={cog} />
+              </Button>
+              <Button
+                size="small"
+                color="danger"
+                className="EngineDetails-gameControl"
+              >
+                <Icon icon={trash} />
+              </Button>
+            </div>
+          ))}
+        </div>
       </div>
       <ErrorText error={abandonError} />
       <Button

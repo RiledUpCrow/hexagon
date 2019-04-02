@@ -53,7 +53,6 @@ const GameDetails: FunctionComponent<Props> = props => {
 
   return (
     <Menu title="Game details">
-      <ErrorText error={error} />
       <div className="GameDetails-line">
         <div>Name</div>
         <div>{game.displayName}</div>
@@ -70,6 +69,7 @@ const GameDetails: FunctionComponent<Props> = props => {
           ))}
         </div>
       </div>
+      <ErrorText error={error} />
       <Button wide onClick={handleOpen}>
         Rename <Icon icon={pencil} />
       </Button>

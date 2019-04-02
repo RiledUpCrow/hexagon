@@ -11,14 +11,14 @@ interface Props {
   disabled?: boolean;
   className?: string;
   color?: Color;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const Button: FunctionComponent<Props> = ({
   size = 'normal',
   wide = false,
   disabled = false,
-  onClick,
+  onClick = () => {},
   children,
   color = 'primary',
   className = '',

@@ -19,3 +19,19 @@
 .EngineDetails-button {
   margin: 0.5em 0;
 }
+
+.EngineDetails-gameControls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5em;
+}
+
+.EngineDetails-gameControl {
+  margin-left: 0.5em;
+}
+
+.EngineDetails-gameName {
+  max-width: 150px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
