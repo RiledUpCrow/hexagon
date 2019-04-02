@@ -10,19 +10,32 @@
 }
 
 .TextInput-input {
+  background: none;
+  border: none;
+  outline: none;
+  flex-grow: 1;
+  line-height: 2em;
+  padding: 0;
+  margin: 0;
+  color: white;
+  font-size: 1.1em;
+}
+
+.TextInput-wrapper {
   width: 100%;
   background: rgb(0, 0, 0, 0.2);
   border: 5px solid hsl(118, 70%, 34%);
   border-radius: 100px;
   line-height: 2em;
   color: white;
-  padding: 0.2em 1em;
+  padding: 0.2em 0.75em 0.2em 1em;
   margin: 0.5em 0;
   outline: none;
   transition-duration: 150ms;
-  font-size: 1.1em;
+  display: inline-flex;
+  align-items: center;
 }
 
-.TextInput-input:focus {
+.TextInput-wrapper:focus-within {
   border: 5px solid hsl(118, 70%, 54%);
 }

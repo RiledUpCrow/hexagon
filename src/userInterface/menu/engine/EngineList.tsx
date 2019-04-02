@@ -9,6 +9,8 @@ import TextInput from '../../components/TextInput';
 import Menu from '../Menu';
 import EngineItem from './EngineItem';
 import './EngineList.css';
+import Icon from 'react-icons-kit';
+import { paperPlane } from 'react-icons-kit/fa/paperPlane';
 
 const EngineList: FunctionComponent = () => {
   const user = useStore(s => s.user)!;
@@ -37,12 +39,18 @@ const EngineList: FunctionComponent = () => {
             onChange={setClaim}
             disabled={claimLoading}
             onEnter={doClaim}
+            button={
+              <Button disabled={claimLoading} onClick={doClaim} size="small">
+                Claim{' '}
+                <Icon
+                  size="1em"
+                  icon={paperPlane}
+                  style={{ cursor: 'pointer' }}
+                />
+              </Button>
+            }
           />
-          <div className="EngineList-claimButton">
-            <Button disabled={claimLoading} onClick={doClaim}>
-              Claim
-            </Button>
-          </div>
+          <div className="EngineList-claimButton" />
         </div>
         <ErrorText error={claimError} />
       </div>

@@ -5,6 +5,7 @@ import React, {
   memo,
   useCallback,
   RefObject,
+  ReactNode,
 } from 'react';
 import useUniqueId from '../../logic/useUniqueId';
 import './TextInput.css';
@@ -18,6 +19,7 @@ interface Props {
   onChange: (value: string) => void;
   onEnter?: () => void;
   inputRef?: RefObject<HTMLInputElement>;
+  button?: ReactNode;
 }
 
 const TextInput: FunctionComponent<Props> = ({
@@ -29,6 +31,7 @@ const TextInput: FunctionComponent<Props> = ({
   onChange,
   onEnter = () => undefined,
   inputRef,
+  button,
 }): JSX.Element => {
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -51,17 +54,20 @@ const TextInput: FunctionComponent<Props> = ({
       <label className="TextInput-label" htmlFor={id}>
         {label}
       </label>
-      <input
-        ref={inputRef}
-        autoFocus={autoFocus}
-        disabled={disabled}
-        className="TextInput-input"
-        id={id}
-        value={value}
-        type={type}
-        onChange={handleChange}
-        onKeyPress={handleKey}
-      />
+      <div className="TextInput-wrapper">
+        <input
+          ref={inputRef}
+          autoFocus={autoFocus}
+          disabled={disabled}
+          className="TextInput-input"
+          id={id}
+          value={value}
+          type={type}
+          onChange={handleChange}
+          onKeyPress={handleKey}
+        />
+        {Boolean(button) && button}
+      </div>
     </div>
   );
 };
