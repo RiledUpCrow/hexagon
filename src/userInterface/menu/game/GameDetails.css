@@ -20,3 +20,12 @@
 .GameDetails-name {
   text-align: center;
 }
+
+.GameDetails-renameButtons {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.GameDetails-renameButton {
+  margin-left: 0.5em;
+}

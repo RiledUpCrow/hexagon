@@ -1,14 +1,17 @@
-import React, { FunctionComponent, memo, useState } from 'react';
-import useStore from '../../../logic/useStore';
-import Menu from '../Menu';
-import './GameDetails.css';
+import Axios from 'axios';
+import React, { FunctionComponent, memo, useCallback, useState } from 'react';
 import Icon from 'react-icons-kit';
 import { pencil } from 'react-icons-kit/fa/pencil';
-import TextInput from '../../components/TextInput';
-import useRequest from '../../../logic/useRequest';
-import Axios from 'axios';
-import ErrorText from '../../components/ErrorText';
 import useDispatch from '../../../logic/useDispatch';
+import useRequest from '../../../logic/useRequest';
+import useStore from '../../../logic/useStore';
+import Button from '../../components/Button';
+import Dialog from '../../components/Dialog';
+import ErrorText from '../../components/ErrorText';
+import TextInput from '../../components/TextInput';
+import Loading from '../Loading';
+import Menu from '../Menu';
+import './GameDetails.css';
 
 interface Props {
   param: string;
@@ -19,7 +22,7 @@ const GameDetails: FunctionComponent<Props> = props => {
   const game = useStore(s => s.user!.games.find(g => g.id === param));
 
   const [editing, setEditing] = useState(false);
-  const [text, setText] = useState('');
+  const [text, setText] = useState(game ? game.displayName : '');
 
   const dispatch = useDispatch();
   const [rename, loading, error] = useRequest(
@@ -32,35 +35,29 @@ const GameDetails: FunctionComponent<Props> = props => {
     [game, text]
   );
 
+  const handleRename = useCallback(() => {
+    rename(text);
+  }, [text]);
+
+  const handleOpen = useCallback(() => {
+    setEditing(true);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setEditing(false);
+  }, []);
+
   if (!game) {
     return <p>This game does not exist</p>;
   }
 
   return (
-    <Menu title="Game details" loading={loading}>
+    <Menu title="Game details">
       <ErrorText error={error} />
-      {editing ? (
-        <TextInput
-          label="Name"
-          autoFocus
-          value={text}
-          onChange={setText}
-          onEnter={() => {
-            rename(text);
-          }}
-        />
-      ) : (
-        <h2 className="GameDetails-name">
-          {game.displayName}{' '}
-          <Icon
-            icon={pencil}
-            onClick={() => {
-              setText(game.displayName);
-              setEditing(true);
-            }}
-          />
-        </h2>
-      )}
+      <div className="GameDetails-line">
+        <div>Name</div>
+        <div>{game.displayName}</div>
+      </div>
       <div className="GameDetails-line">
         <div>Status</div>
         <div>{game.online ? 'Ready' : 'Engine offline'}</div>
@@ -73,6 +70,32 @@ const GameDetails: FunctionComponent<Props> = props => {
           ))}
         </div>
       </div>
+      <Button wide onClick={handleOpen}>
+        Rename <Icon icon={pencil} />
+      </Button>
+      <Dialog open={editing} onClose={handleClose}>
+        <Loading loading={loading}>
+          <TextInput
+            autoFocus
+            label="Rename game"
+            onEnter={handleRename}
+            onChange={setText}
+            value={text}
+          />
+          <div className="GameDetails-renameButtons">
+            <Button
+              color="secondary"
+              className="GameDetails-renameButton"
+              onClick={handleRename}
+            >
+              Rename
+            </Button>
+            <Button className="GameDetails-renameButton" onClick={handleClose}>
+              Cancel
+            </Button>
+          </div>
+        </Loading>
+      </Dialog>
     </Menu>
   );
 };

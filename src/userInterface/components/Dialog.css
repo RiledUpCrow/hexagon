@@ -1,0 +1,19 @@
+.Dialog-root {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: 150ms ease-in Dialog-animate;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 1em;
+}
+
+@keyframes Dialog-animate {
+  0% {
+    opacity: 0;
+  }
+}
