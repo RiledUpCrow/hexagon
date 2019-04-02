@@ -27,6 +27,7 @@ const GameItem: FunctionComponent<Props> = props => {
   return (
     <div className="GameItem-root">
       <Button
+        size="large"
         disabled={!game.online}
         color="secondary"
         onClick={onStart}
@@ -34,7 +35,7 @@ const GameItem: FunctionComponent<Props> = props => {
       >
         {game.displayName}
       </Button>
-      <Button onClick={toGameDetails} className="GameItem-narrow">
+      <Button size="large" onClick={toGameDetails} className="GameItem-narrow">
         <Icon icon={cog} />
       </Button>
     </div>

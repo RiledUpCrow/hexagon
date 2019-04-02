@@ -19,7 +19,12 @@ const EngineItem: FunctionComponent<Props> = props => {
   );
 
   return (
-    <Button color="secondary" className="EngineItem-root" onClick={toEngine}>
+    <Button
+      size="large"
+      color="secondary"
+      className="EngineItem-root"
+      onClick={toEngine}
+    >
       {engine.name}: {engine.online ? 'Online' : 'Offline'}
     </Button>
   );

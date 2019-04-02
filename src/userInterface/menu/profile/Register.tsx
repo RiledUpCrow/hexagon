@@ -133,12 +133,12 @@ const Register: FunctionComponent = (): JSX.Element => {
       <ErrorText error={error} />
       <div className="Login-buttons">
         <div className="Login-button">
-          <Button wide disabled={disabled} onClick={register}>
+          <Button size="large" wide disabled={disabled} onClick={register}>
             Register
           </Button>
         </div>
         <div className="Login-button">
-          <Button wide onClick={cancel}>
+          <Button size="large" wide onClick={cancel}>
             Cancel
           </Button>
         </div>

@@ -3,13 +3,14 @@ import './Button.scss';
 import { buttonClick } from '../../logic/sound';
 
 type Size = 'small' | 'normal' | 'large';
+type Color = 'primary' | 'secondary' | 'danger';
 
 interface Props {
   size?: Size;
   wide?: boolean;
   disabled?: boolean;
   className?: string;
-  color?: 'primary' | 'secondary' | 'danger';
+  color?: Color;
   onClick: () => void;
 }
 

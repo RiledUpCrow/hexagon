@@ -23,7 +23,7 @@ const MainMenu: FunctionComponent = (): JSX.Element => {
 
   const button = (title: string, action: () => void): JSX.Element => (
     <div className="MainMenu-button">
-      <Button wide onClick={action}>
+      <Button size="large" wide onClick={action}>
         {title}
       </Button>
     </div>

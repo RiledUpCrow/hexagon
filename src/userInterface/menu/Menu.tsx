@@ -22,7 +22,7 @@ const Menu: FunctionComponent<Props> = props => {
       <Loading loading={loading} className="Menu-content">
         {children}
       </Loading>
-      <Button className="Menu-button" onClick={back}>
+      <Button size="large" className="Menu-button" onClick={back}>
         Back
       </Button>
     </div>
