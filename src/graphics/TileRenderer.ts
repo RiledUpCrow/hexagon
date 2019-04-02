@@ -112,7 +112,7 @@ export default class TileRenderer {
       case 'GRASSLAND':
         return 0x70d813;
       case 'MOUNTAIN':
-        return 0x777777;
+        return 0x707059;
       case 'OCEAN':
         return 0x337ed4;
       case 'PLAINS':
