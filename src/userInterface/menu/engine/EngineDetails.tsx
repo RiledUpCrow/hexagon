@@ -21,6 +21,7 @@ interface Props {
 const EngineDetails: FunctionComponent<Props> = props => {
   const { param: engineId } = props;
   const engine = useStore(s => s.user.engines.find(e => e.id === engineId));
+  const games = useStore(s => s.user.games);
   const dispatch = useDispatch();
   const [abandonRequest, abandonLoading, abandonError] = useRequest(
     (id: string) => Axios.post('/api/engine/abandon', { id }),
@@ -61,33 +62,35 @@ const EngineDetails: FunctionComponent<Props> = props => {
       <div className="EngineDetails-line">
         <div>Games</div>
         <div>
-          {engine.games.map(game => (
-            <div className="EngineDetails-gameControls">
-              <span className="EngineDetails-gameName">
-                {game.displayName}{' '}
-              </span>
-              <Button
-                size="small"
-                className="EngineDetails-gameControl"
-                onClick={() =>
-                  dispatch({
-                    type: 'navigate',
-                    view: 'game',
-                    param: game.id,
-                  })
-                }
-              >
-                <Icon icon={cog} />
-              </Button>
-              <Button
-                size="small"
-                color="danger"
-                className="EngineDetails-gameControl"
-              >
-                <Icon icon={trash} />
-              </Button>
-            </div>
-          ))}
+          {engine.games
+            .map(gameId => games.find(g => g.id === gameId)!)
+            .map(game => (
+              <div className="EngineDetails-gameControls">
+                <span className="EngineDetails-gameName">
+                  {game.displayName}{' '}
+                </span>
+                <Button
+                  size="small"
+                  className="EngineDetails-gameControl"
+                  onClick={() =>
+                    dispatch({
+                      type: 'navigate',
+                      view: 'game',
+                      param: game.id,
+                    })
+                  }
+                >
+                  <Icon icon={cog} />
+                </Button>
+                <Button
+                  size="small"
+                  color="danger"
+                  className="EngineDetails-gameControl"
+                >
+                  <Icon icon={trash} />
+                </Button>
+              </div>
+            ))}
         </div>
       </div>
       <ErrorText error={abandonError} />
