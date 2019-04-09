@@ -47,7 +47,10 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
       const { games, engines } = res.data;
       dispatch({ type: 'login', user: updatedUser });
       dispatch({ type: 'refresh_data', games, engines });
-      localStorage.setItem('user', JSON.stringify(updatedUser));
+      localStorage.setItem(
+        'user',
+        JSON.stringify({ user: updatedUser, engines, games })
+      );
     },
     []
   );
@@ -58,8 +61,9 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
       if (!rawUser) {
         return;
       }
-      const user = JSON.parse(rawUser);
+      const { user, engines, games } = JSON.parse(rawUser);
       dispatch({ type: 'login', user });
+      dispatch({ type: 'refresh_data', games, engines });
       userRequest(user);
     } catch (error) {
       return;

@@ -30,14 +30,16 @@ const Login: FunctionComponent = (): JSX.Element => {
       }),
     res => {
       const { token, profile } = res.data;
+      const { name, photo, games, engines } = profile;
       const user: User = {
-        name: profile.name,
-        photo: profile.photo,
+        name: name,
+        photo: photo,
         token,
       };
-      localStorage.setItem('user', JSON.stringify(user));
       dispatch({ type: 'login', user });
+      dispatch({ type: 'refresh_data', games, engines });
       dispatch({ type: 'back' });
+      localStorage.setItem('user', JSON.stringify({ user, engines, games }));
     },
     []
   );
