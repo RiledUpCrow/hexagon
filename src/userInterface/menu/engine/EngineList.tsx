@@ -13,7 +13,7 @@ import Icon from 'react-icons-kit';
 import { paperPlane } from 'react-icons-kit/fa/paperPlane';
 
 const EngineList: FunctionComponent = () => {
-  const user = useStore(s => s.user)!;
+  const engines = useStore(s => s.user.engines);
   const dispatch = useDispatch();
 
   const [claim, setClaim] = useState('');
@@ -54,7 +54,7 @@ const EngineList: FunctionComponent = () => {
         </div>
         <ErrorText error={claimError} />
       </div>
-      {user.engines.map(engine => {
+      {engines.map(engine => {
         return <EngineItem key={engine.id} engine={engine} />;
       })}
     </Menu>

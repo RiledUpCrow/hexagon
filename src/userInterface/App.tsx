@@ -39,8 +39,14 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
         headers: { Authorization: `Bearer ${user.token}` },
       }),
     (res, user) => {
-      const updatedUser = { ...res.data, token: user.token };
+      const updatedUser: User = {
+        name: res.data.name,
+        photo: res.data.photo,
+        token: user.token,
+      };
+      const { games, engines } = res.data;
       dispatch({ type: 'login', user: updatedUser });
+      dispatch({ type: 'refresh_data', games, engines });
       localStorage.setItem('user', JSON.stringify(updatedUser));
     },
     []
@@ -66,9 +72,9 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
     if (authInterceptorId.current !== null) {
       Axios.interceptors.request.eject(authInterceptorId.current);
     }
-    if (user) {
+    if (user.profile) {
       const id = Axios.interceptors.request.use(config => {
-        config.headers = { Authorization: `Bearer ${user.token}` };
+        config.headers = { Authorization: `Bearer ${user.profile!.token}` };
         return config;
       });
       authInterceptorId.current = id;

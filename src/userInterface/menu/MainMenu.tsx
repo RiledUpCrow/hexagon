@@ -6,7 +6,7 @@ import useStore from '../../logic/useStore';
 import './MainMenu.css';
 
 const MainMenu: FunctionComponent = (): JSX.Element => {
-  const user = useStore(s => s.user);
+  const user = useStore(s => s.user.profile);
   const dispatch = useDispatch();
 
   const navigate = (view: View): (() => void) => () =>

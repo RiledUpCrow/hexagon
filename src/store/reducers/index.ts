@@ -8,7 +8,7 @@ import selectedTileReducer, { SelectedTileState } from './selectedTileReducer';
 import selectedUnitReducer, { SelectedUnitState } from './selectedUnitReducer';
 import unitReducer, { UnitState } from './unitReducer';
 import updateReducer, { UpdateState } from './updateReducer';
-import userReducer, { UserState } from './userReducer';
+import userReducer, { UserState } from './userReducer/userReducer';
 
 export interface RootState {
   user: UserState;

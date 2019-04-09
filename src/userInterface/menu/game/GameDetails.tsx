@@ -19,7 +19,7 @@ interface Props {
 
 const GameDetails: FunctionComponent<Props> = props => {
   const { param } = props;
-  const game = useStore(s => s.user!.games.find(g => g.id === param));
+  const game = useStore(s => s.user.games.find(g => g.id === param));
 
   const [editing, setEditing] = useState(false);
   const [text, setText] = useState(game ? game.displayName : '');

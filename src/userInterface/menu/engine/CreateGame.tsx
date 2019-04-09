@@ -16,7 +16,7 @@ interface Props {
 
 const CreateGame: FunctionComponent<Props> = props => {
   const { param: engineId } = props;
-  const engine = useStore(s => s.user!.engines.find(e => e.id === engineId));
+  const engine = useStore(s => s.user.engines.find(e => e.id === engineId));
 
   const [mapWidth, setMapWidth] = useState(defaultSettings.mapWidth);
   const [mapHeight, setMapHeight] = useState(defaultSettings.mapHeight);

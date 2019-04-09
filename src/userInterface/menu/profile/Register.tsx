@@ -43,8 +43,6 @@ const Register: FunctionComponent = (): JSX.Element => {
         name: profile.name,
         photo: profile.photo,
         token,
-        engines: profile.engines,
-        games: profile.games,
       };
       localStorage.setItem('user', JSON.stringify(user));
       dispatch({ type: 'login', user });

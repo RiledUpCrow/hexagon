@@ -6,14 +6,13 @@ import Unit from '../../../data/Unit';
 import useDispatch from '../../../logic/useDispatch';
 import useRequest from '../../../logic/useRequest';
 import useStore from '../../../logic/useStore';
-import Button from '../../components/Button';
 import ErrorText from '../../components/ErrorText';
 import Menu from '../Menu';
 import './GameList.css';
 import GameItem from './GameItem';
 
 const GameList: FunctionComponent = () => {
-  const games = useStore(s => s.user!.games);
+  const games = useStore(s => s.user.games);
 
   const dispatch = useDispatch();
   const [fetchGame, loading, error] = useRequest(

@@ -20,7 +20,7 @@ interface Props {
 
 const EngineDetails: FunctionComponent<Props> = props => {
   const { param: engineId } = props;
-  const engine = useStore(s => s.user!.engines.find(e => e.id === engineId));
+  const engine = useStore(s => s.user.engines.find(e => e.id === engineId));
   const dispatch = useDispatch();
   const [abandonRequest, abandonLoading, abandonError] = useRequest(
     (id: string) => Axios.post('/api/engine/abandon', { id }),
