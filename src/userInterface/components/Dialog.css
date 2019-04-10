@@ -7,13 +7,34 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: 150ms ease-in Dialog-animate;
   background: rgba(0, 0, 0, 0.5);
   padding: 1em;
 }
 
-@keyframes Dialog-animate {
+.Dialog-opening {
+  animation: 150ms ease-in Dialog-animateIn;
+  opacity: 1;
+}
+
+.Dialog-closing {
+  animation: 150ms ease-out Dialog-animateOut;
+  opacity: 0;
+}
+
+@keyframes Dialog-animateIn {
   0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes Dialog-animateOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
     opacity: 0;
   }
 }
