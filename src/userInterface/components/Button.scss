@@ -1,10 +1,8 @@
+@import '../../theme.scss';
+
 $dark: 10%;
 $light: 15%;
 $desaturate: 50%;
-
-$primary: hsl(194, 66%, 40%);
-$secondary: hsl(133, 66%, 40%);
-$danger: hsl(14, 67%, 40%);
 
 .Button-button {
   display: flex;
@@ -20,7 +18,7 @@ $danger: hsl(14, 67%, 40%);
   color: rgba(255, 255, 255, 0.85);
   border-style: solid;
   border-radius: 20px;
-  transition-duration: 150ms;
+  transition-duration: $animationTime;
   text-overflow: clip;
   overflow: hidden;
   white-space: nowrap;

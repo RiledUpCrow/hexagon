@@ -11,7 +11,7 @@ import React, {
 } from 'react';
 import ReactDOM from 'react-dom';
 import usePrevious from '../../logic/usePrevious';
-import './Dialog.css';
+import './Dialog.scss';
 import Panel from './Panel';
 
 const ANIMATION_DURATION = 150;
