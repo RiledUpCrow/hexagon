@@ -13,6 +13,7 @@ import Button from '../../components/Button';
 import ErrorText from '../../components/ErrorText';
 import Menu from '../Menu';
 import './EngineDetails.css';
+import Game from '../../../data/Game';
 
 interface Props {
   param: string;
@@ -37,12 +38,24 @@ const EngineDetails: FunctionComponent<Props> = props => {
     []
   );
 
+  const [deleteRequest, deleteLoading, deleteError] = useRequest(
+    (gameId: string) =>
+      Axios.post(`/api/engine/deleteGame/${engineId}`, { gameId }),
+    (res, gameId) => {
+      dispatch({ type: 'del_game', gameId, engineId });
+    },
+    [engineId]
+  );
+  const handleDelete = (game: Game) => () => {
+    deleteRequest(game.id);
+  };
+
   if (!engine) {
     return <h1>This engine does not exist</h1>;
   }
 
   return (
-    <Menu title="Engine" loading={abandonLoading}>
+    <Menu title="Engine" loading={abandonLoading || deleteLoading}>
       <div className="EngineDetails-line">
         <div>Name:</div>
         <div>{engine.name}</div>
@@ -86,6 +99,7 @@ const EngineDetails: FunctionComponent<Props> = props => {
                   size="small"
                   color="danger"
                   className="EngineDetails-gameControl"
+                  onClick={handleDelete(game)}
                 >
                   <Icon icon={trash} />
                 </Button>
@@ -93,7 +107,7 @@ const EngineDetails: FunctionComponent<Props> = props => {
             ))}
         </div>
       </div>
-      <ErrorText error={abandonError} />
+      <ErrorText error={abandonError || deleteError} />
       <Button
         className="EngineDetails-button"
         onClick={toCreateGame}

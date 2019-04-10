@@ -15,16 +15,20 @@ export default (
       return games;
     }
     case 'add_game': {
-      if (!state) {
-        return state;
-      }
       const { game } = action;
       return [...state, game];
     }
-    case 'rename_game': {
-      if (!state) {
+    case 'del_game': {
+      const { gameId } = action;
+      const gameIndex = state.findIndex(g => g.id === gameId);
+      if (gameIndex < 0) {
         return state;
       }
+      const newState = [...state];
+      newState.splice(gameIndex, 1);
+      return newState;
+    }
+    case 'rename_game': {
       const { game, name } = action;
       const gameIndex = state.findIndex(g => g.id === game.id);
       if (gameIndex < 0) {

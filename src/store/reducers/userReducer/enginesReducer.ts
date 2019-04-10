@@ -15,16 +15,44 @@ export default (
       return engines;
     }
     case 'add_engine': {
-      if (!state) {
-        return state;
-      }
       const { engine } = action;
       return [...state, engine];
     }
-    case 'del_engine': {
-      if (!state) {
+    case 'add_game': {
+      const { game, engineId } = action;
+      const newState = [...state];
+      const engineIndex = newState.findIndex(e => e.id === engineId);
+      if (engineIndex < 0) {
         return state;
       }
+      const newEngine: Engine = {
+        ...newState[engineIndex],
+        games: [...newState[engineIndex].games, game.id],
+      };
+      newState.splice(engineIndex, 1, newEngine);
+      return newState;
+    }
+    case 'del_game': {
+      const { gameId, engineId } = action;
+      const newState = [...state];
+      const engineIndex = newState.findIndex(e => e.id === engineId);
+      if (engineIndex < 0) {
+        return state;
+      }
+      const newEngine: Engine = {
+        ...newState[engineIndex],
+      };
+      const newGames = [...newEngine.games];
+      const gameIndex = newGames.findIndex(g => g === gameId);
+      if (gameIndex < 0) {
+        return state;
+      }
+      newGames.splice(gameIndex, 1);
+      newEngine.games = newGames;
+      newState.splice(engineIndex, 1, newEngine);
+      return newState;
+    }
+    case 'del_engine': {
       const { engineId } = action;
       const index = state.findIndex(e => e.id === engineId);
       if (index < 0) {

@@ -33,11 +33,11 @@ const CreateGame: FunctionComponent<Props> = props => {
       }),
     res => {
       const game = res.data;
-      dispatch({ type: 'add_game', game });
+      dispatch({ type: 'add_game', game, engineId });
       dispatch({ type: 'back' });
       dispatch({ type: 'navigate', view: 'game', param: game.id });
     },
-    [mapHeight, mapWidth, players]
+    [mapHeight, mapWidth, players, engineId]
   );
 
   if (!engine) {
