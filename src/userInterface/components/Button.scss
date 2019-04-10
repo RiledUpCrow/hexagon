@@ -7,15 +7,24 @@ $secondary: hsl(133, 66%, 40%);
 $danger: hsl(14, 67%, 40%);
 
 .Button-button {
+  display: flex;
+  outline: none;
+  user-select: none;
+}
+
+.Button-content {
+  position: relative;
+  text-align: center;
   text-transform: uppercase;
+  outline: none;
   color: rgba(255, 255, 255, 0.85);
   border-style: solid;
   border-radius: 20px;
-  outline: none;
   transition-duration: 100ms;
   text-overflow: clip;
   overflow: hidden;
   white-space: nowrap;
+  flex-grow: 1;
 }
 
 .Button-wide {
@@ -46,18 +55,19 @@ $danger: hsl(14, 67%, 40%);
 
   background: $color;
   border-color: $color-dark;
-  &:hover {
+  :hover > & {
     border-color: $color-light;
   }
-  &:active {
+  :active > & {
     border-color: $color;
     background-color: $color-dark;
   }
-  &:focus {
+  :focus > & {
     box-shadow: inset 0 0 30px 0 hsla(0, 100%, 100%, 0.75);
     border-color: $color-light;
   }
-  &:disabled {
+
+  &.Button-disabled {
     background: desaturate($color, $amount: $desaturate);
     border-color: desaturate($color-dark, $amount: $desaturate);
   }

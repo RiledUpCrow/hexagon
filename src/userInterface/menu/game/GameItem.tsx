@@ -28,6 +28,7 @@ const GameItem: FunctionComponent<Props> = props => {
     <div className="GameItem-root">
       <Button
         size="large"
+        wide
         disabled={!game.online}
         color="secondary"
         onClick={onStart}

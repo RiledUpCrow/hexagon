@@ -1,6 +1,7 @@
-import React, { FunctionComponent, useCallback } from 'react';
+import React, { FunctionComponent, useCallback, KeyboardEvent } from 'react';
 import './Button.scss';
 import { buttonClick } from '../../logic/sound';
+import cn from 'classnames';
 
 type Size = 'small' | 'normal' | 'large';
 type Color = 'primary' | 'secondary' | 'danger';
@@ -24,19 +25,48 @@ const Button: FunctionComponent<Props> = ({
   className = '',
 }): JSX.Element => {
   const handleClick = useCallback(() => {
+    if (disabled) {
+      return;
+    }
     buttonClick.play();
     onClick();
   }, [onClick]);
+
+  const handleKey = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      // eslint-disable-next-line default-case
+      switch (event.key) {
+        case 'Enter':
+        case ' ': {
+          handleClick();
+        }
+      }
+    },
+    [handleClick]
+  );
+
+  // `Button-content Button-${size} Button-${color} ${disabled &&
+  //   'Button-disabled'} ${className}`
+
   return (
-    <button
-      disabled={disabled}
-      className={`Button-button Button-${size} ${
-        wide ? 'Button-wide' : ''
-      } Button-${color} ${className}`}
-      onClick={handleClick}
+    <div
+      tabIndex={disabled ? undefined : 0}
+      className={cn('Button-button', wide && 'Button-wide', className)}
+      onKeyPress={handleKey}
     >
-      {children}
-    </button>
+      <span
+        className={cn(
+          'Button-content',
+          `Button-${size}`,
+          `Button-${color}`,
+          disabled && 'Button-disabled'
+        )}
+        tabIndex={-1}
+        onClick={handleClick}
+      >
+        {children}
+      </span>
+    </div>
   );
 };
 
