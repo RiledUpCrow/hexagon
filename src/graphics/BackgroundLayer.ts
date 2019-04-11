@@ -105,12 +105,14 @@ export default class BackgroundLayer implements MapLayer {
 
   protected createBackground = () => {
     const { width, height } = this.dp.getScreen();
-    if (
-      this.background &&
-      this.background.width === width &&
-      this.background.height === height
-    ) {
-      return;
+    if (this.background) {
+      if (
+        this.background.width === width &&
+        this.background.height === height
+      ) {
+        return;
+      }
+      this.container.removeChild(this.background);
     }
     this.background = new Graphics()
       .beginFill(0x13062d)
