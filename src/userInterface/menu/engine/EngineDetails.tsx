@@ -6,6 +6,7 @@ import { rocket } from 'react-icons-kit/fa/rocket';
 import { times } from 'react-icons-kit/fa/times';
 import { cog } from 'react-icons-kit/fa/cog';
 import { trash } from 'react-icons-kit/fa/trash';
+import { pencil } from 'react-icons-kit/fa/pencil';
 import useDispatch from '../../../logic/useDispatch';
 import useRequest from '../../../logic/useRequest';
 import useStore from '../../../logic/useStore';
@@ -15,6 +16,7 @@ import Menu from '../Menu';
 import './EngineDetails.css';
 import Game from '../../../data/Game';
 import Confirm from '../../components/Confirm';
+import InputDialog from '../../components/InputDialog';
 
 interface Props {
   param: string;
@@ -51,12 +53,23 @@ const EngineDetails: FunctionComponent<Props> = props => {
     deleteRequest(game.id);
   };
 
+  const [renameRequest, renameLoading, renameError] = useRequest(
+    (name: string) => Axios.post(`/api/engine/rename/${engine!.id}`, { name }),
+    (res, name) => {
+      dispatch({ type: 'rename_engine', engine: engine!, name });
+    },
+    [engine]
+  );
+
   if (!engine) {
     return <h1>This engine does not exist</h1>;
   }
 
   return (
-    <Menu title="Engine" loading={abandonLoading || deleteLoading}>
+    <Menu
+      title="Engine"
+      loading={abandonLoading || deleteLoading || renameLoading}
+    >
       <div className="EngineDetails-line">
         <div>Name:</div>
         <div>{engine.name}</div>
@@ -109,15 +122,19 @@ const EngineDetails: FunctionComponent<Props> = props => {
             ))}
         </div>
       </div>
-      <ErrorText error={abandonError || deleteError} />
-      <Button
-        className="EngineDetails-button"
-        onClick={toCreateGame}
-        color="secondary"
-      >
+      <ErrorText error={abandonError || deleteError || renameError} />
+      <Button className="EngineDetails-button" onClick={toCreateGame}>
         <Icon size={20} icon={rocket} className="EngineDetails-icon" />
         Create game
       </Button>
+      <InputDialog
+        onInput={renameRequest}
+        message="Rename engine"
+        initialValue={engine.name}
+      >
+        <Icon size={20} icon={pencil} className="EngineDetails-icon" />
+        Rename engine
+      </InputDialog>
       <Confirm
         confirm={`Abandon engine ${engine.name}?`}
         className="EngineDetails-button"

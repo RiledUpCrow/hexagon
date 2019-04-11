@@ -18,6 +18,7 @@ import UpdateTileAction from './updateTileAction';
 import UpdateUnitAction from './updateUnitAction';
 import { RefreshDataAction } from './refreshDataAction';
 import { DelGameAction } from './delGameAction';
+import { RenameEngineAction } from './renameEngineAction';
 
 export type ActionType =
   | 'reset'
@@ -39,7 +40,8 @@ export type ActionType =
   | 'add_game'
   | 'rename_game'
   | 'refresh_data'
-  | 'del_game';
+  | 'del_game'
+  | 'rename_engine';
 
 export type GameAction =
   | ResetAction
@@ -61,4 +63,5 @@ export type GameAction =
   | AddGameAction
   | RenameGameAction
   | RefreshDataAction
-  | DelGameAction;
+  | DelGameAction
+  | RenameEngineAction;

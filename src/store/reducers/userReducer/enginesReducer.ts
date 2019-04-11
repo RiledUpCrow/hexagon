@@ -18,6 +18,17 @@ export default (
       const { engine } = action;
       return [...state, engine];
     }
+    case 'rename_engine': {
+      const { engine, name } = action;
+      const engineIndex = state.findIndex(e => e.id === engine.id);
+      if (engineIndex < 0) {
+        return state;
+      }
+      const newState = [...state];
+      const newEngine: Engine = { ...engine, name };
+      newState.splice(engineIndex, 1, newEngine);
+      return newState;
+    }
     case 'add_game': {
       const { game, engineId } = action;
       const newState = [...state];
