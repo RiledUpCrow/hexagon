@@ -6,7 +6,7 @@ import cn from 'classnames';
 type Size = 'small' | 'normal' | 'large';
 type Color = 'primary' | 'secondary' | 'danger';
 
-interface Props {
+export interface ButtonProps {
   size?: Size;
   wide?: boolean;
   disabled?: boolean;
@@ -15,7 +15,7 @@ interface Props {
   onClick?: () => void;
 }
 
-const Button: FunctionComponent<Props> = ({
+const Button: FunctionComponent<ButtonProps> = ({
   size = 'normal',
   wide = false,
   disabled = false,

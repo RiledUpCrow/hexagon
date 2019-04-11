@@ -1,9 +1,7 @@
 .Panel-root {
   padding: 1em;
-  width: 100%;
   background: hsl(178, 30%, 14%);
   border: 5px solid hsl(178, 30%, 24%);
   border-radius: 20px;
-  max-width: 600px;
   color: rgba(255, 255, 255, 0.9);
 }

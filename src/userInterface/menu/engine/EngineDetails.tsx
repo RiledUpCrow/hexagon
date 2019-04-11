@@ -14,6 +14,7 @@ import ErrorText from '../../components/ErrorText';
 import Menu from '../Menu';
 import './EngineDetails.css';
 import Game from '../../../data/Game';
+import Confirm from '../../components/Confirm';
 
 interface Props {
   param: string;
@@ -95,14 +96,15 @@ const EngineDetails: FunctionComponent<Props> = props => {
                 >
                   <Icon icon={cog} />
                 </Button>
-                <Button
+                <Confirm
+                  confirm={`Delete game ${game.displayName}?`}
                   size="small"
                   color="danger"
                   className="EngineDetails-gameControl"
                   onClick={handleDelete(game)}
                 >
                   <Icon icon={trash} />
-                </Button>
+                </Confirm>
               </div>
             ))}
         </div>
@@ -116,10 +118,15 @@ const EngineDetails: FunctionComponent<Props> = props => {
         <Icon size={20} icon={rocket} className="EngineDetails-icon" />
         Create game
       </Button>
-      <Button className="EngineDetails-button" onClick={abandon} color="danger">
+      <Confirm
+        confirm={`Abandon engine ${engine.name}?`}
+        className="EngineDetails-button"
+        onClick={abandon}
+        color="danger"
+      >
         <Icon size={20} icon={trash} className="EngineDetails-icon" />
         Abandon
-      </Button>
+      </Confirm>
     </Menu>
   );
 };

@@ -23,10 +23,11 @@ interface Props {
   onClose: () => void;
   closeable?: boolean;
   children: ReactNode;
+  className?: string;
 }
 
 const Dialog: FunctionComponent<Props> = props => {
-  const { open, onClose, closeable = true, children } = props;
+  const { open, onClose, closeable = true, children, className } = props;
 
   const [actuallyOpen, setActuallyOpen] = useState(open);
   const [closing, setClosing] = useState(false);
@@ -59,6 +60,16 @@ const Dialog: FunctionComponent<Props> = props => {
   );
 
   useEffect(() => {
+    const handler = (event: KeyboardEvent) => {
+      if (closeable && event.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [closeable, onClose]);
+
+  useEffect(() => {
     if (!actuallyOpen) {
       const timeout = setTimeout(() => {
         setClosing(false);
@@ -80,7 +91,7 @@ const Dialog: FunctionComponent<Props> = props => {
       )}
       onClick={handleClose}
     >
-      <Panel>{children}</Panel>
+      <Panel className={cn('Dialog-panel', className)}>{children}</Panel>
     </div>
   );
 

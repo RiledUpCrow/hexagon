@@ -13,6 +13,11 @@
   padding: 1em;
 }
 
+.Dialog-panel {
+  max-width: 600px;
+  width: 400px;
+}
+
 .Dialog-opening {
   animation: $animationTime ease-in Dialog-animateIn;
   opacity: 1;
