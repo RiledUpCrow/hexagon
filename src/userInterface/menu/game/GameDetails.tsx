@@ -10,6 +10,7 @@ import InputDialog from '../../components/InputDialog';
 import Loading from '../Loading';
 import Menu from '../Menu';
 import './GameDetails.css';
+import GameInvite from './GameInvite';
 
 interface Props {
   param: string;
@@ -20,7 +21,7 @@ const GameDetails: FunctionComponent<Props> = props => {
   const game = useStore(s => s.user.games.find(g => g.id === param));
 
   const dispatch = useDispatch();
-  const [rename, loading, error] = useRequest(
+  const [renameRequest, renameLoading, renameError] = useRequest(
     (name: string) => Axios.post(`/api/game/rename/${game!.id}`, { name }),
     (res, name) => {
       dispatch({ type: 'rename_game', game: game!, name });
@@ -34,7 +35,7 @@ const GameDetails: FunctionComponent<Props> = props => {
 
   return (
     <Menu title="Game details">
-      <Loading loading={loading}>
+      <Loading loading={renameLoading}>
         <div className="GameDetails-line">
           <div>Name</div>
           <div>{game.displayName}</div>
@@ -51,15 +52,17 @@ const GameDetails: FunctionComponent<Props> = props => {
             ))}
           </div>
         </div>
-        <ErrorText error={error} />
+        <ErrorText error={renameError} />
         <InputDialog
           wide
-          onInput={rename}
+          onInput={renameRequest}
           message="Rename game"
           initialValue={game.displayName}
+          className="GameDetails-button"
         >
           Rename <Icon icon={pencil} />
         </InputDialog>
+        <GameInvite className="GameDetails-button" game={game} />
       </Loading>
     </Menu>
   );
