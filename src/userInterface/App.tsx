@@ -17,6 +17,7 @@ import './App.css';
 import Content from './Content';
 import Game from './Game';
 import UI from './UI';
+import GameJoining from './menu/GameJoining';
 
 interface Props {
   store: Store;
@@ -80,7 +81,7 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
 
   const user = useStore(s => s.user);
   const authInterceptorId = useRef<number | null>(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (authInterceptorId.current !== null) {
       Axios.interceptors.request.eject(authInterceptorId.current);
     }
@@ -106,6 +107,7 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
       {update && (
         <Notification text="New version available, close the game to update!" />
       )}
+      <GameJoining />
     </div>
   );
 };

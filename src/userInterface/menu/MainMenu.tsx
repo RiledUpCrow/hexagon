@@ -1,8 +1,8 @@
 import React, { FunctionComponent, memo, useCallback } from 'react';
-import Button from '../components/Button';
 import { View } from '../../data/View';
 import useDispatch from '../../logic/useDispatch';
 import useStore from '../../logic/useStore';
+import Button from '../components/Button';
 import './MainMenu.css';
 
 const MainMenu: FunctionComponent = (): JSX.Element => {
