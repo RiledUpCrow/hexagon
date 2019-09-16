@@ -14,7 +14,7 @@ const Menu: FunctionComponent<Props> = props => {
   const { children, title, loading = false } = props;
 
   const dispatch = useDispatch();
-  const back = useCallback(() => dispatch({ type: 'back' }), []);
+  const back = useCallback(() => dispatch({ type: 'back' }), [dispatch]);
 
   return (
     <div className="Menu-root">

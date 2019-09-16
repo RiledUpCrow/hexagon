@@ -35,10 +35,13 @@ const EngineDetails: FunctionComponent<Props> = props => {
     },
     []
   );
-  const abandon = useCallback(() => abandonRequest(engine!.id), [engine]);
+  const abandon = useCallback(() => abandonRequest(engine!.id), [
+    engine,
+    abandonRequest,
+  ]);
   const toCreateGame = useCallback(
     () => dispatch({ type: 'navigate', view: 'createGame', param: engineId }),
-    []
+    [dispatch, engineId]
   );
 
   const [deleteRequest, deleteLoading, deleteError] = useRequest(

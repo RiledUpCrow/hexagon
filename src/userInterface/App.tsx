@@ -30,7 +30,7 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
   const endGame = useCallback(() => {
     setReady(false);
     dispatch({ type: 'reset' });
-  }, []);
+  }, [dispatch]);
   const game = useStore(s => s.game);
   const update = useStore(s => s.update);
   const [userRequest] = useRequest(
@@ -68,7 +68,7 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
     } catch (error) {
       return;
     }
-  }, []);
+  }, [dispatch, userRequest]);
 
   const user = useStore(s => s.user);
   const authInterceptorId = useRef<number | null>(null);

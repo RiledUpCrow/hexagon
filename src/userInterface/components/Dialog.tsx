@@ -46,7 +46,7 @@ const Dialog: FunctionComponent<Props> = props => {
     if (!prevOpen && open) {
       setActuallyOpen(true);
     }
-  }, [open]);
+  }, [open, prevOpen]);
 
   const wrapper = useRef<HTMLDivElement>(null);
 

@@ -21,7 +21,7 @@ const GameItem: FunctionComponent<Props> = props => {
         view: 'game',
         param: game.id,
       }),
-    [game]
+    [game, dispatch]
   );
 
   return (

@@ -42,7 +42,7 @@ const InputDialog: FunctionComponent<Props> = props => {
   const handleRename = useCallback(() => {
     handleClose();
     onInput(text);
-  }, [text]);
+  }, [text, handleClose, onInput]);
 
   return (
     <>

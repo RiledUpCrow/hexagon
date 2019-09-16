@@ -24,7 +24,7 @@ const Notification: FunctionComponent<Props> = ({ text, time = 10 }) => {
       const timeout = setTimeout(close, time * 1000);
       return () => clearTimeout(timeout);
     }
-  }, [text]);
+  }, [text, close, time]);
 
   useEffect(() => {
     if (!open && !hidden) {

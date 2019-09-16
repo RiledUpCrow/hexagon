@@ -27,22 +27,22 @@ const NumberPicker: FunctionComponent<Props> = ({
 }): JSX.Element => {
   const incement = useCallback(() => {
     onChange(between(value + step, min, max));
-  }, [value, step, min, max]);
+  }, [value, step, min, max, onChange]);
   const decrement = useCallback(() => {
     onChange(between(value - step, min, max));
-  }, [value, step, min, max]);
+  }, [value, step, min, max, onChange]);
   const toMax = useCallback(() => {
     if (max === undefined) {
       return;
     }
     onChange(between(max, min, max));
-  }, [value, step, min, max]);
+  }, [min, max, onChange]);
   const toMin = useCallback(() => {
     if (min === undefined) {
       return;
     }
     onChange(between(min, min, max));
-  }, [value, step, min, max]);
+  }, [min, max, onChange]);
 
   return (
     <div className="NumberPicker-root">

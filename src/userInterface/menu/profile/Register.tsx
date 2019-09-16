@@ -24,10 +24,10 @@ const Register: FunctionComponent = (): JSX.Element => {
   const [password, setPassword] = useState('');
   const [repeat, setRepeat] = useState('');
 
-  const usernameInvalid = useMemo(() => false, [username]);
-  const emailInvalid = useMemo(() => false, [email]);
-  const passwordInvalid = useMemo(() => false, [password]);
-  const repeatInvalid = useMemo(() => false, [repeat]);
+  const usernameInvalid = useMemo(() => false, []);
+  const emailInvalid = useMemo(() => false, []);
+  const passwordInvalid = useMemo(() => false, []);
+  const repeatInvalid = useMemo(() => false, []);
 
   const dispatch = useDispatch();
   const [registerRequest, loading, error] = useRequest(
@@ -68,9 +68,9 @@ const Register: FunctionComponent = (): JSX.Element => {
 
   const register = useCallback(
     () => registerRequest(username, email, password),
-    [username, email, password]
+    [username, email, password, registerRequest]
   );
-  const cancel = useCallback(() => dispatch({ type: 'back' }), []);
+  const cancel = useCallback(() => dispatch({ type: 'back' }), [dispatch]);
 
   const usernameInput = useRef<HTMLInputElement>(null);
   const emailInput = useRef<HTMLInputElement>(null);
@@ -84,7 +84,7 @@ const Register: FunctionComponent = (): JSX.Element => {
     if (error) {
       focusUsername();
     }
-  }, [error]);
+  }, [error, focusUsername]);
 
   return (
     <div className="Login-root">

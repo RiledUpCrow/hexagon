@@ -27,7 +27,7 @@ const EngineList: FunctionComponent = () => {
     []
   );
 
-  const doClaim = useCallback(() => claimRequest(claim), [claim]);
+  const doClaim = useCallback(() => claimRequest(claim), [claim, claimRequest]);
 
   return (
     <Menu title="Engines" loading={claimLoading}>
