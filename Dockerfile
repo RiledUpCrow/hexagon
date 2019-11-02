@@ -1,31 +1,15 @@
-FROM node:10.15 as dev
+FROM node:10.15 as build
 WORKDIR /var/hexagon
-ENV PORT=80 DANGEROUSLY_DISABLE_HOST_CHECK=true
-
-# install git lfs
-RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
-  apt-get install -y git-lfs && \
-  git lfs install
+ENV PORT=80
 
 # installing dependencies
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# copy confing files
-COPY tsconfig.json .eslintrc.json .prettierrc.json ./
-
-CMD [ "npm", "start" ]
-
-FROM dev as build
-ENV CI=true
-
-# copy source code
-COPY .git .git/
+# copy files
+COPY tsconfig.json ./
 COPY public public/
 COPY src src/
-
-# pull correct lfs files
-RUN git lfs pull
 
 # build the static files
 RUN npm run build
