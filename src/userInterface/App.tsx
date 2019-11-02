@@ -52,7 +52,7 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
         JSON.stringify({ user: updatedUser, engines, games })
       );
     },
-    []
+    [dispatch]
   );
 
   useLayoutEffect(() => {

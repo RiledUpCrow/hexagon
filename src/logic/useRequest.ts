@@ -46,7 +46,7 @@ const useRequest = <T extends unknown[], D>(
         handleError(err, setError);
       }
     },
-    [call, handler, ...changeListeners] // eslint-disable-line react-hooks/exhaustive-deps
+    [...changeListeners] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   return [request, loading, error];
