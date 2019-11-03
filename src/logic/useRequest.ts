@@ -24,7 +24,12 @@ const useRequest = <T extends unknown[], D>(
   const [error, setError] = useState('');
 
   const isMounted = useRef(true);
-  useLayoutEffect(() => () => (isMounted.current = false), []);
+  useLayoutEffect(
+    () => () => {
+      isMounted.current = false;
+    },
+    []
+  );
 
   const request = useMemo(
     () => async (...args: T) => {
@@ -41,7 +46,7 @@ const useRequest = <T extends unknown[], D>(
         handleError(err, setError);
       }
     },
-    changeListeners
+    changeListeners // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   return [request, loading, error];
