@@ -11,24 +11,24 @@ import useUniqueId from '../../logic/useUniqueId';
 import './TextInput.css';
 
 interface Props {
-  value: string;
-  label: string;
+  value?: string;
+  label?: string;
   type?: string;
   disabled?: boolean;
   autoFocus?: boolean;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
   onEnter?: () => void;
   inputRef?: RefObject<HTMLInputElement>;
   button?: ReactNode;
 }
 
 const TextInput: FunctionComponent<Props> = ({
-  value,
+  value = '',
   label,
   type,
   disabled = false,
   autoFocus = false,
-  onChange,
+  onChange = () => {},
   onEnter = () => undefined,
   inputRef,
   button,
@@ -51,9 +51,11 @@ const TextInput: FunctionComponent<Props> = ({
 
   return (
     <div className="TextInput-root">
-      <label className="TextInput-label" htmlFor={id}>
-        {label}
-      </label>
+      {Boolean(label) && (
+        <label className="TextInput-label" htmlFor={id}>
+          {label}
+        </label>
+      )}
       <div className="TextInput-wrapper">
         <input
           ref={inputRef}

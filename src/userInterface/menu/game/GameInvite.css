@@ -1,0 +1,8 @@
+.GameInvite-buttons {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.GameInvite-button {
+  margin-left: 0.5em;
+}

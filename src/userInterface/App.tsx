@@ -17,6 +17,7 @@ import './App.css';
 import Content from './Content';
 import Game from './Game';
 import UI from './UI';
+import GameJoining from './menu/GameJoining';
 
 interface Props {
   store: Store;
@@ -33,7 +34,8 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
   }, [dispatch]);
   const game = useStore(s => s.game);
   const update = useStore(s => s.update);
-  const [userRequest] = useRequest(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [userRequest, _, error] = useRequest(
     (user: User) =>
       Axios.get('/api/user/data', {
         headers: { Authorization: `Bearer ${user.token}` },
@@ -70,9 +72,16 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
     }
   }, [dispatch, userRequest]);
 
+  useEffect(() => {
+    if (error === 'Invalid token') {
+      dispatch({ type: 'logout' });
+      localStorage.removeItem('user');
+    }
+  }, [error]);
+
   const user = useStore(s => s.user);
   const authInterceptorId = useRef<number | null>(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (authInterceptorId.current !== null) {
       Axios.interceptors.request.eject(authInterceptorId.current);
     }
@@ -98,6 +107,7 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
       {update && (
         <Notification text="New version available, close the game to update!" />
       )}
+      <GameJoining />
     </div>
   );
 };

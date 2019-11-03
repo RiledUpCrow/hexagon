@@ -31,6 +31,9 @@ export default (
     }
     case 'add_game': {
       const { game, engineId } = action;
+      if (engineId === null) {
+        return state;
+      }
       const newState = [...state];
       const engineIndex = newState.findIndex(e => e.id === engineId);
       if (engineIndex < 0) {

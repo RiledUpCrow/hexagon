@@ -5,5 +5,5 @@ import Game from '../../data/Game';
 export interface AddGameAction extends Action<ActionType> {
   type: 'add_game';
   game: Game;
-  engineId: string;
+  engineId?: string;
 }
