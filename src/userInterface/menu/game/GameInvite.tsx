@@ -49,7 +49,7 @@ const GameInvite: FunctionComponent<Props> = props => {
     document.execCommand('copy');
     input.blur();
     handleClose();
-  }, [token]);
+  }, [handleClose]);
 
   return (
     <>

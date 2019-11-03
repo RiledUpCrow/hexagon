@@ -15,6 +15,7 @@ import Loading from './Loading';
 import ErrorText from '../components/ErrorText';
 import useDispatch from '../../logic/useDispatch';
 import GameInfo from './game/GameInfo';
+import './GameJoining.scss';
 
 const path = window.location.pathname;
 const result = path.match(/^\/invite\/([a-zA-Z0-9]+)$/);
@@ -96,7 +97,7 @@ const GameJoining: FunctionComponent = () => {
         ) : game ? (
           <GameInfo game={game} />
         ) : null}
-        <div>
+        <div className="GameJoining-buttons">
           <Button color="primary" onClick={joinRequest}>
             Join
           </Button>
