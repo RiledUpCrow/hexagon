@@ -33,7 +33,7 @@ const Game: FunctionComponent<Props> = ({ settings, onReady }): JSX.Element => {
       destroyPixi();
       div.removeEventListener('contextmenu', disable);
     };
-  }, [mapHeight, mapWidth, size, maxZoom, minZoom]);
+  }, [mapHeight, mapWidth, size, maxZoom, minZoom, onReady, settings, store]);
 
   return <div className="Game-root" ref={container} />;
 };

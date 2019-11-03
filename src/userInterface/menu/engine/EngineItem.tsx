@@ -15,7 +15,7 @@ const EngineItem: FunctionComponent<Props> = props => {
 
   const toEngine = useCallback(
     () => dispatch({ type: 'navigate', view: 'engine', param: engine.id }),
-    [engine]
+    [engine, dispatch]
   );
 
   return (

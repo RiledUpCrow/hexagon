@@ -30,7 +30,7 @@ const Button: FunctionComponent<ButtonProps> = ({
     }
     buttonClick.play();
     onClick();
-  }, [onClick]);
+  }, [onClick, disabled]);
 
   const handleKey = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {

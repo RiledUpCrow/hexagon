@@ -19,7 +19,7 @@ const MainMenu: FunctionComponent = (): JSX.Element => {
   const logout = useCallback(() => {
     dispatch({ type: 'logout' });
     localStorage.removeItem('user');
-  }, []);
+  }, [dispatch]);
 
   const button = (title: string, action: () => void): JSX.Element => (
     <div className="MainMenu-button">

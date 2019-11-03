@@ -49,8 +49,9 @@ const Login: FunctionComponent = (): JSX.Element => {
   const login = useCallback(() => loginRequest(username, password), [
     username,
     password,
+    loginRequest,
   ]);
-  const cancel = useCallback(() => dispatch({ type: 'back' }), []);
+  const cancel = useCallback(() => dispatch({ type: 'back' }), [dispatch]);
 
   const passwordInput = useRef<HTMLInputElement>(null);
   const focus = useCallback(() => passwordInput.current!.focus(), []);
@@ -59,7 +60,7 @@ const Login: FunctionComponent = (): JSX.Element => {
     if (error) {
       focus();
     }
-  }, [error]);
+  }, [error, focus]);
 
   return (
     <div className="Login-root">

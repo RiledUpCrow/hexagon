@@ -31,7 +31,7 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
   const endGame = useCallback(() => {
     setReady(false);
     dispatch({ type: 'reset' });
-  }, []);
+  }, [dispatch]);
   const game = useStore(s => s.game);
   const update = useStore(s => s.update);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -54,7 +54,7 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
         JSON.stringify({ user: updatedUser, engines, games })
       );
     },
-    []
+    [dispatch]
   );
 
   useLayoutEffect(() => {
@@ -70,7 +70,7 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
     } catch (error) {
       return;
     }
-  }, []);
+  }, [dispatch, userRequest]);
 
   useEffect(() => {
     if (error === 'Invalid token') {

@@ -54,6 +54,7 @@ export default class RangeDrawer implements HighlightDrawer {
     path.push(firstPoint);
     let lastPoint = points[0][1];
     while (this.distance(lastPoint, firstPoint) > 2) {
+      // eslint-disable-next-line no-loop-func
       const next = points.find(p => this.distance(p[0], lastPoint) < 2)!;
       path.push(next[0]);
       lastPoint = next[1];
