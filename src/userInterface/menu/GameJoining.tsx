@@ -51,7 +51,7 @@ const GameJoining: FunctionComponent = () => {
     if (token) {
       infoRequest(token);
     }
-  }, [token]);
+  }, [token, infoRequest]);
 
   const handleEnd = useCallback(() => {
     setOpen(false);

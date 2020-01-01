@@ -77,7 +77,7 @@ const App: FunctionComponent<Props> = (): JSX.Element => {
       dispatch({ type: 'logout' });
       localStorage.removeItem('user');
     }
-  }, [error]);
+  }, [error, dispatch]);
 
   const user = useStore(s => s.user);
   const authInterceptorId = useRef<number | null>(null);
