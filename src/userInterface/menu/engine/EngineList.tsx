@@ -21,7 +21,8 @@ const EngineList: FunctionComponent = () => {
   const [claimRequest, claimLoading, claimError] = useRequest(
     (claim: string) => Axios.post('/api/engine/claim', { adminToken: claim }),
     res => {
-      dispatch({ type: 'add_engine', engine: res.data });
+      const { engine, games } = res.data;
+      dispatch({ type: 'add_engine', engine, games });
       setClaim('');
     },
     []

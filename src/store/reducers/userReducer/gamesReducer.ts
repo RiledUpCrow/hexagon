@@ -39,6 +39,10 @@ export default (
       newState.splice(gameIndex, 1, newGame);
       return newState;
     }
+    case 'add_engine': {
+      const { games } = action;
+      return [...state, ...games];
+    }
     default:
       return state;
   }
